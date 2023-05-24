@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingHorizontal="10dp"
     android:background="@color/white">
 
     <androidx.appcompat.widget.Toolbar
@@ -17,10 +18,11 @@
         app:popupTheme="@style/Theme.AppCompat.DayNight"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:menu="@menu/toolbar_menu_home">
+        app:menu="@menu/toolbar_menu_home"
+        app:contentInsetStart="10dp">
         <ImageView
             android:id="@+id/logo"
-            android:src="@drawable/logo2"
+            android:src="@drawable/img_logo2"
             android:layout_width="56dp"
             android:layout_height="56dp"
             android:layout_gravity="left"/>

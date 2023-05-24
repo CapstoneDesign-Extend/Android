@@ -4,19 +4,21 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginHorizontal="10dp"
+    android:layout_marginHorizontal="0dp"
     android:layout_marginVertical="5dp"
     android:paddingHorizontal="15dp"
     android:paddingVertical="18dp"
-    android:background="@drawable/round_border">
+    android:background="@drawable/shape_round_border">
 
     <LinearLayout
+        android:id="@+id/home_board_more"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
         android:orientation="horizontal">
 
         <TextView
+            android:id="@+id/tv_home_board_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="즐겨찾는 게시판"
@@ -34,102 +36,127 @@
 
 
     <LinearLayout
+        android:id="@+id/home_board_wrapper1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:paddingVertical="7dp">
 
         <TextView
+            android:id="@+id/tv_home_board_name1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="자유게시판"
             android:textColor="@color/black"
             android:textSize="15dp"/>
         <TextView
+            android:id="@+id/tv_home_board_data1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:paddingLeft="10dp"
+            android:maxLines="1"
+            android:ellipsize="end"
             android:text="오늘 성대 축제 가는사람"
             android:textSize="13dp"/>
     </LinearLayout>
     <LinearLayout
+        android:id="@+id/home_board_wrapper2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:paddingVertical="7dp">
 
         <TextView
+            android:id="@+id/tv_home_board_name2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="졸업생게시판"
             android:textColor="@color/black"
             android:textSize="15dp"/>
         <TextView
+            android:id="@+id/tv_home_board_data2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:paddingLeft="10dp"
+            android:maxLines="1"
+            android:ellipsize="end"
             android:text="선배님들 공모전 중요한가요?"
             android:textSize="13dp"/>
     </LinearLayout>
     <LinearLayout
+        android:id="@+id/home_board_wrapper3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:paddingVertical="7dp">
 
         <TextView
+            android:id="@+id/tv_home_board_name3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="장터게시판"
             android:textColor="@color/black"
             android:textSize="15dp"/>
         <TextView
+            android:id="@+id/tv_home_board_data3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:paddingLeft="10dp"
+            android:maxLines="1"
+            android:ellipsize="end"
             android:text="2023 퍼시픽 국시문제집 개념서"
             android:textSize="13dp"/>
     </LinearLayout>
     <LinearLayout
+        android:id="@+id/home_board_wrapper4"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:paddingVertical="7dp">
 
         <TextView
+            android:id="@+id/tv_home_board_name4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="정보게시판"
             android:textColor="@color/black"
             android:textSize="15dp"/>
         <TextView
+            android:id="@+id/tv_home_board_data4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:paddingLeft="10dp"
+            android:maxLines="1"
+            android:ellipsize="end"
             android:text="2020년도 상반기 서울시 학자금대출 이자지원 사업"
             android:textSize="13dp"/>
     </LinearLayout>
     <LinearLayout
+        android:id="@+id/home_board_wrapper5"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:paddingVertical="7dp">
 
         <TextView
+            android:id="@+id/tv_home_board_name5"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="홍보게시판"
             android:textColor="@color/black"
             android:textSize="15dp"/>
         <TextView
+            android:id="@+id/tv_home_board_data5"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:paddingLeft="10dp"
+            android:maxLines="1"
+            android:ellipsize="end"
             android:text="체험단 모집"
             android:textSize="13dp"/>
     </LinearLayout>

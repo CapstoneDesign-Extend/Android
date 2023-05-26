@@ -36,7 +36,7 @@ public class FragBoardNotice extends Fragment {
         layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
 
-        adapter = new BoardNoticeRecyclerViewAdapter();
+        adapter = new BoardNoticeRecyclerViewAdapter(getContext());
         recyclerView.setAdapter(adapter);
 
         return view;

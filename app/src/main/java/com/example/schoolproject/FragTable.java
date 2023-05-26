@@ -1,5 +1,6 @@
 package com.example.schoolproject;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -52,6 +53,8 @@ public class FragTable extends Fragment {
             case R.id.notification:
                 // "notification" 아이템이 클릭되었을 때 수행할 코드 작성
                 Snackbar.make(view, "notification", 100).show();
+                Intent intent = new Intent(getContext(), NotificationActivity.class);
+                startActivity(intent);
                 return true;
             case R.id.myPage:
                 // "myPage" 아이템이 클릭되었을 때 수행할 코드 작성

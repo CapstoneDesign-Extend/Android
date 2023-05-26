@@ -1,5 +1,6 @@
 package com.example.schoolproject;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -79,10 +80,14 @@ public class FragShop extends Fragment {
             case R.id.notification:
                 // "notification" 아이템이 클릭되었을 때 수행할 코드 작성
                 Snackbar.make(view, "notification", 100).show();
+                Intent intent = new Intent(getContext(), NotificationActivity.class);
+                startActivity(intent);
                 return true;
             case R.id.search:
                 // "search" 아이템이 클릭되었을 때 수행할 코드 작성
                 Snackbar.make(view, "search", 100).show();
+                Intent intent1 = new Intent(getContext(), SearchActivity.class);
+                startActivity(intent1);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

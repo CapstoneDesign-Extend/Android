@@ -1,5 +1,7 @@
 package com.example.schoolproject;
 
+import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +14,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.snackbar.Snackbar;
 
 public class BoardNoticeRecyclerViewAdapter extends RecyclerView.Adapter<BoardNoticeRecyclerViewAdapter.myViewHolder>{
+    private Context context;
+    public BoardNoticeRecyclerViewAdapter(Context context){
+        this.context = context;
+    }
 
     public class myViewHolder extends RecyclerView.ViewHolder{
         protected LinearLayout boardWrapper;
@@ -33,6 +39,8 @@ public class BoardNoticeRecyclerViewAdapter extends RecyclerView.Adapter<BoardNo
                 @Override
                 public void onClick(View v) {
                     Snackbar.make(v, "move to post", 100).show();
+                    Intent intent = new Intent(context, PostActivity.class);
+                    context.startActivity(intent);
                 }
             });
         }

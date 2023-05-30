@@ -10,5 +10,7 @@
     <color name="colorAccent">#183294</color>
     <color name="colorMain">#3967AE</color>
     <color name="colorEveryTime">#B63826</color>
+    <color name="colorAccentTest">#2A4E7D</color>
+    <color name="colorBorder">#E1E1E1</color>
 
 </resources>

@@ -5,10 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingHorizontal="10dp"
-    tools:context=".PostActivity">
+    tools:context=".BoardActivity">
 
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar_post"
+        android:id="@+id/toolbar_board"
         android:layout_width="match_parent"
         android:layout_height="56dp"
         android:background="@color/white"
@@ -18,22 +18,22 @@
         app:popupTheme="@style/Theme.AppCompat.DayNight"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:menu="@menu/toolbar_menu_post">
+        app:menu="@menu/toolbar_menu_board">
         <TextView
+            android:id="@+id/tv_board_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:textColor="@color/black"
             android:textSize="20dp"
             android:textStyle="bold"
-            android:text="Post"/>
+            android:text="Board"/>
     </androidx.appcompat.widget.Toolbar>
-
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar_post" />
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_board" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

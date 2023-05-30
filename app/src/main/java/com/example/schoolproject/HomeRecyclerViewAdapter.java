@@ -1,5 +1,7 @@
 package com.example.schoolproject;
 
+import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,21 +16,51 @@ import com.google.android.material.snackbar.Snackbar;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HomeRecyclerViewAdapter extends RecyclerView.Adapter<HomeRecyclerViewAdapter.myViewHolder> {
-    private List<DataHomeBoard> dataHomeBoards;
+public class HomeRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    private static final int VIEW_TYPE_BOARD = 0;
+    private static final int VIEW_TYPE_DYNAMIC_MORNING = 1;
+    private Context context;
+    private List<Object> dataList;
 
-    public HomeRecyclerViewAdapter(List<DataHomeBoard> dataHomeBoards){
-        this.dataHomeBoards = dataHomeBoards;
+    public HomeRecyclerViewAdapter(Context context, List<Object> dataList){
+        this.context = context;
+        this.dataList = dataList;
+    }
+    public int getItemViewType(int position){
+        if(dataList.get(position) instanceof DataHomeBoard){
+            return VIEW_TYPE_BOARD;
+        } else if (dataList.get(position) instanceof DataHomeDynamicMorning) {
+            return VIEW_TYPE_DYNAMIC_MORNING;
+        }
+        return -1;
     }
 
-    public class myViewHolder extends RecyclerView.ViewHolder{
+    public class homeDynamicMorningViewHolder extends RecyclerView.ViewHolder{
+        protected TextView tv_title;
+        protected TextView tv_lecture1;
+        protected TextView tv_lecture2;
+
+        public homeDynamicMorningViewHolder(@NonNull View itemView) {
+            super(itemView);
+            this.tv_title = itemView.findViewById(R.id.tv_home_dynamic_morning_title);
+            this.tv_lecture1 = itemView.findViewById(R.id.tv_home_dynamic_morning_lecture1);
+            this.tv_lecture2 = itemView.findViewById(R.id.tv_home_dynamic_morning_lecture2);
+        }
+        public void bindData(DataHomeDynamicMorning data){
+            tv_title.setText(data.getTitle());
+            tv_lecture1.setText(data.getLecture1());
+            tv_lecture2.setText(data.getLecture2());
+        }
+    }
+
+    public class homeBoardViewHolder extends RecyclerView.ViewHolder{
         protected List<LinearLayout> rowWrappers;
         protected LinearLayout boardMore;
         protected TextView tv_title;
         private List<TextView> nameViews;
         private List<TextView> dataViews;
 
-        public myViewHolder(View itemView){
+        public homeBoardViewHolder(View itemView){
             super(itemView);
             this.boardMore = itemView.findViewById(R.id.home_board_more);
             this.tv_title = itemView.findViewById(R.id.tv_home_board_title);
@@ -49,9 +81,14 @@ public class HomeRecyclerViewAdapter extends RecyclerView.Adapter<HomeRecyclerVi
             }
             // set OnClickListener for "more" wrapper
             this.boardMore.setOnClickListener(new View.OnClickListener() {
+                String boardName = "";
                 @Override
                 public void onClick(View v) {
-                    Snackbar.make(v, "more", 100).show();
+                    boardName = ((TextView)v.findViewById(R.id.tv_home_board_title)).getText().toString();
+                    Snackbar.make(v, boardName, 100).show();
+                    Intent intent = new Intent(context, BoardActivity.class);
+                    intent.putExtra("boardName", boardName);
+                    context.startActivity(intent);
                 }
             });
             // set OnClickListener for rowWrappers
@@ -65,6 +102,7 @@ public class HomeRecyclerViewAdapter extends RecyclerView.Adapter<HomeRecyclerVi
                         switch (id){
                             case R.id.home_board_wrapper1:
                                 text = ((TextView)v.findViewById(R.id.tv_home_board_name1)).getText().toString();
+                                //Intent intent = new Intent(context, )
                                 break;
                             case R.id.home_board_wrapper2:
                                 text = ((TextView)v.findViewById(R.id.tv_home_board_name2)).getText().toString();
@@ -87,9 +125,9 @@ public class HomeRecyclerViewAdapter extends RecyclerView.Adapter<HomeRecyclerVi
 
         }
         public void bindData(DataHomeBoard data){
-            tv_title.setText(data.getTitle());
-            List<String> names = data.getNames();
-            List<String> datas = data.getDatas();
+            tv_title.setText(data.getBoard_name());
+            List<String> names = data.getPost_titles();
+            List<String> datas = data.getPost_contents();
             int size = names.size();
             for (int i=0; i<size; i++){
                 nameViews.get(i).setText(names.get(i));
@@ -99,24 +137,43 @@ public class HomeRecyclerViewAdapter extends RecyclerView.Adapter<HomeRecyclerVi
     }
     @NonNull
     @Override
-    public myViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         // create view and ViewHoldeer
-        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_home,parent,false);
-        myViewHolder viewHolder = new myViewHolder(itemView);
-        return viewHolder;
+        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+        switch (viewType){
+            case VIEW_TYPE_BOARD:
+                View view1 = inflater.inflate(R.layout.item_home,parent,false);
+                return new homeBoardViewHolder(view1);
+            case VIEW_TYPE_DYNAMIC_MORNING:
+                View view2 = inflater.inflate(R.layout.item_home_dynamic_morning,parent,false);
+                return new homeDynamicMorningViewHolder(view2);
+            default:
+                throw new IllegalArgumentException("Invalid view type: " + viewType);
+        }
     }
 
     @Override
-    public void onBindViewHolder(@NonNull myViewHolder holder, int position) {
-        // when list value added
-        DataHomeBoard data = dataHomeBoards.get(position);
-        holder.bindData(data);
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+        Object item = dataList.get(position);
+        switch (holder.getItemViewType()){
+            case VIEW_TYPE_BOARD:
+                homeBoardViewHolder homeBoardViewHolder = (HomeRecyclerViewAdapter.homeBoardViewHolder) holder;  // casting ViewHolder
+                DataHomeBoard dataHomeBoard = (DataHomeBoard) dataList.get(position);
+                homeBoardViewHolder.bindData(dataHomeBoard);
+                break;
+            case VIEW_TYPE_DYNAMIC_MORNING:
+                homeDynamicMorningViewHolder homeDynamicMorningViewHolder = (HomeRecyclerViewAdapter.homeDynamicMorningViewHolder) holder;
+                DataHomeDynamicMorning dataHomeDynamicMorning = (DataHomeDynamicMorning) dataList.get(position);
+                homeDynamicMorningViewHolder.bindData(dataHomeDynamicMorning);
+                break;
+        }
     }
+
 
     @Override
     public int getItemCount() {
         // return total items to display
-        return dataHomeBoards.size();
+        return dataList.size();
     }
 
 }

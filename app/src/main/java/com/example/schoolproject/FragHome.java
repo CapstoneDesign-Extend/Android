@@ -150,7 +150,6 @@ public class FragHome extends Fragment {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.toolbar_menu_home, menu);
 
-        super.onCreateOptionsMenu(menu, inflater);
     }
 
 
@@ -159,19 +158,18 @@ public class FragHome extends Fragment {
         switch (item.getItemId()) {
             case R.id.notification:
                 // "notification" 아이템이 클릭되었을 때 수행할 코드 작성
-                Snackbar.make(view, "notification", 100).show();
                 Intent intent = new Intent(getContext(),NotificationActivity.class);
                 startActivity(intent);
                 return true;
             case R.id.search:
                 // "search" 아이템이 클릭되었을 때 수행할 코드 작성
-                Snackbar.make(view, "search", 100).show();
                 Intent intent1 = new Intent(getContext(), SearchActivity.class);
                 startActivity(intent1);
                 return true;
             case R.id.myPage:
                 // "myPage" 아이템이 클릭되었을 때 수행할 코드 작성
-                Snackbar.make(view, "mypage", 100).show();
+                Intent intent2 = new Intent(getContext(), MyPageActivity.class);
+                startActivity(intent2);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

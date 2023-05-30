@@ -26,7 +26,7 @@ public class BoardQnARecyclerViewAdapter extends RecyclerView.Adapter<BoardQnARe
             this.tv_title = itemView.findViewById(R.id.tv_board_notice_title);
             this.tv_data = itemView.findViewById(R.id.tv_board_notice_data);
             this.tv_time = itemView.findViewById(R.id.tv_board_notice_time);
-            this.tv_isANON = itemView.findViewById(R.id.tv_board_notice_isANON);
+            this.tv_isANON = itemView.findViewById(R.id.tv_board_notice_auth);
 
             // set OnClickListener for boardWrapper
             this.boardWrapper.setOnClickListener(new View.OnClickListener() {

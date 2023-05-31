@@ -138,7 +138,7 @@ public class HomeRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        // create view and ViewHoldeer
+        // create view and ViewHolder
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         switch (viewType){
             case VIEW_TYPE_BOARD:
@@ -158,12 +158,12 @@ public class HomeRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
         switch (holder.getItemViewType()){
             case VIEW_TYPE_BOARD:
                 homeBoardViewHolder homeBoardViewHolder = (HomeRecyclerViewAdapter.homeBoardViewHolder) holder;  // casting ViewHolder
-                DataHomeBoard dataHomeBoard = (DataHomeBoard) dataList.get(position);
+                DataHomeBoard dataHomeBoard = (DataHomeBoard) item;
                 homeBoardViewHolder.bindData(dataHomeBoard);
                 break;
             case VIEW_TYPE_DYNAMIC_MORNING:
                 homeDynamicMorningViewHolder homeDynamicMorningViewHolder = (HomeRecyclerViewAdapter.homeDynamicMorningViewHolder) holder;
-                DataHomeDynamicMorning dataHomeDynamicMorning = (DataHomeDynamicMorning) dataList.get(position);
+                DataHomeDynamicMorning dataHomeDynamicMorning = (DataHomeDynamicMorning) item;
                 homeDynamicMorningViewHolder.bindData(dataHomeDynamicMorning);
                 break;
         }

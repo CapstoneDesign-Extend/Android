@@ -53,10 +53,12 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         // e.g. drop table and recreate
     }
 
-    public void insertData(String table, ContentValues values){
+    public long insertData(String table, ContentValues values){
+        long result;
         SQLiteDatabase db = this.getWritableDatabase();
-        db.insert(table, null, values);
+        result = db.insert(table, null, values);
         db.close();
+        return result;
     }
     public int updateData(String table, ContentValues values, String whereClause, String[] whereArgs) {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -70,4 +72,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         db.close();
         return rowsAffected;
     }
+
+
 }

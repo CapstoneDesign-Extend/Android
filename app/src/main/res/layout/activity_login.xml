@@ -8,7 +8,7 @@
     tools:context=".LoginActivity">
 
     <ImageView
-        android:id="@+id/iv_loginLogo"
+        android:id="@+id/iv_Logo"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_marginTop="92dp"
@@ -24,10 +24,10 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         android:text="대학 생활을 더 편하고 즐겁게"
-        app:layout_constraintEnd_toEndOf="@+id/iv_loginLogo"
+        app:layout_constraintEnd_toEndOf="@+id/iv_Logo"
         app:layout_constraintHorizontal_bias="0.492"
-        app:layout_constraintStart_toStartOf="@+id/iv_loginLogo"
-        app:layout_constraintTop_toBottomOf="@+id/iv_loginLogo" />
+        app:layout_constraintStart_toStartOf="@+id/iv_Logo"
+        app:layout_constraintTop_toBottomOf="@+id/iv_Logo" />
 
     <TextView
         android:id="@+id/textView2"
@@ -79,10 +79,11 @@
         app:layout_constraintTop_toBottomOf="@+id/et_login_pw" />
 
     <TextView
-        android:id="@+id/tv_login_findPW"
+        android:id="@+id/tv_login_findPw"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="20dp"
+        android:padding="5dp"
         android:text="Forgot ID/Password?"
         app:layout_constraintEnd_toEndOf="@+id/btn_login"
         app:layout_constraintStart_toStartOf="@+id/btn_login"
@@ -92,12 +93,13 @@
         android:id="@+id/tv_login_signUp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="4dp"
+        android:padding="5dp"
         android:text="Sign up"
         android:textColor="@color/black"
         android:textSize="18dp"
-        app:layout_constraintEnd_toEndOf="@+id/tv_login_findPW"
+        app:layout_constraintEnd_toEndOf="@+id/tv_login_findPw"
         app:layout_constraintHorizontal_bias="0.493"
-        app:layout_constraintStart_toStartOf="@+id/tv_login_findPW"
-        app:layout_constraintTop_toBottomOf="@+id/tv_login_findPW" />
+        app:layout_constraintStart_toStartOf="@+id/tv_login_findPw"
+        app:layout_constraintTop_toBottomOf="@+id/tv_login_findPw" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -42,7 +42,7 @@ public class SignUpActivity extends AppCompatActivity {
                     // hide keyboard
                     InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(v.getWindowToken(),0);
-                    Snackbar.make(v, "아이디와 비밀번호를 입력해주세요.", 200).show();
+                    Snackbar.make(v, "아이디와 비밀번호를 입력해주세요.", 500).show();
                 }else{
                     ContentValues values = new ContentValues();
                     values.put("id", id);
@@ -53,7 +53,7 @@ public class SignUpActivity extends AppCompatActivity {
                         // hide keyboard
                         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                         imm.hideSoftInputFromWindow(v.getWindowToken(),0);
-                        Snackbar.make(v, "해당 아이디가 이미 존재합니다.", 200).show();
+                        Snackbar.make(v, "해당 아이디가 이미 존재합니다.", 500).show();
                     } else {
                         Toast.makeText(SignUpActivity.this,"회원가입이 완료되었습니다.",Toast.LENGTH_SHORT).show();
                         finish();

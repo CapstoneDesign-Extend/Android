@@ -6,6 +6,7 @@ import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -20,6 +21,8 @@ import com.google.android.material.snackbar.Snackbar;
 
 public class LoginActivity extends AppCompatActivity {
     private DataBaseHelper dbHelper;
+    private SharedPreferences sharedPrefs;
+    private SharedPreferences.Editor editor;
     private EditText et_id, et_pw;
     private Button btn_login;
     private TextView tv_findPw, tv_signUp;
@@ -28,6 +31,17 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        // init SharedPreferences
+        sharedPrefs = getSharedPreferences("loginPrefs", Context.MODE_PRIVATE);
+        editor = sharedPrefs.edit();
+
+        // check login state
+        boolean isLoggedIn = sharedPrefs.getBoolean("isLoggedIn",false);
+        if (isLoggedIn){
+            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            startActivity(intent);
+            finish();
+        }
 
         // make dbHelper instance
         dbHelper = new DataBaseHelper(this);
@@ -50,7 +64,7 @@ public class LoginActivity extends AppCompatActivity {
                     // hide keyboard
                     InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(v.getWindowToken(),0);
-                    Snackbar.make(v, "아이디와 비밀번호를 입력해주세요.", 200).show();
+                    Snackbar.make(v, "아이디와 비밀번호를 입력해주세요.", 500).show();
                 }else{
 
                     // logic: select data from db
@@ -69,6 +83,12 @@ public class LoginActivity extends AppCompatActivity {
                         String message = "ID: " + dbId + ", PW: " + dbPw;
                         Snackbar.make(v, message, 200).show();
                         Toast.makeText(LoginActivity.this,"로그인 되었습니다.",Toast.LENGTH_SHORT).show();
+
+                        // save login state
+                        editor.putBoolean("isLoggedIn", true);
+                        editor.apply();
+
+                        // move to MainActivity
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                         startActivity(intent);
                         finish();
@@ -76,7 +96,7 @@ public class LoginActivity extends AppCompatActivity {
                         // hide keyboard
                         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                         imm.hideSoftInputFromWindow(v.getWindowToken(),0);
-                        Snackbar.make(v, "ID가 존재하지 않거나 ID와 PW가 일치하지 않습니다.", 150).show();
+                        Snackbar.make(v, "ID가 존재하지 않거나 ID와 PW가 일치하지 않습니다.", 500).show();
                     }
 
                     // 리소스 해제

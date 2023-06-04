@@ -64,7 +64,6 @@
             android:textSize="13dp"/>
     </LinearLayout>
     <LinearLayout
-        android:visibility="gone"
         android:id="@+id/home_board_wrapper2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -76,7 +75,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingLeft="5dp"
-            android:text="졸업생게시판"
+            android:text="Post Title 2"
             android:textColor="@color/black"
             android:textSize="15dp"/>
         <TextView
@@ -87,7 +86,7 @@
             android:paddingLeft="5dp"
             android:maxLines="1"
             android:ellipsize="end"
-            android:text="선배님들 공모전 중요한가요?"
+            android:text="Post Content 2"
             android:textSize="13dp"/>
     </LinearLayout>
     <LinearLayout
@@ -102,7 +101,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingLeft="5dp"
-            android:text="Post Title 2"
+            android:text="작성된 게시글이 없습니다 :( "
             android:textColor="@color/black"
             android:textSize="15dp"/>
         <TextView
@@ -113,7 +112,7 @@
             android:paddingLeft="5dp"
             android:maxLines="1"
             android:ellipsize="end"
-            android:text="Post Content 2"
+            android:text="가장 먼저 새로운 글을 작성해보세요!"
             android:textSize="13dp"/>
     </LinearLayout>
     <LinearLayout

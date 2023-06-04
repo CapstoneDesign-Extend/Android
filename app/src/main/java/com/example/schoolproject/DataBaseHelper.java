@@ -79,7 +79,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         String selection = "boardType = ?";
         String[] selectionArgs = {BoardName};
         String orderBy = "postId DESC";
-        Cursor cursor = db.query("Post", columns, selection, selectionArgs, null, null, orderBy);
+        Cursor cursor = db.query(table, columns, selection, selectionArgs, null, null, orderBy);
 
         if (cursor != null && cursor.moveToFirst()){
             do {
@@ -98,6 +98,33 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             cursor.close();
         }
         return objectList;
+    }
+    @SuppressLint("Range")
+    public Object getHomeBoardData(String table, String BoardName, String postLimit){
+        objectList =  new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        String [] columns = {"postId", "boardType", "userId", "title", "content", "author", "date", "time", "heartCount", "chatCount"};
+        String selection = "boardType = ?";
+        String[] selectionArgs = {BoardName};
+        String orderBy = "postId DESC";
+        String limit = postLimit;  // Limit rows from parameter
+        Cursor cursor = db.query(table, columns, selection, selectionArgs, null, null, orderBy, limit);
+
+        List<String> post_titles, post_contents;
+        post_titles = new ArrayList<>();
+        post_contents = new ArrayList<>();
+
+        if (cursor != null && cursor.moveToFirst()){
+            do {
+                post_titles.add(cursor.getString(cursor.getColumnIndex("title")));
+                post_contents.add(cursor.getString(cursor.getColumnIndex("content")));
+            } while (cursor.moveToNext());
+        }
+        if (cursor != null){
+            cursor.close();
+        }
+        DataHomeBoard data = new DataHomeBoard(BoardName, post_titles, post_contents);
+        return data;
     }
     public int updateData(String table, ContentValues values, String whereClause, String[] whereArgs) {
         SQLiteDatabase db = this.getWritableDatabase();

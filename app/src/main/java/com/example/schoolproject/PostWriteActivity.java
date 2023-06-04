@@ -58,28 +58,28 @@ public class PostWriteActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                ContentValues values = new ContentValues();
-                values.put("boardType", receivedBoardName);
-                values.put("userId", savedId);
-                values.put("title", et_post_title.getText().toString());
-                values.put("content", et_post_content.getText().toString());
-                values.put("author", author);
-                values.put("date", getCurrentTime("date"));
-                values.put("time", getCurrentTime("time"));
-                values.put("heartCount", 0);
-                values.put("chatCount", 0);
-
-                long result = dbHelper.insertData("Post", values);
-                if (result == -1){
-                    Toast.makeText(getApplicationContext(),"DB insert Error", Toast.LENGTH_SHORT).show();
+                if (et_post_title.getText().toString().equals("") || et_post_content.getText().toString().equals("")){
+                    Toast.makeText(PostWriteActivity.this, "제목과 내용을 모두 입력해주세요.", Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(getApplicationContext(),"Saved.", Toast.LENGTH_SHORT).show();
-                    finish();
+                    ContentValues values = new ContentValues();
+                    values.put("boardType", receivedBoardName);
+                    values.put("userId", savedId);
+                    values.put("title", et_post_title.getText().toString());
+                    values.put("content", et_post_content.getText().toString());
+                    values.put("author", author);
+                    values.put("date", getCurrentTime("date"));
+                    values.put("time", getCurrentTime("time"));
+                    values.put("heartCount", 0);
+                    values.put("chatCount", 0);
+
+                    long result = dbHelper.insertData("Post", values);
+                    if (result == -1){
+                        Toast.makeText(getApplicationContext(),"DB insert Error", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(getApplicationContext(),"저장되었습니다.", Toast.LENGTH_SHORT).show();
+                        finish();
+                    }
                 }
-
-
-
-
             }
         });
         // checkbox:: set Initial State

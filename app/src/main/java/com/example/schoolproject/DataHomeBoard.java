@@ -8,6 +8,7 @@ public class DataHomeBoard {
     private String board_name;
     private List<String> post_titles;
     private List<String> post_contents;
+    public DataHomeBoard(){}
 
     public DataHomeBoard(String board_name, List<String> post_titles, List<String> post_contents){
         this.board_name = board_name;

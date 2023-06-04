@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingHorizontal="10dp"
+    android:background="@color/white"
     tools:context=".PostWriteActivity">
 
     <androidx.appcompat.widget.Toolbar
@@ -49,7 +50,7 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="text"
-        android:hint="Title"
+        android:hint="제목"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar_write" />
@@ -60,7 +61,7 @@
         android:layout_height="0dp"
         android:ems="10"
         android:gravity="start|top"
-        android:hint="Fill the content."
+        android:hint="내용을 입력해주세요."
         android:inputType="textMultiLine"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
         app:layout_constraintEnd_toEndOf="parent"

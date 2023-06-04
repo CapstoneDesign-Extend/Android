@@ -129,9 +129,28 @@ public class HomeRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
             List<String> names = data.getPost_titles();
             List<String> datas = data.getPost_contents();
             int size = names.size();
+            if (size==0){  // show "작성된 게시글이 없습니다"
+                rowWrappers.get(0).setVisibility(View.GONE);
+                rowWrappers.get(1).setVisibility(View.GONE);
+                rowWrappers.get(2).setVisibility(View.VISIBLE);
+            }
+            if (size==1){
+                rowWrappers.get(0).setVisibility(View.VISIBLE);
+                rowWrappers.get(1).setVisibility(View.GONE);
+                rowWrappers.get(2).setVisibility(View.GONE);
+
+            }
+            if (size==2){
+                rowWrappers.get(0).setVisibility(View.VISIBLE);
+                rowWrappers.get(1).setVisibility(View.VISIBLE);
+                rowWrappers.get(2).setVisibility(View.GONE);
+
+            }
             for (int i=0; i<size; i++){
                 nameViews.get(i).setText(names.get(i));
                 dataViews.get(i).setText(datas.get(i));
+                rowWrappers.get(2).setVisibility(View.GONE);
+
             }
         }
     }

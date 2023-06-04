@@ -10,7 +10,10 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -54,6 +57,36 @@ public class LoginActivity extends AppCompatActivity {
         tv_signUp = findViewById(R.id.tv_login_signUp);
 
         // setting listeners
+
+
+        et_id.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus){
+                    et_id.selectAll();
+                }
+            }
+        });
+
+        et_pw.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus){
+                    et_pw.selectAll();
+                }
+            }
+        });
+        et_pw.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                // detect enter key
+                if (actionId == EditorInfo.IME_ACTION_DONE || event.getKeyCode() == KeyEvent.KEYCODE_ENTER){
+                    btn_login.performClick();
+                    return true;
+                }
+                return false;
+            }
+        });
         btn_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -84,7 +117,8 @@ public class LoginActivity extends AppCompatActivity {
                         Snackbar.make(v, message, 200).show();
                         Toast.makeText(LoginActivity.this,"로그인 되었습니다.",Toast.LENGTH_SHORT).show();
 
-                        // save login state
+                        // save login state + userID
+                        editor.putString("id",id);
                         editor.putBoolean("isLoggedIn", true);
                         editor.apply();
 
@@ -114,6 +148,8 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(LoginActivity.this, SignUpActivity.class);
                 startActivity(intent);
+                et_id.setText("");
+                et_pw.setText("");
             }
         });
 

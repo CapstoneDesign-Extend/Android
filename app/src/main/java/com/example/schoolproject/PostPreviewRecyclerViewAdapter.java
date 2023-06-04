@@ -55,21 +55,26 @@ public class PostPreviewRecyclerViewAdapter extends RecyclerView.Adapter<PostPre
                 }
             });
         }
-        public void bindData(DataPostPreview data){
-            imageView.setImageResource(data.getImageResourceId());
-            tv_title.setText(data.getPost_title());
-            tv_data.setText(data.getPost_content());
+        public void bindData(DataPost data){
+            if (data.getImageResourceId() == 0 ){
+                imageView.setVisibility(View.GONE);
+            }else {
+                imageView.setVisibility(View.VISIBLE);
+                imageView.setImageResource(data.getImageResourceId());
+            }
+            tv_title.setText(data.getTitle());
+            tv_data.setText(data.getContent());
             tv_heartCount.setText(data.getHeart_count());
             tv_chatCount.setText(data.getChat_count());
             tv_time.setText(data.getTime());
-            tv_auth.setText(data.getAuth());
+            tv_auth.setText(data.getAuthor());
         }
     }
 
     @NonNull
     @Override
     public postPreviewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_board_notice,parent,false);
+        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_post_preview,parent,false);
         postPreviewHolder viewHolder = new postPreviewHolder(itemView);
         return viewHolder;
     }
@@ -77,8 +82,8 @@ public class PostPreviewRecyclerViewAdapter extends RecyclerView.Adapter<PostPre
     @Override
     public void onBindViewHolder(@NonNull postPreviewHolder holder, int position) {
         postPreviewHolder postPreviewHolder = holder;
-        DataPostPreview dataPostPreview = (DataPostPreview) dataList.get(position);
-        postPreviewHolder.bindData(dataPostPreview);
+        DataPost dataPost = (DataPost) dataList.get(position);
+        postPreviewHolder.bindData(dataPost);
     }
 
     @Override

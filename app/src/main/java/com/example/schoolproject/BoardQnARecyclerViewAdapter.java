@@ -45,7 +45,7 @@ public class BoardQnARecyclerViewAdapter extends RecyclerView.Adapter<BoardQnARe
     @NonNull
     @Override
     public myViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_board_notice,parent,false);
+        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_post_preview,parent,false);
         myViewHolder viewHolder = new myViewHolder(itemView);
         return viewHolder;
     }

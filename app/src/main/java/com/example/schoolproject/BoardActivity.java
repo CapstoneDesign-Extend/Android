@@ -36,7 +36,7 @@ public class BoardActivity extends AppCompatActivity {
         // Load data and set adapter
         dataPosts.clear();
         DataBaseHelper dbHelper = new DataBaseHelper(this);
-        List<Object> dBData = dbHelper.getPreviewData("Post", receivedBoardName);
+        List<Object> dBData = dbHelper.getPreviewData(receivedBoardName);
         dataPosts.addAll(dBData);
         adapter.notifyDataSetChanged();
     }
@@ -74,7 +74,7 @@ public class BoardActivity extends AppCompatActivity {
 
         dataPosts = new ArrayList<>();  // initialize empty data
         DataBaseHelper dbHelper = new DataBaseHelper(this);
-        List<Object> dbData = dbHelper.getPreviewData("Post", receivedBoardName);
+        List<Object> dbData = dbHelper.getPreviewData(receivedBoardName);
         dataPosts.addAll(dbData);  // add db data to list
 
         adapter = new PostPreviewRecyclerViewAdapter(this, dataPosts);
@@ -97,7 +97,7 @@ public class BoardActivity extends AppCompatActivity {
 
         dataPosts.add(testData1);
         adapter.notifyDataSetChanged();
-        //
+
 
 
     }

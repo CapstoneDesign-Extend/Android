@@ -35,12 +35,12 @@ public class HomeRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
         return -1;
     }
 
-    public class homeDynamicMorningViewHolder extends RecyclerView.ViewHolder{
+    public class HomeDynamicMorningViewHolder extends RecyclerView.ViewHolder{
         protected TextView tv_title;
         protected TextView tv_lecture1;
         protected TextView tv_lecture2;
 
-        public homeDynamicMorningViewHolder(@NonNull View itemView) {
+        public HomeDynamicMorningViewHolder(@NonNull View itemView) {
             super(itemView);
             this.tv_title = itemView.findViewById(R.id.tv_home_dynamic_morning_title);
             this.tv_lecture1 = itemView.findViewById(R.id.tv_home_dynamic_morning_lecture1);
@@ -53,14 +53,16 @@ public class HomeRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
         }
     }
 
-    public class homeBoardViewHolder extends RecyclerView.ViewHolder{
+    public class HomeBoardViewHolder extends RecyclerView.ViewHolder{
+        private String boardName;
+        private int postId1, postId2;
         protected List<LinearLayout> rowWrappers;
         protected LinearLayout boardMore;
         protected TextView tv_title;
         private List<TextView> nameViews;
         private List<TextView> dataViews;
 
-        public homeBoardViewHolder(View itemView){
+        public HomeBoardViewHolder(View itemView){
             super(itemView);
             this.boardMore = itemView.findViewById(R.id.home_board_more);
             this.tv_title = itemView.findViewById(R.id.tv_home_board_title);
@@ -99,33 +101,43 @@ public class HomeRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
                         int id = v.getId();
                         String text = "";
 
-                        switch (id){
+                        switch (id){  // 현재 wrapper 5개 중 2개만 visible. wrapper3은 게시글 없을때 메시지 표시. bindData() 참고.
                             case R.id.home_board_wrapper1:
-                                text = ((TextView)v.findViewById(R.id.tv_home_board_name1)).getText().toString();
-                                //Intent intent = new Intent(context, )
+                                //text = ((TextView)v.findViewById(R.id.tv_home_board_name1)).getText().toString();
+                                Intent intent1 = new Intent(context, PostActivity.class);
+                                intent1.putExtra("postId", postId1);
+                                intent1.putExtra("boardName", boardName);
+                                context.startActivity(intent1);
                                 break;
                             case R.id.home_board_wrapper2:
-                                text = ((TextView)v.findViewById(R.id.tv_home_board_name2)).getText().toString();
+                                //text = ((TextView)v.findViewById(R.id.tv_home_board_name2)).getText().toString();
+                                Intent intent2 = new Intent(context, PostActivity.class);
+                                intent2.putExtra("postId", postId2);
+                                intent2.putExtra("boardName", boardName);
+                                context.startActivity(intent2);
                                 break;
                             case R.id.home_board_wrapper3:
-                                text = ((TextView)v.findViewById(R.id.tv_home_board_name3)).getText().toString();
+                                //text = ((TextView)v.findViewById(R.id.tv_home_board_name3)).getText().toString();
+
                                 break;
                             case R.id.home_board_wrapper4:
-                                text = ((TextView)v.findViewById(R.id.tv_home_board_name4)).getText().toString();
+                                //text = ((TextView)v.findViewById(R.id.tv_home_board_name4)).getText().toString();
                                 break;
                             case R.id.home_board_wrapper5:
-                                text = ((TextView)v.findViewById(R.id.tv_home_board_name5)).getText().toString();
+                                //text = ((TextView)v.findViewById(R.id.tv_home_board_name5)).getText().toString();
                                 break;
                         }
-                        Snackbar.make(v,text,100).show();
+                        //Snackbar.make(v,text,100).show();
                     }
                 });
             }
-
-
         }
+
         public void bindData(DataHomeBoard data){
-            tv_title.setText(data.getBoard_name());
+            // set boardName
+            boardName = data.getBoard_name();
+            tv_title.setText(boardName);
+            List<String> postIds = data.getPost_ids();
             List<String> names = data.getPost_titles();
             List<String> datas = data.getPost_contents();
             int size = names.size();
@@ -135,12 +147,19 @@ public class HomeRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
                 rowWrappers.get(2).setVisibility(View.VISIBLE);
             }
             if (size==1){
+                // set postId
+                postId1 = Integer.parseInt(postIds.get(0));
+
                 rowWrappers.get(0).setVisibility(View.VISIBLE);
                 rowWrappers.get(1).setVisibility(View.GONE);
                 rowWrappers.get(2).setVisibility(View.GONE);
 
             }
             if (size==2){
+                // set postId
+                postId1 = Integer.parseInt(postIds.get(0));
+                postId2 = Integer.parseInt(postIds.get(1));
+
                 rowWrappers.get(0).setVisibility(View.VISIBLE);
                 rowWrappers.get(1).setVisibility(View.VISIBLE);
                 rowWrappers.get(2).setVisibility(View.GONE);
@@ -162,10 +181,10 @@ public class HomeRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
         switch (viewType){
             case VIEW_TYPE_BOARD:
                 View view1 = inflater.inflate(R.layout.item_home,parent,false);
-                return new homeBoardViewHolder(view1);
+                return new HomeBoardViewHolder(view1);
             case VIEW_TYPE_DYNAMIC_MORNING:
                 View view2 = inflater.inflate(R.layout.item_home_dynamic_morning,parent,false);
-                return new homeDynamicMorningViewHolder(view2);
+                return new HomeDynamicMorningViewHolder(view2);
             default:
                 throw new IllegalArgumentException("Invalid view type: " + viewType);
         }
@@ -176,12 +195,12 @@ public class HomeRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
         Object item = dataList.get(position);
         switch (holder.getItemViewType()){
             case VIEW_TYPE_BOARD:
-                homeBoardViewHolder homeBoardViewHolder = (HomeRecyclerViewAdapter.homeBoardViewHolder) holder;  // casting ViewHolder
+                HomeBoardViewHolder homeBoardViewHolder = (HomeBoardViewHolder) holder;  // casting ViewHolder
                 DataHomeBoard dataHomeBoard = (DataHomeBoard) item;
                 homeBoardViewHolder.bindData(dataHomeBoard);
                 break;
             case VIEW_TYPE_DYNAMIC_MORNING:
-                homeDynamicMorningViewHolder homeDynamicMorningViewHolder = (HomeRecyclerViewAdapter.homeDynamicMorningViewHolder) holder;
+                HomeDynamicMorningViewHolder homeDynamicMorningViewHolder = (HomeDynamicMorningViewHolder) holder;
                 DataHomeDynamicMorning dataHomeDynamicMorning = (DataHomeDynamicMorning) item;
                 homeDynamicMorningViewHolder.bindData(dataHomeDynamicMorning);
                 break;

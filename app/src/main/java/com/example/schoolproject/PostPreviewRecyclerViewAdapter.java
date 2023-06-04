@@ -25,6 +25,8 @@ public class PostPreviewRecyclerViewAdapter extends RecyclerView.Adapter<PostPre
     }
 
     public class postPreviewHolder extends RecyclerView.ViewHolder{
+        private int postId;
+        private String boardName;
         protected LinearLayout boardWrapper;
         protected ImageView imageView;
         protected TextView tv_title;
@@ -51,11 +53,17 @@ public class PostPreviewRecyclerViewAdapter extends RecyclerView.Adapter<PostPre
                 public void onClick(View v) {
                     Snackbar.make(v, "move to post", 100).show();
                     Intent intent = new Intent(context, PostActivity.class);
+                    intent.putExtra("postId", postId);
+                    intent.putExtra("boardName", boardName);
                     context.startActivity(intent);
                 }
             });
         }
         public void bindData(DataPost data){
+            // save postId+boardName and send to PostActivity in onClickListener
+            this.postId = data.getPostId();
+            this.boardName = data.getBoardType();
+
             if (data.getImageResourceId() == 0 ){
                 imageView.setVisibility(View.GONE);
             }else {

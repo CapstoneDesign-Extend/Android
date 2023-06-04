@@ -72,12 +72,12 @@ public class FragHome extends Fragment {
         activity.setSupportActionBar(toolbar);
         activity.getSupportActionBar().setDisplayShowTitleEnabled(false);
 
-        // setting RecyclerView
+        // setting Multi-View RecyclerView
         recyclerView = view.findViewById(R.id.recycler_view_home);
         layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
 
-        dataHomeBoards = new ArrayList<>();  // empty data
+        dataHomeBoards = new ArrayList<>();  // // initialize empty data
         adapter = new HomeRecyclerViewAdapter(getContext(), dataHomeBoards);
         recyclerView.setAdapter(adapter);
 

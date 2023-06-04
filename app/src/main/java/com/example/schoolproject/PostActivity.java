@@ -38,7 +38,7 @@ public class PostActivity extends AppCompatActivity {
         tv_boardName = findViewById(R.id.tv_post_board_name);
         tv_boardName.setText(boardName);
         // setting Toolbar
-        Toolbar toolbar = findViewById(R.id.toolbar_post);
+        Toolbar toolbar = findViewById(R.id.toolbar_signUp);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

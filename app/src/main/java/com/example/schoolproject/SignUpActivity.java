@@ -1,10 +1,13 @@
 package com.example.schoolproject;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -17,6 +20,7 @@ public class SignUpActivity extends AppCompatActivity {
     private DataBaseHelper dbHelper;
     private EditText et_id, et_pw;
     private Button btn_signUp;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +34,14 @@ public class SignUpActivity extends AppCompatActivity {
         et_id = findViewById(R.id.et_signUp_id);
         et_pw = findViewById(R.id.et_signUp_pw);
         btn_signUp = findViewById(R.id.btn_signUp);
+
+        // setting Toolbar
+        Toolbar toolbar = findViewById(R.id.toolbar_signUp);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+
 
         // setting listeners
         btn_signUp.setOnClickListener(new View.OnClickListener() {
@@ -63,5 +75,14 @@ public class SignUpActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()){
+            case android.R.id.home:
+                finish(); break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

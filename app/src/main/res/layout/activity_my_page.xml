@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -9,21 +9,34 @@
     android:orientation="vertical"
     android:background="@color/white"
     tools:context=".MyPageActivity">
-    <LinearLayout
-        android:gravity="center_horizontal"
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar_myPage"
         android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:background="@color/white"
+        app:titleTextColor="@color/black"
+        android:elevation="0dp"
+        android:theme="@style/Theme.Design.Light.NoActionBar"
+        app:popupTheme="@style/Theme.AppCompat.DayNight"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+    </androidx.appcompat.widget.Toolbar>
+    <TextView
+        android:id="@+id/tv_post_board_name"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginVertical="15dp"
-            android:text="My page"
-            android:textStyle="bold"
-            android:textColor="@color/black"
-            android:textSize="22dp"/>
-    </LinearLayout>
+        android:layout_marginLeft="10dp"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:text="My Page"
+        app:layout_constraintTop_toTopOf="@+id/toolbar_myPage"
+        app:layout_constraintBottom_toBottomOf="@+id/toolbar_myPage"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
     <LinearLayout
+        android:id="@+id/account"
         android:visibility="gone"
         android:paddingVertical="5dp"
         android:paddingHorizontal="5dp"
@@ -31,7 +44,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/shape_round_border"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar_myPage">
         <ImageView
             android:layout_width="80dp"
             android:layout_height="80dp"
@@ -56,40 +72,46 @@
                 android:text="Department"/>
         </LinearLayout>
     </LinearLayout>
+
     <LinearLayout
-        android:orientation="vertical"
-        android:layout_marginVertical="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginVertical="10dp"
+        android:background="@drawable/shape_round_border"
+        android:orientation="vertical"
         android:paddingHorizontal="18dp"
         android:paddingVertical="10dp"
-        android:background="@drawable/shape_round_border">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/account">
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Account"
-            android:textSize="20dp"
             android:layout_marginVertical="10dp"
+            android:text="Account"
             android:textColor="@color/black"
-            android:textStyle="bold"/>
+            android:textSize="20dp"
+            android:textStyle="bold" />
+
         <TextView
-            android:visibility="gone"
-            android:paddingVertical="5dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:paddingVertical="5dp"
             android:text="Change password"
+            android:textColor="@color/black"
             android:textSize="17dp"
-            android:textColor="@color/black"/>
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/tv_logout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingVertical="5dp"
             android:layout_marginVertical="5dp"
+            android:paddingVertical="5dp"
             android:text="Logout"
             android:textColor="@color/black"
             android:textSize="17dp" />
     </LinearLayout>
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

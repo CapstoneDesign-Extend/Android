@@ -9,7 +9,7 @@
     tools:context=".PostActivity">
 
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar_signUp"
+        android:id="@+id/toolbar_post"
         android:layout_width="match_parent"
         android:layout_height="56dp"
         android:background="@color/white"
@@ -31,8 +31,8 @@
         android:textSize="20sp"
         android:textStyle="bold"
         android:text="Post"
-        app:layout_constraintTop_toTopOf="@+id/toolbar_signUp"
-        app:layout_constraintBottom_toBottomOf="@+id/toolbar_signUp"
+        app:layout_constraintTop_toTopOf="@+id/toolbar_post"
+        app:layout_constraintBottom_toBottomOf="@+id/toolbar_post"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
@@ -42,6 +42,6 @@
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar_signUp" />
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_post" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

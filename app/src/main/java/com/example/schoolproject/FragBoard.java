@@ -23,7 +23,6 @@ public class FragBoard extends Fragment {
     private TextView tv_board_report;
     private TextView tv_board_qna;
 
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -42,43 +41,31 @@ public class FragBoard extends Fragment {
         adapter.addFragment(new FragBoardReport());
         adapter.addFragment(new FragBoardQnA());
 
-        viewPager2.setSaveEnabled(false);
+        viewPager2.setSaveEnabled(false);  // ? prevent crashing when reload
         //viewPager2.setOffscreenPageLimit(10);
         viewPager2.setAdapter(adapter);
 
         // set OnPageChangedListener
+        TextView[] textViews = {
+          tv_board_notice,
+          tv_board_tip,
+          tv_board_report,
+          tv_board_qna
+        };
         viewPager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
             public void onPageSelected(int position) {
                 // when page selected
-                switch (position){
-                    case 0:
-                        setTextViewStyle(tv_board_notice);
-                        setTextViewDefaultStyle(tv_board_tip);
-                        setTextViewDefaultStyle(tv_board_report);
-                        setTextViewDefaultStyle(tv_board_qna);
-                        break;
-                    case 1:
-                        setTextViewStyle(tv_board_tip);
-                        setTextViewDefaultStyle(tv_board_notice);
-                        setTextViewDefaultStyle(tv_board_report);
-                        setTextViewDefaultStyle(tv_board_qna);
-                        break;
-                    case 2:
-                        setTextViewStyle(tv_board_report);
-                        setTextViewDefaultStyle(tv_board_tip);
-                        setTextViewDefaultStyle(tv_board_notice);
-                        setTextViewDefaultStyle(tv_board_qna);
-                        break;
-                    case 3:
-                        setTextViewStyle(tv_board_qna);
-                        setTextViewDefaultStyle(tv_board_tip);
-                        setTextViewDefaultStyle(tv_board_report);
-                        setTextViewDefaultStyle(tv_board_notice);
-                        break;
+                for (int i = 0; i < textViews.length; i++) {
+                    if (i == position){
+                        setTextViewStyle(textViews[i]);
+                    }else {
+                        setTextViewDefaultStyle(textViews[i]);
+                    }
                 }
             }
         });
+        // setting listeners on textView
         tv_board_notice.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -107,13 +94,13 @@ public class FragBoard extends Fragment {
 
         return view;
     }
-
-    private void setTextViewStyle(TextView textView){
+        // style changing methods
+    public static void setTextViewStyle(TextView textView){
         textView.setPaintFlags(textView.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
         textView.setTypeface(textView.getTypeface(), Typeface.BOLD);
         textView.setTextColor(Color.BLACK);
     }
-    private void setTextViewDefaultStyle(TextView textView) {
+    public static void setTextViewDefaultStyle(TextView textView) {
         textView.setPaintFlags(textView.getPaintFlags() & (~Paint.UNDERLINE_TEXT_FLAG));
         textView.setTypeface(null, Typeface.NORMAL);
         textView.setTextColor(Color.parseColor("#B8B8B8"));

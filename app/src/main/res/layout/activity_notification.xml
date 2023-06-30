@@ -21,18 +21,17 @@
         android:background="@color/white">
 
         <TextView
-            android:id="@+id/tv_board_notice"
+            android:id="@+id/tv_notification_notice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="7dp"
-            android:textStyle="bold"
             android:textColor="@color/black"
 
             android:text="알림"
             android:textSize="22dp" />
 
         <TextView
-            android:id="@+id/tv_board_tip"
+            android:id="@+id/tv_notification_message"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="7dp"
@@ -51,7 +50,7 @@
         android:background="#E1E1E1">
 
         <androidx.viewpager2.widget.ViewPager2
-            android:id="@+id/board_viewpager"
+            android:id="@+id/notification_viewpager"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_constraintBottom_toBottomOf="parent"

@@ -58,7 +58,7 @@ public class BoardActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // setting FloatingActionButton;
-        fab = findViewById(R.id.fab_board);
+        fab = findViewById(R.id.fab_board_write);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

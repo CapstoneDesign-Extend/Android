@@ -2,7 +2,6 @@ package com.example.schoolproject;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -24,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
     private FragHome fragHome;
     private FragBoard fragBoard;
     private FragShop fragShop;
-    private FragTable fragTable;
+    private FragGP fragGP;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.menu_home: setFrag(fragHome); return true;
                     case R.id.menu_board: setFrag(fragBoard); return true;
                     case R.id.menu_shop: setFrag(fragShop); return true;
-                    case R.id.menu_table: setFrag(fragTable); return true;
+                    case R.id.menu_table: setFrag(fragGP); return true;
                     default: return false;
                 }
             }
@@ -48,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
         fragHome = new FragHome();
         fragBoard = new FragBoard();
         fragShop = new FragShop();
-        fragTable = new FragTable();
+        fragGP = new FragGP();
 
         setFrag(fragHome);
     }

@@ -4,12 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingHorizontal="10dp">
+    android:paddingLeft="10dp">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar_shop"
         android:layout_width="match_parent"
         android:layout_height="56dp"
+        android:layout_marginRight="10dp"
         android:background="@color/white"
         app:titleTextColor="@color/black"
         android:elevation="0dp"
@@ -27,20 +28,34 @@
             android:textStyle="bold"
             android:text="장터"/>
     </androidx.appcompat.widget.Toolbar>
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar_shop"
-        android:background="#E1E1E1">
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_shop">
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view_shop"
+            android:layout_marginRight="10dp"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-    </LinearLayout>
+            android:layout_height="match_parent"
+            android:background="#E1E1E1"/>
 
+        <com.leinardi.android.speeddial.SpeedDialView
+            android:id="@+id/speedDial"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:layout_gravity="bottom|end"
+            app:sdMainFabClosedBackgroundColor="@color/white"
+            app:sdMainFabClosedIconColor="@color/colorMain"
+            app:sdMainFabClosedSrc="@android:drawable/ic_input_add"
+            app:sdMainFabOpenedIconColor="@color/white"
+            app:sdMainFabOpenedBackgroundColor="@color/colorAccentTest"
+            >
 
+        </com.leinardi.android.speeddial.SpeedDialView>
 
+    </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -8,6 +8,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,12 +19,15 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.snackbar.Snackbar;
+import com.leinardi.android.speeddial.SpeedDialActionItem;
+import com.leinardi.android.speeddial.SpeedDialView;
 
 public class FragShop extends Fragment {
     private View view;
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
     private RecyclerView.Adapter adapter;
+    private SpeedDialView speedDialView;
 
     @Nullable
     @Override
@@ -46,6 +50,33 @@ public class FragShop extends Fragment {
         adapter = new ShopRecyclerViewAdapter();
         recyclerView.setAdapter(adapter);
 
+        // setting SpeedDialView
+        speedDialView = view.findViewById(R.id.speedDial);
+        speedDialView.addActionItem(
+                new SpeedDialActionItem.Builder(R.id.fab_buy, android.R.drawable.ic_input_add)
+                        .setLabel("구매글 작성")
+                        .create()
+        );
+        speedDialView.addActionItem(
+                new SpeedDialActionItem.Builder(R.id.fab_sell, android.R.drawable.ic_input_add)
+                        .setLabel("판매글 작성")
+                        .create()
+        );
+        speedDialView.setOnActionSelectedListener(new SpeedDialView.OnActionSelectedListener(){
+
+            @Override
+            public boolean onActionSelected(SpeedDialActionItem actionItem) {
+                int id = actionItem.getId();
+                if (id == R.id.fab_buy){
+                    Intent intent = new Intent(getContext(), PostWriteActivity.class);
+                    getContext().startActivity(intent);
+                } else if (id == R.id.fab_sell) {
+                    Intent intent = new Intent(getContext(), PostWriteActivity.class);
+                    getContext().startActivity(intent);
+                }
+                return true;
+            }
+        });
 
         return view;
     }

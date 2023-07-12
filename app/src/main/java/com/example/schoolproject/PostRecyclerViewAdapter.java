@@ -31,7 +31,7 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
     public class PostViewHolder extends RecyclerView.ViewHolder{
         private ImageView iv_profile;
         private TextView tv_author, tv_date, tv_time, tv_title, tv_content, tv_heart_count, tv_chat_count;
-        private Button btn_like, btn_scrap;
+        private TextView btn_like, btn_scrap;
 
         public PostViewHolder(@NonNull View itemView) {
             super(itemView);

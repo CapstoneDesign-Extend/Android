@@ -14,24 +14,47 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.snackbar.Snackbar;
 
-public class FragTable extends Fragment {
+import java.util.ArrayList;
+import java.util.List;
+
+public class FragGP extends Fragment {
     private View view;
+    private List<Object> dataGPs;
+    private RecyclerView recyclerView;
+    private RecyclerView.LayoutManager layoutManager;
+    private RecyclerView.Adapter adapter;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.frag_table, container,false);
+        view = inflater.inflate(R.layout.frag_gp, container,false);
 
         setHasOptionsMenu(true);
 
         // setting ToolBar
-        Toolbar toolbar = view.findViewById(R.id.toolbar_table);
+        Toolbar toolbar = view.findViewById(R.id.toolbar_gp);
         AppCompatActivity activity = (AppCompatActivity) getActivity();
         activity.setSupportActionBar(toolbar);
         activity.getSupportActionBar().setDisplayShowTitleEnabled(false);
+
+        // setting multi-view recyclerview
+        recyclerView = view.findViewById(R.id.recycler_view_gp);
+        layoutManager = new LinearLayoutManager(getContext());
+        recyclerView.setLayoutManager(layoutManager);
+
+        dataGPs = new ArrayList<>(); // initialize empty data
+        adapter = new GPRecyclerViewAdapter(getContext(), dataGPs);
+        recyclerView.setAdapter(adapter);
+        // add temp data
+        DataGP dataGP = new DataGP("4.3", "110");
+        DataTimeTable dataTable = new DataTimeTable();
+        dataGPs.add(dataGP);
+        dataGPs.add(dataTable);
 
         return view;
     }
@@ -58,7 +81,8 @@ public class FragTable extends Fragment {
                 return true;
             case R.id.myPage:
                 // "myPage" 아이템이 클릭되었을 때 수행할 코드 작성
-                Snackbar.make(view, "mypage", 100).show();
+                Intent intent2 = new Intent(getContext(), MyPageActivity.class);
+                startActivity(intent2);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

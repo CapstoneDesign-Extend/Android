@@ -13,7 +13,7 @@
             android:layout_margin="7dp"
             android:layout_width="34dp"
             android:layout_height="34dp"
-            android:src="@drawable/icon_pen"/>
+            android:src="@drawable/img_profile"/>
         <LinearLayout
             android:paddingLeft="3dp"
             android:paddingTop="4dp"
@@ -107,26 +107,29 @@
     </LinearLayout>
 
     <LinearLayout
+        android:gravity="center_vertical"
         android:paddingLeft="3dp"
         android:paddingVertical="7dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
-        <Button
+        <TextView
             android:id="@+id/btn_like"
             android:layout_marginRight="5dp"
             android:background="@drawable/shape_round_border"
-            android:textAllCaps="false"
             android:layout_width="65dp"
             android:layout_height="30dp"
+            android:gravity="center"
+            android:textStyle="bold"
             android:textSize="13dp"
             android:text="Like"/>
-        <Button
+        <TextView
             android:id="@+id/btn_scrap"
             android:background="@drawable/shape_round_border"
-            android:textAllCaps="false"
             android:layout_width="65dp"
             android:layout_height="30dp"
+            android:gravity="center"
+            android:textStyle="bold"
             android:textSize="13dp"
             android:text="Scrap"/>
 

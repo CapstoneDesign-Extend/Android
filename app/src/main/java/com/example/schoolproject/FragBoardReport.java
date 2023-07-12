@@ -1,5 +1,6 @@
 package com.example.schoolproject;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -10,12 +11,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 public class FragBoardReport extends Fragment {
 
     private View view;
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
     private RecyclerView.Adapter adapter;
+    private FloatingActionButton fab;
+
 
     public static FragBoardReport newInstance(){
         FragBoardReport fragBoardReport = new FragBoardReport();
@@ -26,7 +31,8 @@ public class FragBoardReport extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.frag_board_report, container, false);
-
+        // connecting resources
+        fab = view.findViewById(R.id.fab_write);
         // setting RecylerView
         recyclerView = view.findViewById(R.id.recycler_view_board_report);
         layoutManager = new LinearLayoutManager(getContext());
@@ -34,6 +40,15 @@ public class FragBoardReport extends Fragment {
 
         adapter = new BoardReportRecyclerViewAdapter();
         recyclerView.setAdapter(adapter);
+        // setting listeners
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(view.getContext(), PostWriteActivity.class);
+                intent.putExtra("boardName", "QnA");
+                startActivity(intent);
+            }
+        });
 
         return view;
     }

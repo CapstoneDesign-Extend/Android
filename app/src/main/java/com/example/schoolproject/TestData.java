@@ -3,7 +3,7 @@ package com.example.schoolproject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DataTest {
+public class TestData {
     // add testData:Boards
     List<String> post_titles1, post_titles2, post_titles3, post_titles4, post_titles5,
             post_contents1, post_contents2, post_contents3, post_contents4, post_contents5;

@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 public class MyPageActivity extends AppCompatActivity {
     private TextView tv_logout;
+    private TextView test_tv_retrofit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +46,14 @@ public class MyPageActivity extends AppCompatActivity {
                 startActivity(intent);
                 Toast.makeText(MyPageActivity.this, "로그아웃 되었습니다.", Toast.LENGTH_SHORT).show();
                 finish();
+            }
+        });
+
+        test_tv_retrofit = findViewById(R.id.test_tv_retrofit);
+        test_tv_retrofit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                TestRetrofit testRetrofit = new TestRetrofit(getApplicationContext());
             }
         });
     }

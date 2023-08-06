@@ -41,6 +41,7 @@ public class TestRetrofit {
                 List<Post> posts = response.body();
                 // UI updating with posts
                 Intent intent = new Intent(context, TestRetrofitActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);  // to call startActivity() from outside of an Activity
                 intent.putParcelableArrayListExtra("posts", new ArrayList<>(posts));
                 context.startActivity(intent);
             }

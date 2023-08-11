@@ -6,6 +6,7 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,7 +15,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.schoolproject.restapi.Member;
+import com.example.schoolproject.restapi.MemberApiService;
 import com.google.android.material.snackbar.Snackbar;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class SignUpActivity extends AppCompatActivity {
     private DataBaseHelper dbHelper;
@@ -56,20 +63,52 @@ public class SignUpActivity extends AppCompatActivity {
                     imm.hideSoftInputFromWindow(v.getWindowToken(),0);
                     Snackbar.make(v, "아이디와 비밀번호를 입력해주세요.", 500).show();
                 }else{
-                    ContentValues values = new ContentValues();
-                    values.put("id", id);
-                    values.put("pw", pw);
-                    // insert data
-                    long result = dbHelper.insertData("User", values);
-                    if (result == -1){
-                        // hide keyboard
-                        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                        imm.hideSoftInputFromWindow(v.getWindowToken(),0);
-                        Snackbar.make(v, "해당 아이디가 이미 존재합니다.", 500).show();
-                    } else {
-                        Toast.makeText(SignUpActivity.this,"회원가입이 완료되었습니다.",Toast.LENGTH_SHORT).show();
-                        finish();
-                    }
+                    MemberApiService memberApiService = new MemberApiService();
+                    Member newMember = new Member();
+                    newMember.setLoginId(id);
+                    newMember.setPassword(pw);
+                    Call<Member> call = memberApiService.createMember(newMember);
+                    call.enqueue(new Callback<Member>() {
+                        @Override
+                        public void onResponse(Call<Member> call, Response<Member> response) {
+                            if (response.isSuccessful()){
+                                Toast.makeText(SignUpActivity.this, "회원가입이 완료되었습니다.", Toast.LENGTH_SHORT).show();
+                                // move to LoginActivity
+                                Intent intent = new Intent(SignUpActivity.this, LoginActivity.class);
+                                startActivity(intent);
+                                finish();
+
+                                } else {
+                                // hide keyboard
+                                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                                imm.hideSoftInputFromWindow(v.getWindowToken(),0);
+                                Snackbar.make(v, "[Error] Can't get Response", 500).show();
+                            }
+                        }
+                        @Override
+                        public void onFailure(Call<Member> call, Throwable t) {
+                            // hide keyboard
+                            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                            imm.hideSoftInputFromWindow(v.getWindowToken(),0);
+                            Snackbar.make(v, "[Error] onFailure called", 500).show();
+                        }
+                    });
+
+//                    // SQLite DB logic
+////                    ContentValues values = new ContentValues();
+////                    values.put("id", id);
+////                    values.put("pw", pw);
+////                    // insert data
+////                    long result = dbHelper.insertData("User", values);
+////                    if (result == -1){
+////                        // hide keyboard
+////                        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+////                        imm.hideSoftInputFromWindow(v.getWindowToken(),0);
+////                        Snackbar.make(v, "해당 아이디가 이미 존재합니다.", 500).show();
+//                    } else {
+//                        Toast.makeText(SignUpActivity.this,"회원가입이 완료되었습니다.",Toast.LENGTH_SHORT).show();
+//                        finish();
+//                    }
                 }
 
 

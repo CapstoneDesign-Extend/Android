@@ -106,9 +106,18 @@ public class LoginActivity extends AppCompatActivity {
                     Snackbar.make(v, "아이디와 비밀번호를 입력해주세요.", 500).show();
                 }else{
                     MemberApiService memberApiService = new MemberApiService();
+
+//                                    Member newMember = new Member();
+//                                    newMember.setStudentId(12341234); // 예시로 학번 설정
+//                                    newMember.setName("John Doe");
+//                                    newMember.setSchoolName("Example School");
+//                                    newMember.setAccess("student");
+//                                    newMember.setLoginId("john@example.com");
+//                                    newMember.setPassword("secretpassword");
+
                     Call<Member> call = memberApiService.getMemberById(Long.parseLong(id));
                     call.enqueue(new Callback<Member>() {
-                        @Override
+                                @Override
                         public void onResponse(Call<Member> call, Response<Member> response) {
                             if (response.isSuccessful()){
                                 Member member = response.body();

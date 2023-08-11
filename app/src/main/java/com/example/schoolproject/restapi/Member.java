@@ -97,6 +97,7 @@ public class Member implements Parcelable {
         loginId = in.readString();
         password = in.readString();
     }
+    public Member(){};
 
     public static final Creator<Member> CREATOR = new Creator<Member>() {
         @Override

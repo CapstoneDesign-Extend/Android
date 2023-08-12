@@ -3,77 +3,62 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/white"
-    tools:context=".LoginActivity">
+    android:layout_height="match_parent">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar_signUp"
-        android:layout_width="match_parent"
-        android:layout_height="56dp"
+    <LinearLayout
+        android:id="@+id/linearLayout3"
         android:background="@color/white"
-        app:titleTextColor="@color/black"
-        android:elevation="0dp"
-        android:theme="@style/Theme.Design.Light.NoActionBar"
-        app:popupTheme="@style/Theme.AppCompat.DayNight"
+        android:layout_width="409dp"
+        android:layout_height="56dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-    </androidx.appcompat.widget.Toolbar>
-    <TextView
-        android:id="@+id/tv_post_board_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:textColor="@color/black"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:text="회원가입"
-        app:layout_constraintTop_toTopOf="@+id/toolbar_signUp"
-        app:layout_constraintBottom_toBottomOf="@+id/toolbar_signUp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        <ImageView
+            android:id="@+id/iv_back"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="20dp"
+            android:src="@drawable/icon_arrow_back"
+            app:tint="@color/colorBasicGray" />
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="2dp"
+            android:text="회원가입"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:layout_gravity="center_vertical"/>
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
+        <ImageView
+            android:id="@+id/iv_close"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginRight="20dp"
+            android:src="@drawable/icon_close"
+            app:tint="@color/colorBasicGray"
+            android:layout_gravity="center_vertical"/>
 
+    </LinearLayout>
 
-    <EditText
-        android:id="@+id/et_signUp_id"
-        android:layout_width="350dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="12dp"
-        android:ems="15"
-        android:hint="User ID"
-        android:textSize="18dp"
-        android:inputType="text"
+    <FrameLayout
+        android:id="@+id/frameWrapper_signup"
+        android:layout_width="409dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.494"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar_signUp" />
-
-    <EditText
-        android:id="@+id/et_signUp_pw"
-        android:layout_width="350dp"
-        android:layout_height="40dp"
-        android:ems="15"
-        android:hint="Password"
-        android:textSize="18dp"
-        android:inputType="textPassword"
-        app:layout_constraintEnd_toEndOf="@+id/et_signUp_id"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/et_signUp_id"
-        app:layout_constraintTop_toBottomOf="@+id/et_signUp_id" />
-
-    <Button
-        android:id="@+id/btn_signUp"
-        android:layout_width="0dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="4dp"
-        android:background="@color/colorAccent"
-        android:text="Sign up"
-        android:textAllCaps="false"
-        android:textColor="@color/white"
-        app:layout_constraintEnd_toEndOf="@+id/et_signUp_pw"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/et_signUp_pw"
-        app:layout_constraintTop_toBottomOf="@+id/et_signUp_pw" />
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout3"
+        app:layout_constraintVertical_bias="0.0"></FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

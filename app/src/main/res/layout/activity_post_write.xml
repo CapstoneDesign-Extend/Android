@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:paddingHorizontal="10dp"
     android:background="@color/white"
-    tools:context=".PostWriteActivity">
+    tools:context=".post.PostWriteActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar_write"

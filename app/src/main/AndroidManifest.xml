@@ -2,11 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-        android:usesCleartextTraffic="true"
-
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -14,37 +12,38 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/Theme.SchoolProject"
+        android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
-            android:name=".TestRetrofitActivity"
+            android:name=".test.TestRetrofitActivity"
             android:exported="false" />
         <activity
-            android:name=".PostWriteActivity"
+            android:name=".post.PostWriteActivity"
             android:exported="false"
             android:windowSoftInputMode="stateAlwaysVisible" />
         <activity
-            android:name=".SignUpActivity"
+            android:name=".auth.signup.SignUpActivity"
             android:exported="false" />
         <activity
-            android:name=".MyPageActivity"
+            android:name=".mypage.MyPageActivity"
             android:exported="false" />
         <activity
             android:name=".MainActivity"
             android:exported="false" />
         <activity
-            android:name=".BoardActivity"
+            android:name=".nav.home.HomeBoardActivity"
             android:exported="false" />
         <activity
-            android:name=".PostActivity"
+            android:name=".post.PostActivity"
             android:exported="false" />
         <activity
-            android:name=".SearchActivity"
+            android:name=".search.SearchActivity"
             android:exported="false" />
         <activity
-            android:name=".NotificationActivity"
+            android:name=".notification.NotificationActivity"
             android:exported="false" />
         <activity
-            android:name=".LoginActivity"
+            android:name=".auth.login.LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

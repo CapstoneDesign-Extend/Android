@@ -1,0 +1,330 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/white"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ScrollView
+        android:id="@+id/scrollview_terms"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="-16dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="30dp">
+
+            <TextView
+                android:id="@+id/textView9"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="35dp"
+                android:layout_marginTop="10dp"
+                android:text="약관 동의"
+                android:textColor="@color/black"
+                android:textSize="20dp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+            <com.google.android.material.checkbox.MaterialCheckBox
+                android:id="@+id/cb_terms_chk_all"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="15dp"
+                android:background="@color/white"
+                android:buttonTint="@color/colorAccent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView9" />
+
+            <com.google.android.material.checkbox.MaterialCheckBox
+                android:id="@+id/cb_terms_service"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginTop="5dp"
+                android:background="@color/white"
+                android:buttonTint="@color/colorAccent"
+                app:layout_constraintEnd_toEndOf="@+id/cb_terms_chk_all"
+                app:layout_constraintStart_toStartOf="@+id/cb_terms_chk_all"
+                app:layout_constraintTop_toBottomOf="@+id/cb_terms_chk_all" />
+
+            <com.google.android.material.checkbox.MaterialCheckBox
+                android:id="@+id/cb_terms_personal"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginTop="5dp"
+                android:background="@color/white"
+                android:buttonTint="@color/colorAccent"
+                app:layout_constraintEnd_toEndOf="@+id/cb_terms_chk_all"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="@+id/cb_terms_chk_all"
+                app:layout_constraintTop_toBottomOf="@+id/tv_terms_content_service" />
+
+            <com.google.android.material.checkbox.MaterialCheckBox
+                android:id="@+id/cb_terms_community"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginTop="5dp"
+                android:background="@color/white"
+                android:buttonTint="@color/colorAccent"
+                app:layout_constraintEnd_toEndOf="@+id/cb_terms_chk_all"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="@+id/cb_terms_chk_all"
+                app:layout_constraintTop_toBottomOf="@+id/tv_terms_content_personal" />
+
+            <com.google.android.material.checkbox.MaterialCheckBox
+                android:id="@+id/cb_terms_advertisement"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginTop="5dp"
+                android:background="@color/white"
+                android:buttonTint="@color/colorAccent"
+                app:layout_constraintEnd_toEndOf="@+id/cb_terms_chk_all"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="@+id/cb_terms_chk_all"
+                app:layout_constraintTop_toBottomOf="@+id/tv_terms_content_community" />
+
+            <com.google.android.material.checkbox.MaterialCheckBox
+                android:id="@+id/cb_terms_uname"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginTop="5dp"
+                android:background="@color/white"
+                android:buttonTint="@color/colorAccent"
+                app:layout_constraintEnd_toEndOf="@+id/cb_terms_chk_all"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="@+id/cb_terms_chk_all"
+                app:layout_constraintTop_toBottomOf="@+id/tv_terms_content_advertisement" />
+
+            <com.google.android.material.checkbox.MaterialCheckBox
+                android:id="@+id/cb_terms_age"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginTop="5dp"
+                android:background="@color/white"
+                android:buttonTint="@color/colorAccent"
+                app:layout_constraintEnd_toEndOf="@+id/cb_terms_chk_all"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="@+id/cb_terms_chk_all"
+                app:layout_constraintTop_toBottomOf="@+id/tv_terms_content_uname" />
+
+            <TextView
+                android:id="@+id/tv_terms_chk_all"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:text="아래 약관에 모두 동의합니다."
+                android:textColor="@color/colorGray"
+                android:textSize="15dp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/cb_terms_chk_all"
+                app:layout_constraintStart_toEndOf="@+id/cb_terms_chk_all"
+                app:layout_constraintTop_toTopOf="@+id/cb_terms_chk_all" />
+
+            <TextView
+                android:id="@+id/tv_terms_content_service"
+                android:layout_width="350dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/shape_round_border"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:maxHeight="100dp"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="5dp"
+                android:scrollbars="vertical"
+                android:text="@string/terms_service"
+                android:textSize="12dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.491"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/cb_terms_service" />
+
+            <TextView
+                android:id="@+id/tv_terms_content_personal"
+                android:layout_width="350dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/shape_round_border"
+                android:maxHeight="100dp"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="5dp"
+                android:scrollbars="vertical"
+                android:text="@string/terms_personal"
+                android:textSize="12dp"
+                app:layout_constraintEnd_toEndOf="@+id/tv_terms_content_service"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="@+id/tv_terms_content_service"
+                app:layout_constraintTop_toBottomOf="@+id/cb_terms_personal" />
+
+            <TextView
+                android:id="@+id/tv_terms_content_community"
+                android:layout_width="350dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/shape_round_border"
+                android:maxHeight="100dp"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="5dp"
+                android:scrollbars="vertical"
+                android:text="@string/terms_community"
+                android:textSize="12dp"
+                app:layout_constraintEnd_toEndOf="@+id/tv_terms_content_service"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="@+id/tv_terms_content_service"
+                app:layout_constraintTop_toBottomOf="@+id/cb_terms_community" />
+
+            <TextView
+                android:id="@+id/tv_terms_content_advertisement"
+                android:layout_width="350dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/shape_round_border"
+                android:maxHeight="100dp"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="5dp"
+                android:scrollbars="vertical"
+                android:text="@string/terms_advertisement"
+                android:textSize="12dp"
+                app:layout_constraintEnd_toEndOf="@+id/tv_terms_content_service"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="@+id/tv_terms_content_service"
+                app:layout_constraintTop_toBottomOf="@+id/cb_terms_advertisement" />
+
+            <TextView
+                android:id="@+id/tv_terms_content_uname"
+                android:layout_width="350dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/shape_round_border"
+                android:maxHeight="100dp"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="5dp"
+                android:scrollbars="vertical"
+                android:text="@string/terms_uname"
+                android:textSize="12dp"
+                app:layout_constraintEnd_toEndOf="@+id/tv_terms_content_service"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="@+id/tv_terms_content_service"
+                app:layout_constraintTop_toBottomOf="@+id/cb_terms_uname" />
+
+            <TextView
+                android:id="@+id/tv_terms_content_age"
+                android:layout_width="350dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/shape_round_border"
+                android:maxHeight="100dp"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="5dp"
+                android:scrollbars="vertical"
+                android:text="@string/terms_age"
+                android:textSize="12dp"
+                app:layout_constraintEnd_toEndOf="@+id/tv_terms_content_service"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="@+id/tv_terms_content_service"
+                app:layout_constraintTop_toBottomOf="@+id/cb_terms_age" />
+
+            <TextView
+                android:id="@+id/tv_title_terms_service"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:text="서비스이용약관 동의 (필수)"
+                android:textColor="@color/colorGray"
+                android:textSize="14dp"
+                app:layout_constraintBottom_toBottomOf="@+id/cb_terms_service"
+                app:layout_constraintStart_toEndOf="@+id/cb_terms_service"
+                app:layout_constraintTop_toTopOf="@+id/cb_terms_service" />
+
+            <TextView
+                android:id="@+id/tv_terms_title_personal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:text="개인정보 수집 및 이용 동의 (필수)"
+                android:textColor="@color/colorGray"
+                android:textSize="14dp"
+                app:layout_constraintBottom_toBottomOf="@+id/cb_terms_personal"
+                app:layout_constraintStart_toEndOf="@+id/cb_terms_personal"
+                app:layout_constraintTop_toTopOf="@+id/cb_terms_personal" />
+
+            <TextView
+                android:id="@+id/tv_terms_title_community"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:text="커뮤니티이용규칙 확인 (필수)"
+                android:textColor="@color/colorGray"
+                android:textSize="14dp"
+                app:layout_constraintBottom_toBottomOf="@+id/cb_terms_community"
+                app:layout_constraintStart_toEndOf="@+id/cb_terms_community"
+                app:layout_constraintTop_toTopOf="@+id/cb_terms_community" />
+
+            <TextView
+                android:id="@+id/tv_terms_title_advertisement"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:text="광고성 정보 수신 동의 (선택)"
+                android:textColor="@color/colorGray"
+                android:textSize="14dp"
+                app:layout_constraintBottom_toBottomOf="@+id/cb_terms_advertisement"
+                app:layout_constraintStart_toEndOf="@+id/cb_terms_advertisement"
+                app:layout_constraintTop_toTopOf="@+id/cb_terms_advertisement" />
+
+            <TextView
+                android:id="@+id/tv_terms_title_uname"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:text="본인 명의를 이용하여 가입을 진행하겠습니다."
+                android:textColor="@color/colorGray"
+                android:textSize="15dp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/cb_terms_uname"
+                app:layout_constraintStart_toEndOf="@+id/cb_terms_uname"
+                app:layout_constraintTop_toTopOf="@+id/cb_terms_uname" />
+
+            <TextView
+                android:id="@+id/tv_terms_title_age"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:text="만 14세 이상입니다."
+                android:textColor="@color/colorGray"
+                android:textSize="15dp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/cb_terms_age"
+                app:layout_constraintStart_toEndOf="@+id/cb_terms_age"
+                app:layout_constraintTop_toTopOf="@+id/cb_terms_age" />
+
+            <TextView
+                android:id="@+id/tv_auth_phone"
+                android:layout_width="350dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/shape_round_border_accent"
+                android:gravity="center"
+                android:text="다음"
+                android:textColor="@color/white"
+                android:textSize="15dp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.491"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_terms_content_age" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </ScrollView>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

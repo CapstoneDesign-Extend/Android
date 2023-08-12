@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:paddingHorizontal="10dp"
     android:background="@color/white"
-    tools:context=".PostActivity">
+    tools:context=".post.PostActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar_post"

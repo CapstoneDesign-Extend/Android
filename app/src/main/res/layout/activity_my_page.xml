@@ -8,7 +8,7 @@
     android:paddingTop="5dp"
     android:orientation="vertical"
     android:background="@color/white"
-    tools:context=".MyPageActivity">
+    tools:context=".mypage.MyPageActivity">
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar_myPage"
         android:layout_width="match_parent"

@@ -11,6 +11,10 @@ import android.os.Handler;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.example.schoolproject.nav.board.FragBoard;
+import com.example.schoolproject.nav.gp.FragGP;
+import com.example.schoolproject.nav.home.FragHome;
+import com.example.schoolproject.nav.shop.FragShop;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
@@ -55,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
     private void setFrag(Fragment frag){
         fragmentManager = getSupportFragmentManager();
         fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.frameWrapper, frag);
+        fragmentTransaction.replace(R.id.frameWrapper_main, frag);
         fragmentTransaction.commit();
     }
 

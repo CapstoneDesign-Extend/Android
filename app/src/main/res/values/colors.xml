@@ -11,7 +11,10 @@
     <color name="colorMain">#3967AE</color>
     <color name="colorEveryTime">#B63826</color>
     <color name="colorAccentTest">#2A4E7D</color>
+    <color name="colorBubble">#f7f9ff</color>
     <color name="colorBorder">#E1E1E1</color>
     <color name="colorBorderAccent">#ffffff</color>
+    <color name="colorBasicGray">#757575</color>
+    <color name="colorGray">#555555</color>
 
 </resources>

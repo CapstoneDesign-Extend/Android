@@ -13,7 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.schoolproject.R;
-import com.example.schoolproject.model.DataPost;
+import com.example.schoolproject.model.old.DataPost;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;

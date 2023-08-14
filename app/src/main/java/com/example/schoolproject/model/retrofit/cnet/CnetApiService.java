@@ -1,8 +1,4 @@
-package com.example.schoolproject.model.retrofit;
-
-import com.google.gson.Gson;
-
-import java.util.List;
+package com.example.schoolproject.model.retrofit.cnet;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;

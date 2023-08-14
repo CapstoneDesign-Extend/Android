@@ -1,5 +1,7 @@
 package com.example.schoolproject.model.retrofit;
 
+import com.example.schoolproject.model.Member;
+
 import java.util.List;
 
 import okhttp3.OkHttpClient;
@@ -10,7 +12,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
-import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 
@@ -63,35 +64,36 @@ public class MemberApiService{
     public Call<Void> deleteMember(long id){
         return memberApi.deleteMemberById(id);
     }
+
+    // declaring API interface
+    interface MemberApi {
+        // 특정 ID의 회원 정보를 조회하는 API 엔드포인트
+        @GET("/api/members/{id}")
+        Call<Member> getMemberById(@Path("id") Long id);
+
+        // 학번으로 회원 조회
+        @GET("/api/members/byStudentId/{studentId}")
+        Call<List<Member>> getMemberByStudentId(@Path("studentId") int studentId);
+
+        // 로그인 ID로 회원 조회
+        @GET("/api/members/byLoginId/{loginId}")
+        Call<Member> getMemberByLoginId(@Path("loginId") String loginId);
+
+        // 이메일로 회원 조회
+        @GET("/api/members/byEmail/{email}")
+        Call<Member> getMemberByEmail(@Path("email") String email);
+
+        // 모든 회원 정보를 조회하는 API 엔드포인트
+        @GET("/api/members")
+        Call<List<Member>> getAllMembers();
+
+        // 회원을 생성하는 API 엔드포인트
+        @POST("/api/members")
+        Call<Member> createMember(@Body Member member);
+
+        // 특정 ID의 회원 정보를 삭제하는 API 엔드포인트
+        @DELETE("/api/members/{id}")
+        Call<Void> deleteMemberById(@Path("id") Long id);
+    }
 }
 
-// declaring API interface
-interface MemberApi {
-    // 특정 ID의 회원 정보를 조회하는 API 엔드포인트
-    @GET("/api/members/{id}")
-    Call<Member> getMemberById(@Path("id") Long id);
-
-    // 학번으로 회원 조회
-    @GET("/api/members/byStudentId/{studentId}")
-    Call<List<Member>> getMemberByStudentId(@Path("studentId") int studentId);
-
-    // 로그인 ID로 회원 조회
-    @GET("/api/members/byLoginId/{loginId}")
-    Call<Member> getMemberByLoginId(@Path("loginId") String loginId);
-
-    // 이메일로 회원 조회
-    @GET("/api/members/byEmail/{email}")
-    Call<Member> getMemberByEmail(@Path("email") String email);
-
-    // 모든 회원 정보를 조회하는 API 엔드포인트
-    @GET("/api/members")
-    Call<List<Member>> getAllMembers();
-
-    // 회원을 생성하는 API 엔드포인트
-    @POST("/api/members")
-    Call<Member> createMember(@Body Member member);
-
-    // 특정 ID의 회원 정보를 삭제하는 API 엔드포인트
-    @DELETE("/api/members/{id}")
-    Call<Void> deleteMemberById(@Path("id") Long id);
-}

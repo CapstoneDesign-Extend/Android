@@ -14,7 +14,7 @@ import android.view.ViewGroup;
 import com.example.schoolproject.post.PostPreviewRecyclerViewAdapter;
 import com.example.schoolproject.post.PostWriteActivity;
 import com.example.schoolproject.R;
-import com.example.schoolproject.model.DataPost;
+import com.example.schoolproject.model.old.DataPost;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;

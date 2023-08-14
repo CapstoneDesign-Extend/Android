@@ -1,6 +1,8 @@
 package com.example.schoolproject.model.retrofit;
 
 
+import com.example.schoolproject.model.Member;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;

@@ -21,7 +21,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.schoolproject.R;
 import com.example.schoolproject.auth.login.LoginActivity;
-import com.example.schoolproject.model.retrofit.Member;
+import com.example.schoolproject.model.Member;
 import com.example.schoolproject.model.retrofit.MemberApiService;
 
 import retrofit2.Call;

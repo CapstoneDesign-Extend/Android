@@ -23,15 +23,11 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.schoolproject.R;
-import com.example.schoolproject.auth.login.LoginActivity;
-import com.example.schoolproject.model.retrofit.CnetApiService;
-import com.example.schoolproject.model.retrofit.CnetSchool;
-import com.example.schoolproject.model.retrofit.CnetSchoolResponse;
-import com.example.schoolproject.model.retrofit.Member;
+import com.example.schoolproject.model.retrofit.cnet.CnetApiService;
+import com.example.schoolproject.model.retrofit.cnet.CnetSchool;
+import com.example.schoolproject.model.retrofit.cnet.CnetSchoolResponse;
+import com.example.schoolproject.model.Member;
 import com.example.schoolproject.model.retrofit.MemberApiService;
-import com.google.android.material.snackbar.Snackbar;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;

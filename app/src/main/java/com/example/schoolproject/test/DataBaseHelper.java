@@ -7,8 +7,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.example.schoolproject.model.DataHomeBoard;
-import com.example.schoolproject.model.DataPost;
+import com.example.schoolproject.model.old.DataHomeBoard;
+import com.example.schoolproject.model.old.DataPost;
 
 import java.util.ArrayList;
 import java.util.List;

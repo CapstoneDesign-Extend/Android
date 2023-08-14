@@ -13,8 +13,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.schoolproject.post.PostActivity;
 import com.example.schoolproject.R;
-import com.example.schoolproject.model.DataHomeBoard;
-import com.example.schoolproject.model.DataHomeDynamicMorning;
+import com.example.schoolproject.model.old.DataHomeBoard;
+import com.example.schoolproject.model.old.DataHomeDynamicMorning;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;

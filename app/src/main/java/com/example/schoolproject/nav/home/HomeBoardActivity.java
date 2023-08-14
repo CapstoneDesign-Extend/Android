@@ -18,7 +18,7 @@ import com.example.schoolproject.post.PostWriteActivity;
 import com.example.schoolproject.search.SearchActivity;
 import com.example.schoolproject.post.PostPreviewRecyclerViewAdapter;
 import com.example.schoolproject.test.DataBaseHelper;
-import com.example.schoolproject.model.DataPost;
+import com.example.schoolproject.model.old.DataPost;
 import com.example.schoolproject.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;

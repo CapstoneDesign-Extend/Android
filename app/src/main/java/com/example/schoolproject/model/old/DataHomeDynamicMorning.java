@@ -1,4 +1,4 @@
-package com.example.schoolproject.model;
+package com.example.schoolproject.model.old;
 
 public class DataHomeDynamicMorning {
     private String title;

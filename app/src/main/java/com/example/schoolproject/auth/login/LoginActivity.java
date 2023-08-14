@@ -16,10 +16,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.schoolproject.auth.signup.SignUpActivity;
-import com.example.schoolproject.test.DataBaseHelper;
 import com.example.schoolproject.R;
 import com.example.schoolproject.MainActivity;
-import com.example.schoolproject.model.retrofit.Member;
+import com.example.schoolproject.model.Member;
 import com.example.schoolproject.model.retrofit.MemberApiService;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -28,7 +27,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class LoginActivity extends AppCompatActivity {
-    private DataBaseHelper dbHelper;
     private SharedPreferences sharedPrefs;
     private SharedPreferences.Editor editor;
     private EditText et_id, et_pw;
@@ -51,8 +49,6 @@ public class LoginActivity extends AppCompatActivity {
             finish();
         }
 
-        // make dbHelper instance
-        dbHelper = new DataBaseHelper(this);
 
         // connect resources
         et_id = findViewById(R.id.et_login_id);
@@ -62,8 +58,6 @@ public class LoginActivity extends AppCompatActivity {
         tv_signUp = findViewById(R.id.tv_login_signUp);
 
         // setting listeners
-
-
         et_id.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
@@ -108,7 +102,7 @@ public class LoginActivity extends AppCompatActivity {
 
                     Call<Member> call = memberApiService.getMemberByLoginId(id);
                     call.enqueue(new Callback<Member>() {
-                                @Override
+                        @Override
                         public void onResponse(Call<Member> call, Response<Member> response) {
                             if (response.isSuccessful()){
                                 Member member = response.body();
@@ -119,7 +113,8 @@ public class LoginActivity extends AppCompatActivity {
                                     Toast.makeText(LoginActivity.this, "로그인 되었습니다.", Toast.LENGTH_SHORT).show();
 
                                     // save login state + userID
-                                    editor.putString("id", id);
+                                    editor.putLong("id", member.getId());
+                                    editor.putString("loginId", id);
                                     editor.putBoolean("isLoggedIn", true);
                                     editor.apply();
 
@@ -131,13 +126,13 @@ public class LoginActivity extends AppCompatActivity {
                                     //hide keyboard
                                     InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                                     imm.hideSoftInputFromWindow(v.getWindowToken(),0);
-                                    Snackbar.make(v, "ID가 존재하지 않거나 ID와 PW가 일치하지 않습니다.", 500).show();
+                                    Toast.makeText(LoginActivity.this, "다시 한번 확인해주세요.", Toast.LENGTH_SHORT).show();
                                 }
                             } else {
                                 // hide keyboard
                                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                                 imm.hideSoftInputFromWindow(v.getWindowToken(),0);
-                                Snackbar.make(v, "[Error] Can't get Response", 500).show();
+                                Toast.makeText(LoginActivity.this, "서버로부터 응답을 받을 수 없습니다.", Toast.LENGTH_SHORT).show();
                             }
                         }
 
@@ -146,7 +141,7 @@ public class LoginActivity extends AppCompatActivity {
                             // hide keyboard
                             InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                             imm.hideSoftInputFromWindow(v.getWindowToken(),0);
-                            Snackbar.make(v, "[Error] onFailure called", 500).show();
+                            Toast.makeText(LoginActivity.this, "인터넷 연결을 확인해주세요.", Toast.LENGTH_SHORT).show();
                         }
                     });
 

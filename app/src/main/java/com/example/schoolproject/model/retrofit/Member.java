@@ -28,6 +28,9 @@ public class Member implements Parcelable {
     @SerializedName("password")
     private String password;
 
+    @SerializedName("email")
+    private String email;
+
     // 생성자, Getter 및 Setter
 
 
@@ -85,6 +88,14 @@ public class Member implements Parcelable {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     // Parcelable 관련 메서드

@@ -22,6 +22,59 @@
         app:layout_constraintTop_toBottomOf="@+id/textView11" />
 
     <TextView
+        android:id="@+id/tv_signup_msg_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="32dp"
+        android:paddingLeft="5dp"
+        android:text="해당 아이디가 이미 존재합니다."
+        android:textColor="@color/colorGray"
+        android:textSize="12dp"
+        app:layout_constraintBottom_toBottomOf="@+id/textView12"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/textView12"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/tv_signup_msg_pw"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="32dp"
+        android:paddingLeft="5dp"
+        android:text="비밀번호가 일치하지 않습니다."
+        android:textColor="@color/colorGray"
+        android:textSize="12dp"
+        app:layout_constraintBottom_toBottomOf="@+id/textView13"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/textView13" />
+
+    <TextView
+        android:id="@+id/tv_signup_msg_email"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="32dp"
+        android:paddingLeft="5dp"
+        android:text="해당 이메일은 이미 사용되었습니다."
+        android:textColor="@color/colorGray"
+        android:textSize="12dp"
+        app:layout_constraintBottom_toBottomOf="@+id/textView15"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/textView15" />
+
+    <TextView
+        android:id="@+id/tv_signup_msg_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="32dp"
+        android:paddingLeft="5dp"
+        android:text="이름을 입력해주세요."
+        android:textColor="@color/colorGray"
+        android:textSize="12dp"
+        app:layout_constraintBottom_toBottomOf="@+id/textView14"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/textView14" />
+
+    <TextView
         android:id="@+id/textView13"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -32,7 +85,7 @@
         android:textColor="@color/colorGray"
         android:textSize="12dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/et_signUp_id" />
+        app:layout_constraintTop_toBottomOf="@+id/et_signup_id" />
 
     <TextView
         android:id="@+id/textView14"
@@ -45,7 +98,7 @@
         android:textColor="@color/colorGray"
         android:textSize="12dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/et_signUp_pw2" />
+        app:layout_constraintTop_toBottomOf="@+id/et_signup_pw2" />
 
     <TextView
         android:id="@+id/textView15"
@@ -58,7 +111,7 @@
         android:textColor="@color/colorGray"
         android:textSize="12dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/et_signUp_name" />
+        app:layout_constraintTop_toBottomOf="@+id/et_signup_name" />
 
     <TextView
         android:id="@+id/textView11"
@@ -74,15 +127,15 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/et_signUp_id"
+        android:id="@+id/et_signup_id"
         android:layout_width="350dp"
         android:layout_height="40dp"
         android:layout_marginTop="5dp"
         android:background="@drawable/shape_round_border"
         android:ems="15"
         android:hint="아이디"
-        android:maxLines="1"
         android:inputType="text"
+        android:maxLines="1"
         android:paddingLeft="10dp"
         android:textSize="15dp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -91,7 +144,7 @@
         app:layout_constraintTop_toBottomOf="@+id/textView12" />
 
     <EditText
-        android:id="@+id/et_signUp_pw"
+        android:id="@+id/et_signup_pw"
         android:layout_width="350dp"
         android:layout_height="40dp"
         android:layout_marginTop="5dp"
@@ -101,13 +154,13 @@
         android:inputType="textPassword"
         android:paddingLeft="10dp"
         android:textSize="15dp"
-        app:layout_constraintEnd_toEndOf="@+id/et_signUp_id"
+        app:layout_constraintEnd_toEndOf="@+id/et_signup_id"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/et_signUp_id"
+        app:layout_constraintStart_toStartOf="@+id/et_signup_id"
         app:layout_constraintTop_toBottomOf="@+id/textView13" />
 
     <EditText
-        android:id="@+id/et_signUp_pw2"
+        android:id="@+id/et_signup_pw2"
         android:layout_width="350dp"
         android:layout_height="40dp"
         android:layout_marginTop="5dp"
@@ -117,13 +170,13 @@
         android:inputType="textPassword"
         android:paddingLeft="10dp"
         android:textSize="15dp"
-        app:layout_constraintEnd_toEndOf="@+id/et_signUp_id"
+        app:layout_constraintEnd_toEndOf="@+id/et_signup_id"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/et_signUp_id"
-        app:layout_constraintTop_toBottomOf="@+id/et_signUp_pw" />
+        app:layout_constraintStart_toStartOf="@+id/et_signup_id"
+        app:layout_constraintTop_toBottomOf="@+id/et_signup_pw" />
 
     <EditText
-        android:id="@+id/et_signUp_name"
+        android:id="@+id/et_signup_name"
         android:layout_width="350dp"
         android:layout_height="40dp"
         android:layout_marginTop="5dp"
@@ -134,13 +187,13 @@
         android:maxLines="1"
         android:paddingLeft="10dp"
         android:textSize="15dp"
-        app:layout_constraintEnd_toEndOf="@+id/et_signUp_id"
+        app:layout_constraintEnd_toEndOf="@+id/et_signup_id"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/et_signUp_id"
+        app:layout_constraintStart_toStartOf="@+id/et_signup_id"
         app:layout_constraintTop_toBottomOf="@+id/textView14" />
 
     <EditText
-        android:id="@+id/et_signUp_email"
+        android:id="@+id/et_signup_email"
         android:layout_width="350dp"
         android:layout_height="40dp"
         android:layout_marginTop="5dp"
@@ -151,9 +204,9 @@
         android:maxLines="1"
         android:paddingLeft="10dp"
         android:textSize="15dp"
-        app:layout_constraintEnd_toEndOf="@+id/et_signUp_id"
+        app:layout_constraintEnd_toEndOf="@+id/et_signup_id"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/et_signUp_id"
+        app:layout_constraintStart_toStartOf="@+id/et_signup_id"
         app:layout_constraintTop_toBottomOf="@+id/textView15" />
 
     <Button
@@ -167,9 +220,9 @@
         android:textColor="@color/white"
         android:textSize="15dp"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="@+id/et_signUp_pw"
+        app:layout_constraintEnd_toEndOf="@+id/et_signup_pw"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/et_signUp_pw"
-        app:layout_constraintTop_toBottomOf="@+id/et_signUp_email" />
+        app:layout_constraintStart_toStartOf="@+id/et_signup_pw"
+        app:layout_constraintTop_toBottomOf="@+id/et_signup_email" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

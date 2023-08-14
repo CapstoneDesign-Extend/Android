@@ -41,11 +41,15 @@ public class MemberApiService{
     public Call<Member> getMemberById(long id){
         return memberApi.getMemberById(id);
     }
-    public Call<Member> getMemberByStudentId(int studentId){
+    public Call<List<Member>> getMemberByStudentId(int studentId){
         return memberApi.getMemberByStudentId(studentId);
     }
     public Call<Member> getMemberByLoginId(String loginId){
         return memberApi.getMemberByLoginId(loginId);
+    }
+
+    public Call<Member> getMemberByEmail(String email){
+        return memberApi.getMemberByEmail(email);
     }
 
     public Call<List<Member>> getAllMembers(){
@@ -69,11 +73,15 @@ interface MemberApi {
 
     // 학번으로 회원 조회
     @GET("/api/members/byStudentId/{studentId}")
-    Call<Member> getMemberByStudentId(@Path("studentId") int studentId);
+    Call<List<Member>> getMemberByStudentId(@Path("studentId") int studentId);
 
     // 로그인 ID로 회원 조회
     @GET("/api/members/byLoginId/{loginId}")
     Call<Member> getMemberByLoginId(@Path("loginId") String loginId);
+
+    // 이메일로 회원 조회
+    @GET("/api/members/byEmail/{email}")
+    Call<Member> getMemberByEmail(@Path("email") String email);
 
     // 모든 회원 정보를 조회하는 API 엔드포인트
     @GET("/api/members")

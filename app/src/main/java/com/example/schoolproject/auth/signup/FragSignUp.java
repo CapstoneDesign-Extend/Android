@@ -246,6 +246,13 @@ public class FragSignUp extends Fragment {
         btn_signUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // 포커스 모두 해제 (검증작업 실행)
+                et_id.clearFocus();
+                et_pw.clearFocus();
+                et_pw2.clearFocus();
+                et_name.clearFocus();
+                et_email.clearFocus();
+
                 String sid = sharedPreferences.getString("sid", null);
                 String univ = sharedPreferences.getString("univ", null);
                 String id = et_id.getText().toString().trim();
@@ -253,6 +260,7 @@ public class FragSignUp extends Fragment {
                 String pw2 = et_pw2.getText().toString().trim();
                 String name = et_name.getText().toString().trim();
                 String email = et_email.getText().toString().trim();
+
 
                 // 모든 항목 입력 검사
                 if (!isIdVerified || !isPwVerified || !isNameVerified || !isEmailVerified){
@@ -285,7 +293,7 @@ public class FragSignUp extends Fragment {
                                 // hide keyboard
                                 InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                                 imm.hideSoftInputFromWindow(v.getWindowToken(),0);
-                                Toast.makeText(view.getContext(), "해당 아이디가 이미 존재합니다.", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(view.getContext(), "입력하신 내용을 확인해주세요.", Toast.LENGTH_SHORT).show();
                             }
                         }
                         @Override

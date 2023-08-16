@@ -126,13 +126,13 @@ public class LoginActivity extends AppCompatActivity {
                                     //hide keyboard
                                     InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                                     imm.hideSoftInputFromWindow(v.getWindowToken(),0);
-                                    Toast.makeText(LoginActivity.this, "다시 한번 확인해주세요.", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(LoginActivity.this, "비밀번호가 일치하지 않습니다.", Toast.LENGTH_SHORT).show();
                                 }
                             } else {
                                 // hide keyboard
                                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                                 imm.hideSoftInputFromWindow(v.getWindowToken(),0);
-                                Toast.makeText(LoginActivity.this, "서버로부터 응답을 받을 수 없습니다.", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(LoginActivity.this, "해당 계정이 존재하지 않습니다.", Toast.LENGTH_SHORT).show();
                             }
                         }
 

@@ -22,8 +22,8 @@ import com.example.schoolproject.search.SearchActivity;
 import com.example.schoolproject.test.DataBaseHelper;
 import com.example.schoolproject.R;
 import com.example.schoolproject.notification.NotificationActivity;
-import com.example.schoolproject.model.old.DataHomeBoard;
-import com.example.schoolproject.model.old.DataHomeDynamicMorning;
+import com.example.schoolproject.model.ui.DataHomeBoard;
+import com.example.schoolproject.model.ui.DataHomeDynamicMorning;
 
 import java.util.ArrayList;
 import java.util.List;

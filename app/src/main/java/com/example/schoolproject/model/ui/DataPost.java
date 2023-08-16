@@ -1,4 +1,4 @@
-package com.example.schoolproject.model.old;
+package com.example.schoolproject.model.ui;
 
 public class DataPost {
     private int imageResourceId;

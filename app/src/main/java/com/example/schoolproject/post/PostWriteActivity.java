@@ -4,7 +4,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -18,6 +17,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.schoolproject.R;
+import com.example.schoolproject.model.Board;
+import com.example.schoolproject.model.BoardKind;
+import com.example.schoolproject.model.retrofit.BoardApiService;
 import com.example.schoolproject.test.DataBaseHelper;
 
 import java.text.SimpleDateFormat;
@@ -25,8 +27,8 @@ import java.util.Date;
 
 public class PostWriteActivity extends AppCompatActivity {
     private DataBaseHelper dbHelper;
-    private String receivedBoardName;
-    private String savedId;
+    private String boardKind;
+    private String loginId;
     private Toolbar toolbar;
     private TextView btn_done;
     private EditText et_post_title;
@@ -40,17 +42,15 @@ public class PostWriteActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post_write);
         // get current boardName + saved ID
-        receivedBoardName = getIntent().getStringExtra("boardName");
+        boardKind = getIntent().getStringExtra("boardKind");
         SharedPreferences sharedPrefs = getSharedPreferences("loginPrefs", Context.MODE_PRIVATE);
-        savedId = sharedPrefs.getString("id","error:ID is null");
+        loginId = sharedPrefs.getString("loginId","error:ID is null");
         // connect resources
         btn_done = findViewById(R.id.tv_write_done);
         et_post_title = findViewById(R.id.et_post_title);
         et_post_content = findViewById(R.id.et_post_content);
         cb_isAnon = findViewById(R.id.cb_isAnon);
 
-        // setup db
-        dbHelper = new DataBaseHelper(this);
 
         // setting listener
         btn_done.setOnClickListener(new View.OnClickListener() {
@@ -60,24 +60,30 @@ public class PostWriteActivity extends AppCompatActivity {
                 if (et_post_title.getText().toString().equals("") || et_post_content.getText().toString().equals("")){
                     Toast.makeText(PostWriteActivity.this, "제목과 내용을 모두 입력해주세요.", Toast.LENGTH_SHORT).show();
                 } else {
-                    ContentValues values = new ContentValues();
-                    values.put("boardType", receivedBoardName);
-                    values.put("userId", savedId);
-                    values.put("title", et_post_title.getText().toString());
-                    values.put("content", et_post_content.getText().toString());
-                    values.put("author", author);
-                    values.put("date", getCurrentTime("date"));
-                    values.put("time", getCurrentTime("time"));
-                    values.put("heartCount", 0);
-                    values.put("chatCount", 0);
 
-                    long result = dbHelper.insertData("Post", values);
-                    if (result == -1){
-                        Toast.makeText(getApplicationContext(),"DB insert Error", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(getApplicationContext(),"저장되었습니다.", Toast.LENGTH_SHORT).show();
-                        finish();
-                    }
+                    BoardApiService apiService = new BoardApiService();
+                    Board board = new Board();
+                    board.setBoardKind(BoardKind.valueOf(boardKind));
+
+
+//                    ContentValues values = new ContentValues();
+//                    values.put("boardType", boardName);
+//                    values.put("userId", loginId);
+//                    values.put("title", et_post_title.getText().toString());
+//                    values.put("content", et_post_content.getText().toString());
+//                    values.put("author", author);
+//                    values.put("date", getCurrentTime("date"));
+//                    values.put("time", getCurrentTime("time"));
+//                    values.put("heartCount", 0);
+//                    values.put("chatCount", 0);
+//
+//                    long result = dbHelper.insertData("Post", values);
+//                    if (result == -1){
+//                        Toast.makeText(getApplicationContext(),"DB insert Error", Toast.LENGTH_SHORT).show();
+//                    } else {
+//                        Toast.makeText(getApplicationContext(),"저장되었습니다.", Toast.LENGTH_SHORT).show();
+//                        finish();
+//                    }
                 }
             }
         });
@@ -85,7 +91,7 @@ public class PostWriteActivity extends AppCompatActivity {
         if (cb_isAnon.isChecked()){
             author = "익명";
         } else {
-            author = savedId;
+            author = loginId;
         }
         // get Anon state from checkbox
         cb_isAnon.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -94,7 +100,7 @@ public class PostWriteActivity extends AppCompatActivity {
                 if (isChecked){
                     author = "익명";
                 }else {
-                    author = savedId;
+                    author = loginId;
                 }
             }
         });

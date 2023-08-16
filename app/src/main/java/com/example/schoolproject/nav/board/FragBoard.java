@@ -37,7 +37,7 @@ public class FragBoard extends Fragment {
 
         // setting ViewPager
         BoardViewPagerAdapter adapter = new BoardViewPagerAdapter(getChildFragmentManager(), getLifecycle());
-        adapter.addFragment(new FragBoardNotice());
+        adapter.addFragment(new FragBoardIssue());
         adapter.addFragment(new FragBoardTip());
         adapter.addFragment(new FragBoardReport());
         adapter.addFragment(new FragBoardQnA());

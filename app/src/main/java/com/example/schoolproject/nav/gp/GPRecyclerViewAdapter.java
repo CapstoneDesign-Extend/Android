@@ -14,8 +14,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.schoolproject.R;
-import com.example.schoolproject.model.old.DataGP;
-import com.example.schoolproject.model.old.DataTimeTable;
+import com.example.schoolproject.model.ui.DataGP;
+import com.example.schoolproject.model.ui.DataTimeTable;
 
 import java.util.List;
 

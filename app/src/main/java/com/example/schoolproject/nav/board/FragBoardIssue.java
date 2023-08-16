@@ -14,14 +14,14 @@ import android.view.ViewGroup;
 import com.example.schoolproject.post.PostPreviewRecyclerViewAdapter;
 import com.example.schoolproject.post.PostWriteActivity;
 import com.example.schoolproject.R;
-import com.example.schoolproject.model.old.DataPost;
+import com.example.schoolproject.model.ui.DataPost;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class FragBoardNotice extends Fragment {
+public class FragBoardIssue extends Fragment {
 
     private View view;
     private List<Object> dataFragBoardNotices;
@@ -30,15 +30,15 @@ public class FragBoardNotice extends Fragment {
     private RecyclerView.Adapter adapter;
     private FloatingActionButton fab;
 
-    public static FragBoardNotice newInstance(){
-        FragBoardNotice fragBoardNotice = new FragBoardNotice();
-        return fragBoardNotice;
+    public static FragBoardIssue newInstance(){
+        FragBoardIssue fragBoardIssue = new FragBoardIssue();
+        return fragBoardIssue;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.frag_board_notice, container, false);
+        view = inflater.inflate(R.layout.frag_board_issue, container, false);
         // connect resources
         fab = view.findViewById(R.id.fab_write);
         // setting RecylerView
@@ -63,6 +63,8 @@ public class FragBoardNotice extends Fragment {
                 );
 
         dataFragBoardNotices.add(testData1);
+        dataFragBoardNotices.add(testData1);
+        dataFragBoardNotices.add(testData1);
         adapter.notifyDataSetChanged();
 
 
@@ -71,7 +73,7 @@ public class FragBoardNotice extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(view.getContext(), PostWriteActivity.class);
-                intent.putExtra("boardName","notice");
+                intent.putExtra("boardKind","ISSUE");
                 startActivity(intent);
             }
         });

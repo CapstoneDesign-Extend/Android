@@ -12,7 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.schoolproject.R;
-import com.example.schoolproject.model.old.DataPost;
+import com.example.schoolproject.model.ui.DataPost;
 import com.example.schoolproject.test.DataBaseHelper;
 
 import java.util.ArrayList;

@@ -15,6 +15,7 @@ import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 public class BoardApiService {
     private static final String BASE_URL = "http://www.codeshare.live:5438";
@@ -49,10 +50,13 @@ public class BoardApiService {
         return boardApi.deleteBoard(id);
     }
 
-    public Call<List<Board>> searchBoards(String title) {
-        return boardApi.searchBoards(title);
+    public Call<List<Board>> getBoardsByTitle(String title) {
+        return boardApi.getBoardsByTitle(title);
     }
 
+    public Call<List<Board>> getBoardsByKeyword(String keyword) {
+        return boardApi.getBoardsByKeyword(keyword);
+    }
     public Call<List<Board>> getAllBoards() {
         return boardApi.getAllBoards();
     }
@@ -67,10 +71,14 @@ public class BoardApiService {
         @DELETE("/api/boards/{id}")
         Call<Void> deleteBoard(@Path("id") Long id);
 
-        @GET("/api/boards/search")
-        Call<List<Board>> searchBoards(@retrofit2.http.Query("title") String title);
+        @GET("/api/boards/search/byTitle")  // 제목만 검색
+        Call<List<Board>> getBoardsByTitle(@Query("title") String title);
+        @GET("/api/boards/search/byKeyword")  // 키워드로 제목 본문 함께 검색
+        Call<List<Board>> getBoardsByKeyword(@Query("keyword") String keyword);
 
         @GET("/api/boards")
         Call<List<Board>> getAllBoards();
+
+
     }
 }

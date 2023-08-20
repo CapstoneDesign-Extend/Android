@@ -21,6 +21,7 @@ import com.example.schoolproject.MainActivity;
 import com.example.schoolproject.model.Member;
 import com.example.schoolproject.model.retrofit.MemberApiService;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.gson.Gson;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -112,7 +113,10 @@ public class LoginActivity extends AppCompatActivity {
                                     Snackbar.make(v, message, 200).show();
                                     Toast.makeText(LoginActivity.this, "로그인 되었습니다.", Toast.LENGTH_SHORT).show();
 
-                                    // save login state + userID
+                                    // save login state + userID + Member
+                                    Gson gson = new Gson();
+                                    String memberJson = gson.toJson(member);
+                                    editor.putString("memberJson", memberJson);
                                     editor.putLong("id", member.getId());
                                     editor.putString("loginId", id);
                                     editor.putBoolean("isLoggedIn", true);

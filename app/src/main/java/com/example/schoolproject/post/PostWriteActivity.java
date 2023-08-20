@@ -19,11 +19,17 @@ import android.widget.Toast;
 import com.example.schoolproject.R;
 import com.example.schoolproject.model.Board;
 import com.example.schoolproject.model.BoardKind;
+import com.example.schoolproject.model.Member;
 import com.example.schoolproject.model.retrofit.BoardApiService;
 import com.example.schoolproject.test.DataBaseHelper;
+import com.google.gson.Gson;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class PostWriteActivity extends AppCompatActivity {
     private DataBaseHelper dbHelper;
@@ -35,16 +41,22 @@ public class PostWriteActivity extends AppCompatActivity {
     private EditText et_post_content;
     private CheckBox cb_isAnon;
     private String author;
+    private Member member;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post_write);
-        // get current boardName + saved ID
+        // get current boardName + saved ID + Member
         boardKind = getIntent().getStringExtra("boardKind");
         SharedPreferences sharedPrefs = getSharedPreferences("loginPrefs", Context.MODE_PRIVATE);
-        loginId = sharedPrefs.getString("loginId","error:ID is null");
+        loginId = sharedPrefs.getString("loginId","error:ID is NULL");
+        String memberJson = sharedPrefs.getString("memberJson", "error:Member is NULL");
+        if (!memberJson.isEmpty()){
+            Gson gson = new Gson();
+            member = gson.fromJson(memberJson, Member.class);
+        }
         // connect resources
         btn_done = findViewById(R.id.tv_write_done);
         et_post_title = findViewById(R.id.et_post_title);
@@ -64,26 +76,29 @@ public class PostWriteActivity extends AppCompatActivity {
                     BoardApiService apiService = new BoardApiService();
                     Board board = new Board();
                     board.setBoardKind(BoardKind.valueOf(boardKind));
+                    board.setTitle(et_post_title.getText().toString());
+                    board.setContent(et_post_content.getText().toString());
+                    board.setMember(member);
+                    board.setFinalDate(getCurrentTime("default"));
 
+                    Call<Board> call = apiService.createBoard(board);
+                    call.enqueue(new Callback<Board>() {
+                        @Override
+                        public void onResponse(Call<Board> call, Response<Board> response) {
+                            if (response.isSuccessful()){
+                                Toast.makeText(v.getContext(), "게시글 작성이 완료되었습니다.", Toast.LENGTH_SHORT).show();
+                                finish();
+                            } else {
+                                Toast.makeText(v.getContext(), "서버로부터 응답을 받을 수 없습니다.", Toast.LENGTH_SHORT).show();
+                            }
+                        }
 
-//                    ContentValues values = new ContentValues();
-//                    values.put("boardType", boardName);
-//                    values.put("userId", loginId);
-//                    values.put("title", et_post_title.getText().toString());
-//                    values.put("content", et_post_content.getText().toString());
-//                    values.put("author", author);
-//                    values.put("date", getCurrentTime("date"));
-//                    values.put("time", getCurrentTime("time"));
-//                    values.put("heartCount", 0);
-//                    values.put("chatCount", 0);
-//
-//                    long result = dbHelper.insertData("Post", values);
-//                    if (result == -1){
-//                        Toast.makeText(getApplicationContext(),"DB insert Error", Toast.LENGTH_SHORT).show();
-//                    } else {
-//                        Toast.makeText(getApplicationContext(),"저장되었습니다.", Toast.LENGTH_SHORT).show();
-//                        finish();
-//                    }
+                        @Override
+                        public void onFailure(Call<Board> call, Throwable t) {
+                            Toast.makeText(v.getContext(), "네트워크 오류입니다. 인터넷 연결을 확인해주세요.", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
                 }
             }
         });
@@ -133,6 +148,7 @@ public class PostWriteActivity extends AppCompatActivity {
         SimpleDateFormat sdf_fullDate = new SimpleDateFormat("yy/MM/dd");
         SimpleDateFormat sdf_date = new SimpleDateFormat("MM/dd");
         SimpleDateFormat sdf_time = new SimpleDateFormat("HH:mm");
+        SimpleDateFormat sdf_default = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
         switch (type){
             case "fullDate":
                 return sdf_fullDate.format(currentTime);
@@ -140,6 +156,8 @@ public class PostWriteActivity extends AppCompatActivity {
                 return sdf_date.format(currentTime);
             case "time":
                 return sdf_time.format(currentTime);
+            case "default":
+                return sdf_default.format(currentTime);
             default:
                 throw new IllegalArgumentException("Invalid type: " + type);
         }

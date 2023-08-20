@@ -107,6 +107,7 @@ public class Member implements Parcelable {
         access = in.readString();
         loginId = in.readString();
         password = in.readString();
+        email = in.readString();
     }
     public Member(){};
 
@@ -136,5 +137,6 @@ public class Member implements Parcelable {
         dest.writeString(access);
         dest.writeString(loginId);
         dest.writeString(password);
+        dest.writeString(email);
     }
 }

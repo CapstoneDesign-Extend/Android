@@ -2,7 +2,7 @@ package com.example.schoolproject.model.ui;
 
 public class DataPost {
     private int imageResourceId;
-    private int postId;
+    private Long postId;
     private String boardType;
     private String userId;
     private String title;
@@ -12,7 +12,8 @@ public class DataPost {
     private String time;
     private String heart_count;
     private String chat_count;
-    // default
+
+
     public DataPost(){
 
     };
@@ -56,11 +57,11 @@ public class DataPost {
         this.imageResourceId = imageResourceId;
     }
 
-    public int getPostId() {
+    public Long getPostId() {
         return postId;
     }
 
-    public void setPostId(int postId) {
+    public void setPostId(Long postId) {
         this.postId = postId;
     }
 

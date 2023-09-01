@@ -13,21 +13,79 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.schoolproject.R;
+import com.example.schoolproject.model.Board;
+import com.example.schoolproject.model.BoardKindUtils;
 import com.example.schoolproject.model.ui.DataPost;
 import com.google.android.material.snackbar.Snackbar;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class PostPreviewRecyclerViewAdapter extends RecyclerView.Adapter<PostPreviewRecyclerViewAdapter.postPreviewHolder>{
     private Context context;
     private List<Object> dataList;
+
+    public void convertAndSetData(List<Board> boardList){
+        if (dataList == null){
+            dataList = new ArrayList<>();
+        }
+        for(Board b : boardList){
+            DataPost p = new DataPost();
+            //p.setImageResourceId();
+            p.setPostId(b.getId());
+            if (!existingSamePost(p.getPostId())) {
+                p.setBoardType(BoardKindUtils.getBoardTitleByEnum(b.getBoardKind()));
+                //p.setUserId();
+                p.setTitle(b.getTitle());
+                p.setContent(b.getContent());
+                p.setAuthor(b.getAuthor());
+                p.setDate(convertDate(b.getFinalDate(),"date"));
+                p.setTime(convertDate(b.getFinalDate(),"time"));
+                p.setHeart_count(String.valueOf(b.getLikeCnt()));
+                p.setChat_count("0");
+
+                dataList.add(p);
+            }
+        }
+        notifyDataSetChanged();
+    }
+    private boolean existingSamePost(Long postId){
+        if (dataList == null) {return false;}
+        for (Object item : dataList){
+            DataPost dataPost = (DataPost) item;
+            if (dataPost.getPostId() != null && dataPost.getPostId().equals(postId)){
+                return true;
+            }
+        }
+        return false;
+    }
+    private String convertDate(String mysqlDate, String format){
+        SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd");
+        SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
+        try{
+            Date dateMysql = inputFormat.parse(mysqlDate);
+            String formattedDate = dateFormat.format(dateMysql);
+            String formattedTime = timeFormat.format(dateMysql);
+            if (format.equals("date")){return formattedDate;}
+            if (format.equals("time")){return formattedTime;}
+
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+        return "error:convertFailed";
+    }
+
     public PostPreviewRecyclerViewAdapter(Context context, List<Object> dataList){
         this.context = context;
         this.dataList = dataList;
     }
 
     public class postPreviewHolder extends RecyclerView.ViewHolder{
-        private int postId;
+        private Long postId;
         private String boardName;
         protected LinearLayout boardWrapper;
         protected ImageView imageView;

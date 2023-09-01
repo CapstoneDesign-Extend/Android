@@ -1,6 +1,7 @@
 package com.example.schoolproject.model.retrofit;
 
 import com.example.schoolproject.model.Board;
+import com.example.schoolproject.model.BoardKind;
 
 import java.util.List;
 
@@ -50,6 +51,10 @@ public class BoardApiService {
         return boardApi.deleteBoard(id);
     }
 
+    public Call<List<Board>> getBoardsByBoardKind(BoardKind boardKind){
+        return boardApi.getBoardsByBoardKind(boardKind);
+    }
+
     public Call<List<Board>> getBoardsByTitle(String title) {
         return boardApi.getBoardsByTitle(title);
     }
@@ -71,6 +76,8 @@ public class BoardApiService {
         @DELETE("/api/boards/{id}")
         Call<Void> deleteBoard(@Path("id") Long id);
 
+        @GET("/api/boards/search/byBoardKind")  // 게시판 종류에 해당하는 게시글 가져오기
+        Call<List<Board>> getBoardsByBoardKind(@Query("boardKind") BoardKind boardKind);
         @GET("/api/boards/search/byTitle")  // 제목만 검색
         Call<List<Board>> getBoardsByTitle(@Query("title") String title);
         @GET("/api/boards/search/byKeyword")  // 키워드로 제목 본문 함께 검색

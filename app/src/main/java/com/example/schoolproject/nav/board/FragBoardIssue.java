@@ -11,6 +11,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.schoolproject.model.Board;
+import com.example.schoolproject.model.BoardKind;
+import com.example.schoolproject.model.retrofit.BoardApiService;
+import com.example.schoolproject.model.retrofit.BoardCallback;
 import com.example.schoolproject.post.PostPreviewRecyclerViewAdapter;
 import com.example.schoolproject.post.PostWriteActivity;
 import com.example.schoolproject.R;
@@ -20,11 +24,13 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.ArrayList;
 import java.util.List;
 
+import retrofit2.Call;
+
 
 public class FragBoardIssue extends Fragment {
 
     private View view;
-    private List<Object> dataFragBoardNotices;
+    private List<Object> dataFragBoardIssues;
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
     private RecyclerView.Adapter adapter;
@@ -46,8 +52,8 @@ public class FragBoardIssue extends Fragment {
         layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
 
-        dataFragBoardNotices = new ArrayList<>();
-        adapter = new PostPreviewRecyclerViewAdapter(getContext(), dataFragBoardNotices);
+        dataFragBoardIssues = new ArrayList<>();
+        adapter = new PostPreviewRecyclerViewAdapter(getContext(), dataFragBoardIssues);
         recyclerView.setAdapter(adapter);
 
         // add testData
@@ -62,10 +68,11 @@ public class FragBoardIssue extends Fragment {
                 "11:28","0","0"
                 );
 
-        dataFragBoardNotices.add(testData1);
-        dataFragBoardNotices.add(testData1);
-        dataFragBoardNotices.add(testData1);
-        adapter.notifyDataSetChanged();
+        // get posts matching boardKind
+        BoardApiService apiService = new BoardApiService();
+        Call<List<Board>> call = apiService.getBoardsByBoardKind(BoardKind.ISSUE);
+        call.enqueue(new BoardCallback.BoardListCallBack(getActivity().getApplicationContext(), adapter));
+
 
 
         // set listeners

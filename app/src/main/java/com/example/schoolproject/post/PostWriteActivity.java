@@ -21,6 +21,9 @@ import com.example.schoolproject.model.Board;
 import com.example.schoolproject.model.BoardKind;
 import com.example.schoolproject.model.Member;
 import com.example.schoolproject.model.retrofit.BoardApiService;
+import com.example.schoolproject.model.retrofit.BoardCallback;
+import com.example.schoolproject.model.retrofit.MemberApiService;
+import com.example.schoolproject.model.retrofit.MemberCallback;
 import com.example.schoolproject.test.DataBaseHelper;
 import com.google.gson.Gson;
 
@@ -32,7 +35,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class PostWriteActivity extends AppCompatActivity {
-    private DataBaseHelper dbHelper;
     private String boardKind;
     private String loginId;
     private Toolbar toolbar;
@@ -48,7 +50,7 @@ public class PostWriteActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post_write);
-        // get current boardName + saved ID + Member
+        // get current boardName + saved ID + Member, set author
         boardKind = getIntent().getStringExtra("boardKind");
         SharedPreferences sharedPrefs = getSharedPreferences("loginPrefs", Context.MODE_PRIVATE);
         loginId = sharedPrefs.getString("loginId","error:ID is NULL");
@@ -56,7 +58,9 @@ public class PostWriteActivity extends AppCompatActivity {
         if (!memberJson.isEmpty()){
             Gson gson = new Gson();
             member = gson.fromJson(memberJson, Member.class);
+            author = member.getName();
         }
+
         // connect resources
         btn_done = findViewById(R.id.tv_write_done);
         et_post_title = findViewById(R.id.et_post_title);
@@ -79,25 +83,37 @@ public class PostWriteActivity extends AppCompatActivity {
                     board.setTitle(et_post_title.getText().toString());
                     board.setContent(et_post_content.getText().toString());
                     board.setMember(member);
+                    board.setLikeCnt(0);
+                    board.setViewCnt(0);
                     board.setFinalDate(getCurrentTime("default"));
+                    if (cb_isAnon.isChecked()){
+                        author = "익명";
+                    }
+                    board.setAuthor(author);
 
                     Call<Board> call = apiService.createBoard(board);
-                    call.enqueue(new Callback<Board>() {
-                        @Override
-                        public void onResponse(Call<Board> call, Response<Board> response) {
-                            if (response.isSuccessful()){
-                                Toast.makeText(v.getContext(), "게시글 작성이 완료되었습니다.", Toast.LENGTH_SHORT).show();
-                                finish();
-                            } else {
-                                Toast.makeText(v.getContext(), "서버로부터 응답을 받을 수 없습니다.", Toast.LENGTH_SHORT).show();
-                            }
-                        }
+                    BoardCallback callback = new BoardCallback();
+                    callback.setContext(getApplicationContext());
+                    callback.setActivity(PostWriteActivity.this);
+                    call.enqueue(callback);
 
-                        @Override
-                        public void onFailure(Call<Board> call, Throwable t) {
-                            Toast.makeText(v.getContext(), "네트워크 오류입니다. 인터넷 연결을 확인해주세요.", Toast.LENGTH_SHORT).show();
-                        }
-                    });
+
+//                    call.enqueue(new Callback<Board>() {
+//                        @Override
+//                        public void onResponse(Call<Board> call, Response<Board> response) {
+//                            if (response.isSuccessful()){
+//                                Toast.makeText(v.getContext(), "게시글 작성이 완료되었습니다.", Toast.LENGTH_SHORT).show();
+//                                finish();
+//                            } else {
+//                                Toast.makeText(v.getContext(), "서버로부터 응답을 받을 수 없습니다.", Toast.LENGTH_SHORT).show();
+//                            }
+//                        }
+//
+//                        @Override
+//                        public void onFailure(Call<Board> call, Throwable t) {
+//                            Toast.makeText(v.getContext(), "네트워크 오류입니다. 인터넷 연결을 확인해주세요.", Toast.LENGTH_SHORT).show();
+//                        }
+//                    });
 
                 }
             }

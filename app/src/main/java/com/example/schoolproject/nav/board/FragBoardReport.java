@@ -11,13 +11,24 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.schoolproject.model.Board;
+import com.example.schoolproject.model.BoardKind;
+import com.example.schoolproject.model.retrofit.BoardApiService;
+import com.example.schoolproject.model.retrofit.BoardCallback;
+import com.example.schoolproject.post.PostPreviewRecyclerViewAdapter;
 import com.example.schoolproject.post.PostWriteActivity;
 import com.example.schoolproject.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import retrofit2.Call;
+
 public class FragBoardReport extends Fragment {
 
     private View view;
+    private List<Object> dataFragBoardReports;
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
     private RecyclerView.Adapter adapter;
@@ -27,6 +38,15 @@ public class FragBoardReport extends Fragment {
     public static FragBoardReport newInstance(){
         FragBoardReport fragBoardReport = new FragBoardReport();
         return fragBoardReport;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        // get updated board
+        BoardApiService apiService = new BoardApiService();
+        Call<List<Board>> call = apiService.getBoardsByBoardKind(BoardKind.REPORT);
+        call.enqueue(new BoardCallback.BoardListCallBack(getActivity().getApplicationContext(), adapter));
     }
 
     @Override
@@ -40,14 +60,20 @@ public class FragBoardReport extends Fragment {
         layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
 
-        adapter = new BoardReportRecyclerViewAdapter();
+        dataFragBoardReports = new ArrayList<>();
+        adapter = new PostPreviewRecyclerViewAdapter(getContext(), dataFragBoardReports);
         recyclerView.setAdapter(adapter);
+        // get posts matching boardKind
+        BoardApiService apiService = new BoardApiService();
+        Call<List<Board>> call = apiService.getBoardsByBoardKind(BoardKind.REPORT);
+        call.enqueue(new BoardCallback.BoardListCallBack(getActivity().getApplicationContext(), adapter));
+
         // setting listeners
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(view.getContext(), PostWriteActivity.class);
-                intent.putExtra("boardName", "QnA");
+                intent.putExtra("boardKind", "REPORT");
                 startActivity(intent);
             }
         });

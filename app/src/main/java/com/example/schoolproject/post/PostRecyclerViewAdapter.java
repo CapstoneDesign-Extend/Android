@@ -1,5 +1,6 @@
 package com.example.schoolproject.post;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,8 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
     private static final int VIEW_TYPE_POST = 0;
     private static final int VIEW_TYPE_COMMENT = 1;
     private static final int VIEW_TYPE_REPLY = 2;
+
+    private Context context;
     private List<Object> dataList;
 
     public PostRecyclerViewAdapter(List<Object> dataList){

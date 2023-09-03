@@ -12,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.schoolproject.R;
+import com.example.schoolproject.model.BoardKindUtils;
 import com.example.schoolproject.model.ui.DataPost;
 import com.example.schoolproject.test.DataBaseHelper;
 
@@ -19,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PostActivity extends AppCompatActivity {
-    private int postId;
+    private Long postId;
     private String boardName;
     private TextView tv_boardName;
     private DataBaseHelper dbHelper;
@@ -34,7 +35,7 @@ public class PostActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post);
 
-        postId = getIntent().getIntExtra("postId",-1);
+        postId = getIntent().getLongExtra("postId",-1);
         boardName = getIntent().getStringExtra("boardName");
         if (postId == -1){
             Toast.makeText(getApplicationContext(), "Fatal Error: postId is null", Toast.LENGTH_SHORT).show();
@@ -43,7 +44,7 @@ public class PostActivity extends AppCompatActivity {
 
         // set boardName
         tv_boardName = findViewById(R.id.tv_post_board_name);
-        tv_boardName.setText(boardName);
+        tv_boardName.setText(BoardKindUtils.getBoardTitleByString(boardName));
         // setting Toolbar
         Toolbar toolbar = findViewById(R.id.toolbar_post);
         setSupportActionBar(toolbar);
@@ -59,8 +60,8 @@ public class PostActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
 
         dbHelper = new DataBaseHelper(this);
-        DataPost data = dbHelper.getPostData(postId);
-        dataPosts.add(data);
+        //DataPost data = dbHelper.getPostData(postId);
+        //dataPosts.add(data);
 
         adapter.notifyDataSetChanged();
 

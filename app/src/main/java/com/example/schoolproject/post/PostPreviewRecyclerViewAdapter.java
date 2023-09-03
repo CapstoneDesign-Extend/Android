@@ -31,6 +31,8 @@ public class PostPreviewRecyclerViewAdapter extends RecyclerView.Adapter<PostPre
     public void convertAndSetData(List<Board> boardList){
         if (dataList == null){
             dataList = new ArrayList<>();
+        } else {
+            dataList.clear();  // Clear exiting data before adding new data
         }
         for(Board b : boardList){
             DataPost p = new DataPost();
@@ -86,7 +88,7 @@ public class PostPreviewRecyclerViewAdapter extends RecyclerView.Adapter<PostPre
 
     public class postPreviewHolder extends RecyclerView.ViewHolder{
         private Long postId;
-        private String boardName;
+        private String boardKind;
         protected LinearLayout boardWrapper;
         protected ImageView imageView;
         protected TextView tv_title;
@@ -114,7 +116,7 @@ public class PostPreviewRecyclerViewAdapter extends RecyclerView.Adapter<PostPre
                     Snackbar.make(v, "move to post", 100).show();
                     Intent intent = new Intent(context, PostActivity.class);
                     intent.putExtra("postId", postId);
-                    intent.putExtra("boardName", boardName);
+                    intent.putExtra("boardKind", boardKind);
                     context.startActivity(intent);
                 }
             });
@@ -122,7 +124,7 @@ public class PostPreviewRecyclerViewAdapter extends RecyclerView.Adapter<PostPre
         public void bindData(DataPost data){
             // save postId+boardName and send to PostActivity in onClickListener
             this.postId = data.getPostId();
-            this.boardName = data.getBoardType();
+            this.boardKind = data.getBoardType();
 
             if (data.getImageResourceId() == 0 ){
                 imageView.setVisibility(View.GONE);

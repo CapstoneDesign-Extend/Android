@@ -97,24 +97,6 @@ public class PostWriteActivity extends AppCompatActivity {
                     callback.setActivity(PostWriteActivity.this);
                     call.enqueue(callback);
 
-
-//                    call.enqueue(new Callback<Board>() {
-//                        @Override
-//                        public void onResponse(Call<Board> call, Response<Board> response) {
-//                            if (response.isSuccessful()){
-//                                Toast.makeText(v.getContext(), "게시글 작성이 완료되었습니다.", Toast.LENGTH_SHORT).show();
-//                                finish();
-//                            } else {
-//                                Toast.makeText(v.getContext(), "서버로부터 응답을 받을 수 없습니다.", Toast.LENGTH_SHORT).show();
-//                            }
-//                        }
-//
-//                        @Override
-//                        public void onFailure(Call<Board> call, Throwable t) {
-//                            Toast.makeText(v.getContext(), "네트워크 오류입니다. 인터넷 연결을 확인해주세요.", Toast.LENGTH_SHORT).show();
-//                        }
-//                    });
-
                 }
             }
         });

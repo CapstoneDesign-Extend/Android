@@ -42,6 +42,15 @@ public class FragBoardIssue extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        // get updated board
+        BoardApiService apiService = new BoardApiService();
+        Call<List<Board>> call = apiService.getBoardsByBoardKind(BoardKind.ISSUE);
+        call.enqueue(new BoardCallback.BoardListCallBack(getActivity().getApplicationContext(), adapter));
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.frag_board_issue, container, false);
@@ -56,7 +65,7 @@ public class FragBoardIssue extends Fragment {
         adapter = new PostPreviewRecyclerViewAdapter(getContext(), dataFragBoardIssues);
         recyclerView.setAdapter(adapter);
 
-        // add testData
+        // testData
         DataPost testData1 = new DataPost(
                 R.drawable.img_board_sample1,
                 "서일대학교 장학금 규정 안내",

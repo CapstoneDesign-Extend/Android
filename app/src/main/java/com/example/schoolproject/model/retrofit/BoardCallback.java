@@ -10,6 +10,7 @@ import com.example.schoolproject.auth.login.LoginActivity;
 import com.example.schoolproject.model.Board;
 import com.example.schoolproject.nav.board.FragBoardIssue;
 import com.example.schoolproject.post.PostPreviewRecyclerViewAdapter;
+import com.example.schoolproject.post.PostRecyclerViewAdapter;
 
 import java.util.List;
 
@@ -79,8 +80,14 @@ public class BoardCallback implements Callback<Board> {
         public void onResponse(Call<List<Board>> call, Response<List<Board>> response) {
             if (response.isSuccessful()) {
                 List<Board> boardList = response.body();
-                PostPreviewRecyclerViewAdapter postPrevAdapter = (PostPreviewRecyclerViewAdapter) adapter;
-                postPrevAdapter.convertAndSetData(boardList);
+                // distinguishing by instance
+                if (adapter instanceof PostPreviewRecyclerViewAdapter) {
+                    PostPreviewRecyclerViewAdapter postPrevAdapter = (PostPreviewRecyclerViewAdapter) adapter;
+                    postPrevAdapter.convertAndSetData(boardList);
+                } else if (adapter instanceof PostRecyclerViewAdapter) {
+                    PostRecyclerViewAdapter postAdapter = (PostRecyclerViewAdapter) adapter;
+                    //postAdapter.convertAndSetData(boardList);
+                }
 
                 adapter.notifyDataSetChanged();
 

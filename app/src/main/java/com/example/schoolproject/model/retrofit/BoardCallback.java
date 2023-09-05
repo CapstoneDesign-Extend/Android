@@ -1,7 +1,10 @@
 package com.example.schoolproject.model.retrofit;
 
+import static android.content.ContentValues.TAG;
+
 import android.app.Activity;
 import android.content.Context;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
@@ -21,6 +24,19 @@ import retrofit2.Response;
 public class BoardCallback implements Callback<Board> {
     private Activity activity;
     private Context context;
+    private RecyclerView.Adapter adapter;
+
+    public BoardCallback(Activity activity, Context context) {
+        this.activity = activity;
+        this.context = context;
+        this.adapter = adapter;
+    }
+    public BoardCallback(Activity activity, Context context, RecyclerView.Adapter adapter) {
+        this.activity = activity;
+        this.context = context;
+        this.adapter = adapter;
+    }
+
 
     public void setContext(Context context) {
         this.context = context;
@@ -38,10 +54,12 @@ public class BoardCallback implements Callback<Board> {
 
     @Override
     public void onResponse(Call<Board> call, Response<Board> response) {
-        if (response.isSuccessful()){
+        if (response.isSuccessful()) {
             Board board = response.body();
-
-            if (call.request().method().equals("POST")){
+            if (call.request().method().equals("GET")){
+                PostRecyclerViewAdapter postAdapter = (PostRecyclerViewAdapter) adapter;
+                postAdapter.setData(board);
+            }else if (call.request().method().equals("POST")){
                 showShortToast(context, "게시글 작성이 완료되었습니다.");
                 finishActivity(activity);
             } else if (call.request().method().equals("UPDATE")){
@@ -84,6 +102,7 @@ public class BoardCallback implements Callback<Board> {
                 if (adapter instanceof PostPreviewRecyclerViewAdapter) {
                     PostPreviewRecyclerViewAdapter postPrevAdapter = (PostPreviewRecyclerViewAdapter) adapter;
                     postPrevAdapter.convertAndSetData(boardList);
+
                 } else if (adapter instanceof PostRecyclerViewAdapter) {
                     PostRecyclerViewAdapter postAdapter = (PostRecyclerViewAdapter) adapter;
                     //postAdapter.convertAndSetData(boardList);
@@ -93,7 +112,6 @@ public class BoardCallback implements Callback<Board> {
 
                 if (call.request().url().toString().contains("getBoardsByKind")) {
 
-
                 } else if (call.request().url().toString().contains("getBoardsByTitle")) {
 
                 } else if (call.request().url().toString().contains("getBoardsByKeyWord")) {
@@ -101,7 +119,6 @@ public class BoardCallback implements Callback<Board> {
                 } else if (call.request().url().toString().contains("getAllBoards")) {
 
                 }
-
             } else {
                 Toast.makeText(context, "서버로부터 응답을 받을 수 없습니다.", Toast.LENGTH_SHORT).show();
 

@@ -12,18 +12,21 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.schoolproject.R;
+import com.example.schoolproject.model.Board;
 import com.example.schoolproject.model.BoardKindUtils;
-import com.example.schoolproject.model.ui.DataPost;
+import com.example.schoolproject.model.retrofit.BoardApiService;
+import com.example.schoolproject.model.retrofit.BoardCallback;
 import com.example.schoolproject.test.DataBaseHelper;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import retrofit2.Call;
+
 public class PostActivity extends AppCompatActivity {
     private Long postId;
-    private String boardName;
+    private String boardKind;
     private TextView tv_boardName;
-    private DataBaseHelper dbHelper;
     private List<Object> dataPosts;
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
@@ -36,7 +39,7 @@ public class PostActivity extends AppCompatActivity {
         setContentView(R.layout.activity_post);
 
         postId = getIntent().getLongExtra("postId",-1);
-        boardName = getIntent().getStringExtra("boardName");
+        boardKind = getIntent().getStringExtra("boardKind");
         if (postId == -1){
             Toast.makeText(getApplicationContext(), "Fatal Error: postId is null", Toast.LENGTH_SHORT).show();
         }
@@ -44,7 +47,7 @@ public class PostActivity extends AppCompatActivity {
 
         // set boardName
         tv_boardName = findViewById(R.id.tv_post_board_name);
-        tv_boardName.setText(BoardKindUtils.getBoardTitleByString(boardName));
+        tv_boardName.setText(BoardKindUtils.getBoardTitleByString(boardKind));
         // setting Toolbar
         Toolbar toolbar = findViewById(R.id.toolbar_post);
         setSupportActionBar(toolbar);
@@ -59,9 +62,10 @@ public class PostActivity extends AppCompatActivity {
         adapter = new PostRecyclerViewAdapter(dataPosts);
         recyclerView.setAdapter(adapter);
 
-        dbHelper = new DataBaseHelper(this);
-        //DataPost data = dbHelper.getPostData(postId);
-        //dataPosts.add(data);
+        // get post matching postId
+        BoardApiService apiService = new BoardApiService();
+        Call<Board> call = apiService.getBoardById(postId);
+        call.enqueue(new BoardCallback(PostActivity.this, getApplicationContext(), adapter));
 
         adapter.notifyDataSetChanged();
 

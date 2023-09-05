@@ -1,5 +1,7 @@
 package com.example.schoolproject.model.ui;
 
+import com.example.schoolproject.model.BoardKind;
+
 public class DataPost {
     private int imageResourceId;
     private Long postId;
@@ -70,6 +72,10 @@ public class DataPost {
     }
 
     public void setBoardType(String boardType) {
+        this.boardType = boardType;
+    }
+
+    public void String(String boardType) {
         this.boardType = boardType;
     }
 

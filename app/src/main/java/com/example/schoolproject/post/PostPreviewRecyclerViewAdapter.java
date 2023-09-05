@@ -1,19 +1,25 @@
 package com.example.schoolproject.post;
 
+import static android.content.ContentValues.TAG;
+import static com.example.schoolproject.model.DateConvertUtils.convertDate;
+
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.schoolproject.R;
 import com.example.schoolproject.model.Board;
+import com.example.schoolproject.model.BoardKind;
 import com.example.schoolproject.model.BoardKindUtils;
 import com.example.schoolproject.model.ui.DataPost;
 import com.google.android.material.snackbar.Snackbar;
@@ -28,6 +34,7 @@ public class PostPreviewRecyclerViewAdapter extends RecyclerView.Adapter<PostPre
     private Context context;
     private List<Object> dataList;
 
+    // db 모델을 ui 모델로 변환 (*초기 코드* 이후 다른 어댑터는 db모델을 그대로 사용)
     public void convertAndSetData(List<Board> boardList){
         if (dataList == null){
             dataList = new ArrayList<>();
@@ -39,7 +46,7 @@ public class PostPreviewRecyclerViewAdapter extends RecyclerView.Adapter<PostPre
             //p.setImageResourceId();
             p.setPostId(b.getId());
             if (!existingSamePost(p.getPostId())) {
-                p.setBoardType(BoardKindUtils.getBoardTitleByEnum(b.getBoardKind()));
+                p.setBoardType(String.valueOf(b.getBoardKind()));
                 //p.setUserId();
                 p.setTitle(b.getTitle());
                 p.setContent(b.getContent());
@@ -64,22 +71,7 @@ public class PostPreviewRecyclerViewAdapter extends RecyclerView.Adapter<PostPre
         }
         return false;
     }
-    private String convertDate(String mysqlDate, String format){
-        SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-        SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd");
-        SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
-        try{
-            Date dateMysql = inputFormat.parse(mysqlDate);
-            String formattedDate = dateFormat.format(dateMysql);
-            String formattedTime = timeFormat.format(dateMysql);
-            if (format.equals("date")){return formattedDate;}
-            if (format.equals("time")){return formattedTime;}
 
-        } catch (ParseException e) {
-            throw new RuntimeException(e);
-        }
-        return "error:convertFailed";
-    }
 
     public PostPreviewRecyclerViewAdapter(Context context, List<Object> dataList){
         this.context = context;
@@ -113,9 +105,10 @@ public class PostPreviewRecyclerViewAdapter extends RecyclerView.Adapter<PostPre
             this.boardWrapper.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Snackbar.make(v, "move to post", 100).show();
                     Intent intent = new Intent(context, PostActivity.class);
                     intent.putExtra("postId", postId);
+                    //Toast.makeText(context, postId.toString(), Toast.LENGTH_SHORT).show();
+
                     intent.putExtra("boardKind", boardKind);
                     context.startActivity(intent);
                 }
@@ -124,7 +117,7 @@ public class PostPreviewRecyclerViewAdapter extends RecyclerView.Adapter<PostPre
         public void bindData(DataPost data){
             // save postId+boardName and send to PostActivity in onClickListener
             this.postId = data.getPostId();
-            this.boardKind = data.getBoardType();
+            this.boardKind = String.valueOf(data.getBoardType());
 
             if (data.getImageResourceId() == 0 ){
                 imageView.setVisibility(View.GONE);

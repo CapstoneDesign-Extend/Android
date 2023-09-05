@@ -89,7 +89,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             do {
                 DataPost data1 = new DataPost();
                 data1.setPostId(cursor.getLong(cursor.getColumnIndex("postId")));
-                data1.setBoardType(cursor.getString(cursor.getColumnIndex("boardType")));
+                //data1.setBoardType(cursor.getString(cursor.getColumnIndex("boardType")));
                 data1.setTitle(cursor.getString(cursor.getColumnIndex("title")));
                 data1.setContent(cursor.getString(cursor.getColumnIndex("content")));
                 data1.setAuthor(cursor.getString(cursor.getColumnIndex("author")));
@@ -115,7 +115,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         Cursor cursor = db.query("Post", columns, selection, selectionArgs, null, null,null);
 
         if (cursor != null && cursor.moveToFirst()){
-            data.setBoardType(cursor.getString(cursor.getColumnIndex("boardType")));
+            //data.setBoardType(cursor.getString(cursor.getColumnIndex("boardType")));
             data.setAuthor(cursor.getString(cursor.getColumnIndex("author")));
             data.setDate(cursor.getString(cursor.getColumnIndex("date")));
             data.setTime(cursor.getString(cursor.getColumnIndex("time")));

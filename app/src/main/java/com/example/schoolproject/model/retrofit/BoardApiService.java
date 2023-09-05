@@ -51,6 +51,7 @@ public class BoardApiService {
         return boardApi.deleteBoard(id);
     }
 
+    public Call<Board> getBoardById(Long id) { return boardApi.getBoardById(id); }
     public Call<List<Board>> getBoardsByBoardKind(BoardKind boardKind){
         return boardApi.getBoardsByBoardKind(boardKind);
     }
@@ -76,6 +77,8 @@ public class BoardApiService {
         @DELETE("/api/boards/{id}")
         Call<Void> deleteBoard(@Path("id") Long id);
 
+        @GET("/api/boards/{id}")
+        Call<Board> getBoardById(@Path("id") Long id);  // 특정 id의 게시글 가져오기
         @GET("/api/boards/search/byBoardKind")  // 게시판 종류에 해당하는 게시글 가져오기
         Call<List<Board>> getBoardsByBoardKind(@Query("boardKind") BoardKind boardKind);
         @GET("/api/boards/search/byTitle")  // 제목만 검색

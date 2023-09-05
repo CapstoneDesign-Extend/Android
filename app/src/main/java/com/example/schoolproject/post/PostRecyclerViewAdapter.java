@@ -1,5 +1,7 @@
 package com.example.schoolproject.post;
 
+import static com.example.schoolproject.model.DateConvertUtils.convertDate;
+
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,7 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.schoolproject.R;
-import com.example.schoolproject.model.ui.DataPost;
+import com.example.schoolproject.model.Board;
 
 import java.util.List;
 
@@ -26,8 +28,12 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
     public PostRecyclerViewAdapter(List<Object> dataList){
         this.dataList = dataList;
     }
+    public void setData(Object data){
+        dataList.add(data);
+        notifyDataSetChanged();
+    }
     public int getItemViewType(int position){
-        if (dataList.get(position) instanceof DataPost){
+        if (dataList.get(position) instanceof Board){
             return VIEW_TYPE_POST;
         }
         return -1;
@@ -65,16 +71,17 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
                 }
             });
         }
-        public void bindData(DataPost data){
+        public void bindData(Board data){
             //iv_profile.setImageResource(data.getImageResourceId());  // (using default image)
             tv_author.setText(data.getAuthor());
-            tv_date.setText(data.getDate());
-            tv_time.setText(data.getTime());
+            tv_date.setText(convertDate(data.getFinalDate(),"date"));
+            tv_time.setText(convertDate(data.getFinalDate(),"time"));
             tv_title.setText(data.getTitle());
             tv_content.setText(data.getContent());
-            tv_heart_count.setText(data.getHeart_count());
-            tv_chat_count.setText(data.getChat_count());
+            tv_heart_count.setText(String.valueOf(data.getLikeCnt()));
+            tv_chat_count.setText("0");
         }
+
     }
 
     @NonNull
@@ -96,8 +103,8 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
         switch (holder.getItemViewType()){
             case VIEW_TYPE_POST:
                 PostViewHolder postViewHolder = (PostViewHolder) holder;
-                DataPost dataPost = (DataPost) itemData;
-                postViewHolder.bindData(dataPost);
+                Board board = (Board) itemData;
+                postViewHolder.bindData(board);
                 break;
         }
     }

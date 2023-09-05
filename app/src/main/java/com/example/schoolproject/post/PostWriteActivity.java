@@ -92,9 +92,7 @@ public class PostWriteActivity extends AppCompatActivity {
                     board.setAuthor(author);
 
                     Call<Board> call = apiService.createBoard(board);
-                    BoardCallback callback = new BoardCallback();
-                    callback.setContext(getApplicationContext());
-                    callback.setActivity(PostWriteActivity.this);
+                    BoardCallback callback = new BoardCallback(PostWriteActivity.this, getApplicationContext());
                     call.enqueue(callback);
 
                 }

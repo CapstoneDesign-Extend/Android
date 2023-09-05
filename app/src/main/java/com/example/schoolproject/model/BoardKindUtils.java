@@ -34,6 +34,8 @@ public class BoardKindUtils {
         } catch (IllegalArgumentException e) {
             // 해당 enum 이 없을 경우
             return "";
+        } catch (NullPointerException e){
+            return "error:BoardName is NULL!";
         }
     }
 }

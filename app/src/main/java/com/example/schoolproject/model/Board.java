@@ -25,6 +25,9 @@ public class Board {
 
     private List<File> files;
 
+
+    // getters and setters
+
     public Long getId() {
         return id;
     }

@@ -16,7 +16,7 @@ import retrofit2.http.POST;
 import retrofit2.http.Path;
 
 public class NotificationApiService {
-    private static final String BASE_URL = "http://www.codeshare.live:5438";
+    private static final String BASE_URL = "http://www.extends.online:5438";
     private NotificationApi notificationApi;
 
     public NotificationApiService() {

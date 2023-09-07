@@ -17,7 +17,7 @@ import retrofit2.http.PUT;
 import retrofit2.http.Path;
 
 public class TimetableApiService {
-    private static final String BASE_URL = "http://www.codeshare.live:5438";
+    private static final String BASE_URL = "http://www.extends.online:5438";
     private TimetableApi timetableApi;
 
     public TimetableApiService() {

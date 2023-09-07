@@ -1,10 +1,13 @@
 package com.example.schoolproject.model.ui;
 
 
+import com.example.schoolproject.model.BoardKind;
+
 import java.util.List;
 
 public class DataHomeBoard {
 
+    private BoardKind boardKind;
     private String board_name;
     private List<String> post_titles;
     private List<String> post_contents;
@@ -19,6 +22,14 @@ public class DataHomeBoard {
     }
 
     // getters and setters
+
+    public BoardKind getBoardKind() {
+        return boardKind;
+    }
+
+    public void setBoardKind(BoardKind boardKind) {
+        this.boardKind = boardKind;
+    }
 
     public String getBoard_name() {
         return board_name;

@@ -86,7 +86,6 @@ public class HomeBoardActivity extends AppCompatActivity {
         adapter = new PostPreviewRecyclerViewAdapter(this, dataPosts);
         recyclerView.setAdapter(adapter);
 
-
         // add testData
         DataPost testData1 = new DataPost(
                 R.drawable.img_board_sample1,
@@ -99,12 +98,8 @@ public class HomeBoardActivity extends AppCompatActivity {
                 "11:28","0","0"
         );
 
-
-
         dataPosts.add(testData1);
         adapter.notifyDataSetChanged();
-
-
 
     }
 

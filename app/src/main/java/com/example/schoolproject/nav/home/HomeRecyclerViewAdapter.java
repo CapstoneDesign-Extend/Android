@@ -11,9 +11,12 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.schoolproject.model.Board;
+import com.example.schoolproject.model.BoardKind;
+import com.example.schoolproject.model.BoardKindUtils;
+import com.example.schoolproject.model.ui.DataHomeBoard;
 import com.example.schoolproject.post.PostActivity;
 import com.example.schoolproject.R;
-import com.example.schoolproject.model.ui.DataHomeBoard;
 import com.example.schoolproject.model.ui.DataHomeDynamicMorning;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -29,6 +32,27 @@ public class HomeRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
     public HomeRecyclerViewAdapter(Context context, List<Object> dataList){
         this.context = context;
         this.dataList = dataList;
+    }
+    public void convertData(BoardKind boardKind, List<Board> boardList, List<DataHomeBoard> dataHomeBoardList){
+        // converting model
+        DataHomeBoard dataHomeBoard = new DataHomeBoard();
+        List<String> postIds = new ArrayList<>();
+        List<String> titles = new ArrayList<>();
+        List<String> contents = new ArrayList<>();
+        for (Board b: boardList){
+            postIds.add(String.valueOf(b.getId()));
+            titles.add(b.getTitle());
+            contents.add(b.getContent());
+        }
+        dataHomeBoard.setBoardKind(boardKind);
+        dataHomeBoard.setBoard_name(BoardKindUtils.getBoardTitleByEnum(boardKind));
+        dataHomeBoard.setPost_ids(postIds);
+        dataHomeBoard.setPost_titles(titles);
+        dataHomeBoard.setPost_contents(contents);
+        // 완성된 모델을 여기 넣고 FragHome에서 정렬 후 Data Setting
+        dataHomeBoardList.add(dataHomeBoard);
+        // 테스트용(받는대로 setting)
+        //dataList.add(dataHomeBoard);
     }
     public int getItemViewType(int position){
         if(dataList.get(position) instanceof DataHomeBoard){
@@ -58,31 +82,31 @@ public class HomeRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
     }
 
     public class HomeBoardViewHolder extends RecyclerView.ViewHolder{
-        private String boardName;
-        private int postId1, postId2;
+        private String boardName;  // more를 클릭시 BoardActivity 에 넘겨줄 이름
+        private int postId1, postId2;  // 게시글 preview 클릭시 postActivity 로 id 전달용
         protected List<LinearLayout> rowWrappers;
         protected LinearLayout boardMore;
-        protected TextView tv_title;
-        private List<TextView> nameViews;
-        private List<TextView> dataViews;
+        protected TextView tv_boardTitle;
+        private List<TextView> postTitleList;
+        private List<TextView> postContentList;
 
         public HomeBoardViewHolder(View itemView){
             super(itemView);
             this.boardMore = itemView.findViewById(R.id.home_board_more);
-            this.tv_title = itemView.findViewById(R.id.tv_home_board_title);
-            this.nameViews = new ArrayList<>();
-            this.dataViews = new ArrayList<>();
+            this.tv_boardTitle = itemView.findViewById(R.id.tv_home_board_title);
+            this.postTitleList = new ArrayList<>();
+            this.postContentList = new ArrayList<>();
             this.rowWrappers = new ArrayList<>();
             // connect multiple view res with getResources()
             for(int i=1;i<=5;i++){
-                TextView nameView = itemView.findViewById(itemView.getContext().getResources()
-                        .getIdentifier("tv_home_board_name" + i, "id", itemView.getContext().getPackageName()));
-                TextView dataView = itemView.findViewById(itemView.getContext().getResources()
-                        .getIdentifier("tv_home_board_data" + i, "id", itemView.getContext().getPackageName()));
+                TextView tv_postTitle = itemView.findViewById(itemView.getContext().getResources()
+                        .getIdentifier("tv_home_post_title" + i, "id", itemView.getContext().getPackageName()));
+                TextView tv_postContent = itemView.findViewById(itemView.getContext().getResources()
+                        .getIdentifier("tv_home_post_content" + i, "id", itemView.getContext().getPackageName()));
                 LinearLayout rowWrapper = itemView.findViewById(itemView.getContext().getResources()
                         .getIdentifier("home_board_wrapper" + i, "id", itemView.getContext().getPackageName()));
-                nameViews.add(nameView);
-                dataViews.add(dataView);
+                postTitleList.add(tv_postTitle);
+                postContentList.add(tv_postContent);
                 rowWrappers.add(rowWrapper);
             }
             // set OnClickListener for "more" wrapper
@@ -140,11 +164,12 @@ public class HomeRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
         public void bindData(DataHomeBoard data){
             // set boardName
             boardName = data.getBoard_name();
-            tv_title.setText(boardName);
             List<String> postIds = data.getPost_ids();
-            List<String> names = data.getPost_titles();
-            List<String> datas = data.getPost_contents();
-            int size = names.size();
+            List<String> titles = data.getPost_titles();
+            List<String> contents = data.getPost_contents();
+            tv_boardTitle.setText(boardName);
+
+            int size = titles.size();
             if (size==0){  // show "작성된 게시글이 없습니다"
                 rowWrappers.get(0).setVisibility(View.GONE);
                 rowWrappers.get(1).setVisibility(View.GONE);
@@ -170,8 +195,8 @@ public class HomeRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
 
             }
             for (int i=0; i<size; i++){
-                nameViews.get(i).setText(names.get(i));
-                dataViews.get(i).setText(datas.get(i));
+                postTitleList.get(i).setText(titles.get(i));
+                postContentList.get(i).setText(contents.get(i));
                 rowWrappers.get(2).setVisibility(View.GONE);
 
             }

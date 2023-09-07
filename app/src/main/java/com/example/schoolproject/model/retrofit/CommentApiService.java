@@ -17,7 +17,7 @@ import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public class CommentApiService {
-    private static final String BASE_URL = "http://www.codeshare.live:5438";
+    private static final String BASE_URL = "http://www.extends.online:5438";
     private CommentApi commentApi;
 
     public CommentApiService() {

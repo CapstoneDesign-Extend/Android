@@ -130,6 +130,7 @@ public class FragHome extends Fragment {
             case R.id.search:
                 // "search" 아이템이 클릭되었을 때 수행할 코드 작성
                 Intent intent1 = new Intent(getContext(), SearchActivity.class);
+                intent1.putExtra("searchType","board");
                 startActivity(intent1);
                 return true;
             case R.id.myPage:

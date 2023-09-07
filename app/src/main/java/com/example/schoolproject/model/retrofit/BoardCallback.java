@@ -122,15 +122,18 @@ public class BoardCallback implements Callback<Board> {
 
                 adapter.notifyDataSetChanged();
                 // *주의*: request url에 해당 키워드가 실제로 포함되는지 확인 후 구현하기
-                if (call.request().url().toString().contains("getBoardsByKind")) {
+                if (call.request().url().toString().contains("byBoardKind")) {
 
                 } else if (call.request().url().toString().contains("byBoardKindAmount")){
 
-                } else if (call.request().url().toString().contains("getBoardsByTitle")) {
+                } else if (call.request().url().toString().contains("byTitle")) {
 
-                } else if (call.request().url().toString().contains("getBoardsByKeyWord")) {
+                } else if (call.request().url().toString().contains("byKeyword")) {
 
-                } else if (call.request().url().toString().contains("getAllBoards")) {
+                }  else if (call.request().url().toString().contains("byKeywordKind")) {
+
+                } else if (call.request().url().toString().contains("boards")) {
+                    // 모든 url에 boards가 포함되므로 가장 마지막에 두기
 
                 }
             } else {

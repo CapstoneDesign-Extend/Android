@@ -121,6 +121,7 @@ public class FragShop extends Fragment {
                 // "search" 아이템이 클릭되었을 때 수행할 코드 작성
                 Snackbar.make(view, "search", 100).show();
                 Intent intent1 = new Intent(getContext(), SearchActivity.class);
+                intent1.putExtra("searchType", "market");
                 startActivity(intent1);
                 return true;
             default:

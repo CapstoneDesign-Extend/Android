@@ -69,6 +69,9 @@ public class BoardApiService {
     public Call<List<Board>> getBoardsByKeyword(String keyword) {
         return boardApi.getBoardsByKeyword(keyword);
     }
+    public Call<List<Board>> getBoardsByKeywordKind(String keyword, BoardKind boardKind){
+        return boardApi.getBoardsByKeywordKind(keyword, boardKind);
+    }
     public Call<List<Board>> getAllBoards() {
         return boardApi.getAllBoards();
     }
@@ -93,6 +96,9 @@ public class BoardApiService {
         Call<List<Board>> getBoardsByTitle(@Query("title") String title);
         @GET("/api/boards/search/byKeyword")  // 키워드로 제목 본문 함께 검색
         Call<List<Board>> getBoardsByKeyword(@Query("keyword") String keyword);
+
+        @GET("/api/boards/search/byKeywordKind") // 특정 게시판에서 키워드로 검색
+        Call<List<Board>> getBoardsByKeywordKind(@Query("keyword") String keyword, @Query("boardKind") BoardKind boardKind);
 
         @GET("/api/boards")
         Call<List<Board>> getAllBoards();

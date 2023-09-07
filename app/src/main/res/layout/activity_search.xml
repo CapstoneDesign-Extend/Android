@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginHorizontal="10dp"
+    android:paddingHorizontal="10dp"
     tools:context=".search.SearchActivity">
 
     <LinearLayout
@@ -20,11 +20,19 @@
         android:background="@color/white">
 
         <EditText
+            android:id="@+id/et_search_input"
+            android:inputType="text"
+            android:imeOptions="actionSearch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="@integer/material_motion_duration_long_1"
-            android:hint="제목, 본문, 태그 검색"/>
+            android:background="@drawable/shape_round_border"
+            android:paddingVertical="5dp"
+            android:paddingLeft="10dp"
+            android:textSize="17dp"
+            android:hint="제목, 본문, 키워드 검색"/>
         <ImageButton
+            android:id="@+id/btn_search"
             android:layout_gravity="center_vertical"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -37,16 +45,23 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:background="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout"
-        android:background="#E1E1E1">
-        <androidx.viewpager2.widget.ViewPager2
-            android:id="@+id/board_viewpager"
+        app:layout_constraintVertical_bias="0.0">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_view_search"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent">
+
+        </androidx.recyclerview.widget.RecyclerView>
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

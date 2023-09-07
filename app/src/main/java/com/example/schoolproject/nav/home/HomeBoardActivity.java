@@ -14,6 +14,10 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.schoolproject.model.Board;
+import com.example.schoolproject.model.BoardKindUtils;
+import com.example.schoolproject.model.retrofit.BoardApiService;
+import com.example.schoolproject.model.retrofit.BoardCallback;
 import com.example.schoolproject.post.PostWriteActivity;
 import com.example.schoolproject.search.SearchActivity;
 import com.example.schoolproject.post.PostPreviewRecyclerViewAdapter;
@@ -25,6 +29,8 @@ import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
 
 public class HomeBoardActivity extends AppCompatActivity {
     String receivedBoardName;
@@ -40,11 +46,9 @@ public class HomeBoardActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         // Load data and set adapter
-        dataPosts.clear();
-        DataBaseHelper dbHelper = new DataBaseHelper(this);
-        List<Object> dBData = dbHelper.getPreviewData(receivedBoardName);
-        dataPosts.addAll(dBData);
-        adapter.notifyDataSetChanged();
+        BoardApiService apiService = new BoardApiService();
+        Call<List<Board>> call = apiService.getBoardsByBoardKind(BoardKindUtils.getBoardKindByKorean(receivedBoardName));
+        call.enqueue(new BoardCallback.BoardListCallBack(getApplicationContext(), adapter));
     }
 
 
@@ -69,7 +73,7 @@ public class HomeBoardActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), PostWriteActivity.class);
-                intent.putExtra("boardName",receivedBoardName);
+                intent.putExtra("boardKind",BoardKindUtils.getBoardKindByKorean(receivedBoardName).toString());
                 startActivity(intent);
             }
         });
@@ -79,27 +83,13 @@ public class HomeBoardActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         dataPosts = new ArrayList<>();  // initialize empty data
-        DataBaseHelper dbHelper = new DataBaseHelper(this);
-        List<Object> dbData = dbHelper.getPreviewData(receivedBoardName);
-        dataPosts.addAll(dbData);  // add db data to list
-
         adapter = new PostPreviewRecyclerViewAdapter(this, dataPosts);
         recyclerView.setAdapter(adapter);
 
-        // add testData
-        DataPost testData1 = new DataPost(
-                R.drawable.img_board_sample1,
-                "서일대학교 장학금 규정 안내",
-                "그 외 장학금에 대해서 궁금 하시면\n" +
-                        "(https://cafe.naver.com/seoiluniversity/826)\n" +
-                        "장학금 QnA\n" +
-                        "(https://cafe.naver.com/seoiluniversity/1416)",
-                "서일대학교카페",
-                "11:28","0","0"
-        );
+        BoardApiService apiService = new BoardApiService();
+        Call<List<Board>> call = apiService.getBoardsByBoardKind(BoardKindUtils.getBoardKindByKorean(receivedBoardName));
+        call.enqueue(new BoardCallback.BoardListCallBack(getApplicationContext(), adapter));
 
-        dataPosts.add(testData1);
-        adapter.notifyDataSetChanged();
 
     }
 

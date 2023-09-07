@@ -65,17 +65,6 @@ public class FragBoardIssue extends Fragment {
         adapter = new PostPreviewRecyclerViewAdapter(getContext(), dataFragBoardIssues);
         recyclerView.setAdapter(adapter);
 
-        // testData
-        DataPost testData1 = new DataPost(
-                R.drawable.img_board_sample1,
-                "서일대학교 장학금 규정 안내",
-                        "그 외 장학금에 대해서 궁금 하시면\n" +
-                        "(https://cafe.naver.com/seoiluniversity/826)\n" +
-                        "장학금 QnA\n" +
-                        "(https://cafe.naver.com/seoiluniversity/1416)",
-                "서일대학교카페",
-                "11:28","0","0"
-                );
 
         // get posts matching boardKind
         BoardApiService apiService = new BoardApiService();

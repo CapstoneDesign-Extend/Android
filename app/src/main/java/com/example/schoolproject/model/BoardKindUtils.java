@@ -38,4 +38,30 @@ public class BoardKindUtils {
             return "error:BoardName is NULL!";
         }
     }
+    public static BoardKind getBoardKindByKorean(String koreanBoardName){
+        switch (koreanBoardName){
+            case "학과소식":
+                return BoardKind.ISSUE;
+            case "학과꿀팁":
+                return BoardKind.TIP;
+            case "신문고":
+                return BoardKind.REPORT;
+            case "Q&A":
+                return BoardKind.QNA;
+            case "장터게시판":
+                return BoardKind.MARKET;
+            case "자유게시판":
+                return BoardKind.FREE;
+            case "새내기게시판":
+                return BoardKind.FRESH;
+            case "졸업생게시판":
+                return BoardKind.FOSSIL;
+            case "정보게시판":
+                return BoardKind.INFO;
+            case "취업·진로":
+                return BoardKind.CAREER;
+            default:
+                return null;
+        }
+    }
 }

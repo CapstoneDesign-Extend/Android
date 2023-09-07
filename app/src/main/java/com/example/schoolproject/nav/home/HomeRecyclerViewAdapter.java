@@ -18,6 +18,7 @@ import com.example.schoolproject.model.ui.DataHomeBoard;
 import com.example.schoolproject.post.PostActivity;
 import com.example.schoolproject.R;
 import com.example.schoolproject.model.ui.DataHomeDynamicMorning;
+import com.example.schoolproject.post.PostWriteActivity;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
@@ -115,7 +116,6 @@ public class HomeRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
                 @Override
                 public void onClick(View v) {
                     boardName = ((TextView)v.findViewById(R.id.tv_home_board_title)).getText().toString();
-                    Snackbar.make(v, boardName, 100).show();
                     Intent intent = new Intent(context, HomeBoardActivity.class);
                     intent.putExtra("boardName", boardName);
                     context.startActivity(intent);
@@ -144,14 +144,17 @@ public class HomeRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
                                 intent2.putExtra("boardName", boardName);
                                 context.startActivity(intent2);
                                 break;
-                            case R.id.home_board_wrapper3:
+                            case R.id.home_board_wrapper3:  // 작성된 게시글이 없을 때 표시됨
                                 //text = ((TextView)v.findViewById(R.id.tv_home_board_name3)).getText().toString();
+                                Intent intent = new Intent(context, PostWriteActivity.class);
+                                intent.putExtra("boardKind", BoardKindUtils.getBoardKindByKorean(boardName).toString());
+                                context.startActivity(intent);
 
                                 break;
-                            case R.id.home_board_wrapper4:
+                            case R.id.home_board_wrapper4:  // xml에서 gone 설정됨
                                 //text = ((TextView)v.findViewById(R.id.tv_home_board_name4)).getText().toString();
                                 break;
-                            case R.id.home_board_wrapper5:
+                            case R.id.home_board_wrapper5:  // xml에서 gone 설정됨
                                 //text = ((TextView)v.findViewById(R.id.tv_home_board_name5)).getText().toString();
                                 break;
                         }

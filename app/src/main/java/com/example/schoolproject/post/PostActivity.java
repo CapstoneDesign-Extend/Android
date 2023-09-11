@@ -31,7 +31,7 @@ public class PostActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
 
-        
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

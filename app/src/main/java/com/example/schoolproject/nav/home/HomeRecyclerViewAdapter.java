@@ -1,7 +1,10 @@
 package com.example.schoolproject.nav.home;
 
+import static android.content.ContentValues.TAG;
+
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -133,15 +136,15 @@ public class HomeRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
                             case R.id.home_board_wrapper1:
                                 //text = ((TextView)v.findViewById(R.id.tv_home_board_name1)).getText().toString();
                                 Intent intent1 = new Intent(context, PostActivity.class);
-                                intent1.putExtra("postId", postId1);
-                                intent1.putExtra("boardName", boardName);
+                                intent1.putExtra("postId", Long.valueOf(postId1));
+                                intent1.putExtra("boardKind", BoardKindUtils.getBoardKindByKorean(boardName).toString());
                                 context.startActivity(intent1);
                                 break;
                             case R.id.home_board_wrapper2:
                                 //text = ((TextView)v.findViewById(R.id.tv_home_board_name2)).getText().toString();
                                 Intent intent2 = new Intent(context, PostActivity.class);
-                                intent2.putExtra("postId", postId2);
-                                intent2.putExtra("boardName", boardName);
+                                intent2.putExtra("postId", Long.valueOf(postId2));
+                                intent2.putExtra("boardKind", BoardKindUtils.getBoardKindByKorean(boardName).toString());
                                 context.startActivity(intent2);
                                 break;
                             case R.id.home_board_wrapper3:  // 작성된 게시글이 없을 때 표시됨

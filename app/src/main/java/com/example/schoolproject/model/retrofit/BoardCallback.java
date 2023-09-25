@@ -43,7 +43,7 @@ public class BoardCallback implements Callback<Board> {
     public void setActivity(Activity activity) {
         this.activity = activity;
     }
-    private void showShortToast(Context context, String message){
+    private static void showShortToast(Context context, String message){
         Toast.makeText(context,message,Toast.LENGTH_SHORT).show();
     }
     private void finishActivity(Activity activity){
@@ -71,13 +71,13 @@ public class BoardCallback implements Callback<Board> {
             }
 
         } else {
-            Toast.makeText(context, "서버로부터 응답을 받을 수 없습니다.", Toast.LENGTH_SHORT).show();
+            showShortToast(context, "서버로부터 응답을 받을 수 없습니다.");
         }
     }
 
     @Override
     public void onFailure(Call<Board> call, Throwable t) {
-        Toast.makeText(context, "인터넷 연결을 확인해주세요.", Toast.LENGTH_SHORT).show();
+        showShortToast(context, "인터넷 연결을 확인해주세요.");
     }
 
 
@@ -143,13 +143,13 @@ public class BoardCallback implements Callback<Board> {
 //                        homeAdapter.setData(boardKind, new ArrayList<>());
 //                    }
 //                } else {
-                    Toast.makeText(context, "서버로부터 응답을 받을 수 없습니다.", Toast.LENGTH_SHORT).show();
+                    showShortToast(context, "서버로부터 응답을 받을 수 없습니다.");
 //                }
             }
         }
         @Override
         public void onFailure(Call<List<Board>> call, Throwable t) {
-            Toast.makeText(context, "인터넷 연결을 확인해주세요.", Toast.LENGTH_SHORT).show();
+            showShortToast(context, "인터넷 연결을 확인해주세요.");
         }
     }
 

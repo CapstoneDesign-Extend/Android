@@ -66,7 +66,7 @@ public class HomeRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
         }
         return -1;
     }
-
+    // ViewHolder 1: DynamicMessage
     public class HomeDynamicMorningViewHolder extends RecyclerView.ViewHolder{
         protected TextView tv_title;
         protected TextView tv_lecture1;
@@ -84,7 +84,7 @@ public class HomeRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
             tv_lecture2.setText(data.getLecture2());
         }
     }
-
+    // ViewHolder 2: HomeBoards
     public class HomeBoardViewHolder extends RecyclerView.ViewHolder{
         private String boardName;  // more를 클릭시 BoardActivity 에 넘겨줄 이름
         private int postId1, postId2;  // 게시글 preview 클릭시 postActivity 로 id 전달용

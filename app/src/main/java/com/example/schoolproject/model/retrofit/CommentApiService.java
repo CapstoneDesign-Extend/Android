@@ -37,8 +37,8 @@ public class CommentApiService {
         commentApi = retrofit.create(CommentApi.class);
     }
 
-    public Call<Comment> createComment(Long boardId, Long memberId, String content) {
-        return commentApi.createComment(boardId, memberId, content);
+    public Call<Comment> createComment(Long boardId, Long memberId, String content, String author) {
+        return commentApi.createComment(boardId, memberId, content, author);
     }
 
     public Call<List<Comment>> getCommentsByBoardId(Long boardId) {
@@ -65,7 +65,8 @@ public class CommentApiService {
         @POST("/api/comments")
         Call<Comment> createComment(@Query("boardId") Long boardId,
                                     @Query("memberId") Long memberId,
-                                    @Query("content") String content);
+                                    @Query("content") String content,
+                                    @Query("author") String author);
 
         @GET("/api/comments/{boardId}")
         Call<List<Comment>> getCommentsByBoardId(@Path("boardId") Long boardId);

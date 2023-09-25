@@ -18,6 +18,8 @@
             android:layout_height="wrap_content"
             android:textColor="@color/black"
             android:textStyle="bold"
+            android:maxLines="1"
+            android:ellipsize="end"
             android:text="체험단 모집"/>
         <TextView
             android:id="@+id/tv_board_notice_data"

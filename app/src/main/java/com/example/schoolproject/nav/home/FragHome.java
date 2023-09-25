@@ -92,21 +92,6 @@ public class FragHome extends Fragment {
         recyclerView.setAdapter(adapter);
 
 
-        // add testData to ViewHolder1 (DynamicMorning) ::
-        String MorningTitle, MorningLecture1, MorningLecture2;
-        MorningTitle = "오늘은 강의가 2개 있어요.";
-        MorningLecture1 = "09:00 캡스톤디자인";
-        MorningLecture2 = "13:00 모바일프로그래밍";
-
-        DataHomeDynamicMorning data0 = new DataHomeDynamicMorning(MorningTitle, MorningLecture1, MorningLecture2);
-        dataList.add(data0);
-
-
-        // set data from DB to ViewHolder2 (BoardsPreview) ::
-        // 이 리스트를 수정하여 게시판 순서를 사용자 지정 가능
-        //List<BoardKind> customOrder = Arrays.asList(BoardKind.ISSUE, BoardKind.FRESH, BoardKind.INFO, BoardKind.CAREER, BoardKind.FOSSIL);
-        //fetchDataFromAPI(customOrder);
-
 
         return view;
     }  // onCreateView ended
@@ -189,8 +174,7 @@ public class FragHome extends Fragment {
                     }
 
                     dataList.addAll(dataHomeBoardList);
-                    Log.d("FragHome", "dataHomeBoardList::"+dataHomeBoardList.toString());
-                    Log.d("FragHome", "dataList::"+dataList.toString());
+
                     return true;
                 })
                 .subscribeOn(Schedulers.io())

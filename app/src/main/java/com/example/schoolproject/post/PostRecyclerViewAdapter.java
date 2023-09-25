@@ -1,19 +1,25 @@
 package com.example.schoolproject.post;
 
+import static android.content.ContentValues.TAG;
 import static com.example.schoolproject.model.DateConvertUtils.convertDate;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.schoolproject.R;
+import com.example.schoolproject.databinding.ItemCommentBinding;
 import com.example.schoolproject.model.Board;
+import com.example.schoolproject.model.Comment;
+import com.example.schoolproject.model.DateConvertUtils;
 
 import java.util.List;
 
@@ -32,13 +38,22 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
         dataList.add(data);
         notifyDataSetChanged();
     }
+    public void setCommentList(List<Comment> list){
+        dataList.addAll(list);
+        notifyDataSetChanged();
+        Log.d(TAG, "setCommentList: enabled");
+        Log.d(TAG, dataList.toString());
+    }
     public int getItemViewType(int position){
         if (dataList.get(position) instanceof Board){
             return VIEW_TYPE_POST;
+        } else if (dataList.get(position) instanceof Comment){
+            return VIEW_TYPE_COMMENT;
         }
         return -1;
     }
 
+    // ViewHolder 1: Post
     public class PostViewHolder extends RecyclerView.ViewHolder{
         private ImageView iv_profile;
         private TextView tv_author, tv_date, tv_time, tv_title, tv_content, tv_heart_count, tv_chat_count;
@@ -61,13 +76,13 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
             this.btn_like.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+                    Log.d(TAG, "onClick: =========Like버튼 클릭========");
                 }
             });
             this.btn_scrap.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+                    Log.d(TAG, "onClick: =========Scrap버튼 클릭========");
                 }
             });
         }
@@ -83,7 +98,22 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
         }
 
     }
-
+    // viewHolder 2: Comments
+    public class CommentViewHolder extends RecyclerView.ViewHolder{
+        private ItemCommentBinding binding;
+        public CommentViewHolder(ItemCommentBinding binding) {
+            super(binding.getRoot());
+            this.binding = binding;
+        }
+        public void bindData(Comment data){
+            //binding.ivCommentLike.setImageResource(data.getImageResourceId());
+            binding.tvCommentAuthor.setText(data.getAuthor());
+            binding.tvCommentContents.setText(data.getContent());
+            binding.tvCommentDate.setText(DateConvertUtils.convertDate(data.getFinalDate().toString(), "date"));
+            binding.tvCommentTime.setText(DateConvertUtils.convertDate(data.getFinalDate().toString(), "time"));
+            binding.tvCommentHeartCount.setText(String.valueOf(data.getLikeCount()));
+        }
+    }
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -92,6 +122,9 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
             case VIEW_TYPE_POST:
                 View view1 = inflater.inflate(R.layout.item_post, parent, false);
                 return new PostViewHolder(view1);
+            case VIEW_TYPE_COMMENT:
+                ItemCommentBinding commentBinding = ItemCommentBinding.inflate(LayoutInflater.from(parent.getContext()),parent, false);
+                return new CommentViewHolder(commentBinding);
             default:
                 throw new IllegalArgumentException("Invalid view type: " + viewType);
         }
@@ -106,6 +139,13 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
                 Board board = (Board) itemData;
                 postViewHolder.bindData(board);
                 break;
+            case VIEW_TYPE_COMMENT:
+                CommentViewHolder commentViewHolder = (CommentViewHolder) holder;
+                Comment comment = (Comment) itemData;
+                commentViewHolder.bindData(comment);
+                break;
+            //case VIEW_TYPE_REPLY: break;
+
         }
     }
 

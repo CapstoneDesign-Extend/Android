@@ -4,22 +4,23 @@
     <item
         android:id="@+id/notification"
         android:title="notification"
-        android:icon="@drawable/icon_notification_gicon"
+        android:icon="@drawable/icon_notification_off_gicon"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/sendMessage"
-        android:title="Send message"
+        android:title="메시지"
         app:showAsAction="never" />
     <item
         android:id="@+id/report"
-        android:title="Report"
+        android:title="신고"
         app:showAsAction="never" />
     <item
         android:id="@+id/block"
-        android:title="Block"
+        android:title="차단"
         app:showAsAction="never" />
     <item
-        android:id="@+id/copyUrl"
-        android:title="Copy URL"
+        android:id="@+id/delete"
+        android:title="삭제"
         app:showAsAction="never" />
+
 </menu>

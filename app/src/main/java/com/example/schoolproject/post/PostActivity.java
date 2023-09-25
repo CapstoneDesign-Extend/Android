@@ -55,25 +55,8 @@ public class PostActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         // get post matching postId
-        BoardApiService boardApiService = new BoardApiService();
-        Call<Board> call1 = boardApiService.getBoardById(postId);
-        call1.enqueue(new BoardCallback(PostActivity.this, getApplicationContext(), adapter));
+        loadData();
 
-        CommentApiService commentApiService = new CommentApiService();
-        Call<List<Comment>> call2 = commentApiService.getCommentsByBoardId(postId);
-        call2.enqueue(new CommentCallback.CommentListCallBack(getApplicationContext(), adapter));
-
-//        Comment comment = new Comment();
-//        comment.setAuthor("test");
-//        comment.setContent("testContents");
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//            comment.setFinalDate(LocalDateTime.now());
-//        }
-//        comment.setLikeCount(0);
-//
-//        dataList.add(new Comment());
-
-        adapter.notifyDataSetChanged();
     }
 
     @Override
@@ -120,17 +103,15 @@ public class PostActivity extends AppCompatActivity {
                     else { author = loginId; }
                     CommentApiService apiService = new CommentApiService();
                     Call<Comment> call = apiService.createComment(postId, memberId, binding.tvPostComment.getText().toString(), author);
-                    call.enqueue(new CommentCallback(getApplicationContext(), adapter));
+                    call.enqueue(new CommentCallback(postId, PostActivity.this, getApplicationContext(), adapter));
                     // 댓글 작성 후 입력폼 초기화 및 키보드 숨기기
                     binding.tvPostComment.setText("");
                     InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(v.getWindowToken(),0);
                 }
 
-
             }
         });
-
 
     }
 
@@ -183,5 +164,11 @@ public class PostActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
 
         }
+    }
+
+    private void loadData(){
+        BoardApiService boardApiService = new BoardApiService();
+        Call<Board> call1 = boardApiService.getBoardById(postId);
+        call1.enqueue(new BoardCallback(postId, PostActivity.this, getApplicationContext(), adapter));
     }
 }

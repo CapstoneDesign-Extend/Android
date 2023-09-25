@@ -8,6 +8,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.schoolproject.model.Board;
 import com.example.schoolproject.model.BoardKind;
+import com.example.schoolproject.model.Comment;
+import com.example.schoolproject.model.retrofit.cnet.CommentCallback;
 import com.example.schoolproject.model.ui.DataHomeBoard;
 import com.example.schoolproject.nav.home.HomeRecyclerViewAdapter;
 import com.example.schoolproject.post.PostPreviewRecyclerViewAdapter;
@@ -20,6 +22,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class BoardCallback implements Callback<Board> {
+    private Long postId;
     private Activity activity;
     private Context context;
     private RecyclerView.Adapter adapter;
@@ -27,9 +30,14 @@ public class BoardCallback implements Callback<Board> {
     public BoardCallback(Activity activity, Context context) {
         this.activity = activity;
         this.context = context;
-        this.adapter = adapter;
     }
     public BoardCallback(Activity activity, Context context, RecyclerView.Adapter adapter) {
+        this.activity = activity;
+        this.context = context;
+        this.adapter = adapter;
+    }
+    public BoardCallback(Long postId, Activity activity, Context context, RecyclerView.Adapter adapter){
+        this.postId = postId;
         this.activity = activity;
         this.context = context;
         this.adapter = adapter;
@@ -57,6 +65,11 @@ public class BoardCallback implements Callback<Board> {
             if (call.request().method().equals("GET")){
                 PostRecyclerViewAdapter postAdapter = (PostRecyclerViewAdapter) adapter;
                 postAdapter.setData(board);
+                // 두 번째 콜백 호출(1: Post 2: Comment <--)
+                CommentApiService commentApiService = new CommentApiService();
+                Call<List<Comment>> call2 = commentApiService.getCommentsByBoardId(postId);
+                call2.enqueue(new CommentCallback.CommentListCallBack(context, adapter));
+
 
             }else if (call.request().method().equals("POST")){
                 showShortToast(context, "게시글 작성이 완료되었습니다.");

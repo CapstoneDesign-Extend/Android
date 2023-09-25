@@ -2,6 +2,7 @@ package com.example.schoolproject.model.retrofit.cnet;
 
 import static android.content.ContentValues.TAG;
 
+import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
@@ -10,7 +11,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.schoolproject.model.Board;
 import com.example.schoolproject.model.Comment;
+import com.example.schoolproject.model.retrofit.BoardApiService;
+import com.example.schoolproject.model.retrofit.BoardCallback;
 import com.example.schoolproject.nav.home.HomeRecyclerViewAdapter;
+import com.example.schoolproject.post.PostActivity;
 import com.example.schoolproject.post.PostPreviewRecyclerViewAdapter;
 import com.example.schoolproject.post.PostRecyclerViewAdapter;
 
@@ -21,10 +25,19 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class CommentCallback implements Callback<Comment> {
+    private Long postId;
+    private Activity activity;
     private Context context;
     private RecyclerView.Adapter adapter;
 
     public CommentCallback(Context context, RecyclerView.Adapter adapter) {
+        this.context = context;
+        this.adapter = adapter;
+    }
+
+    public CommentCallback(Long postId, Activity activity, Context context, RecyclerView.Adapter adapter) {
+        this.postId = postId;
+        this.activity = activity;
         this.context = context;
         this.adapter = adapter;
     }
@@ -40,6 +53,12 @@ public class CommentCallback implements Callback<Comment> {
 
             }else if (call.request().method().equals("POST")){
                 Toast.makeText(context, "댓글 작성이 완료되었습니다.", Toast.LENGTH_SHORT).show();
+                // dataList 초기화
+                ((PostRecyclerViewAdapter) adapter).clearData();
+                // 두 번째 콜백 호출 : 댓글 갱신용
+                BoardApiService boardApiService = new BoardApiService();
+                Call<Board> call1 = boardApiService.getBoardById(postId);
+                call1.enqueue(new BoardCallback(postId, activity, context, adapter));
 
             } else if (call.request().method().equals("UPDATE")){
                 //Toast.makeText(context, "댓글 수정이 완료되었습니다.", Toast.LENGTH_SHORT).show();
@@ -74,7 +93,6 @@ public class CommentCallback implements Callback<Comment> {
         public void onResponse(Call<List<Comment>> call, Response<List<Comment>> response) {
             if (response.isSuccessful()) {
                 List<Comment> commentList = response.body();
-                Log.d(TAG, "onResponse: 서버로부터 데이터를 가져왔습니다!\n어댑터의 setCommentList를 실행합니다...");
                 // distinguishing by instance
                 // 어댑터는 postRecyclerViewAdapter 하나만 들어오기때문에 구별할 필요없음
                 PostRecyclerViewAdapter postRecyclerViewAdapter = (PostRecyclerViewAdapter) adapter;
@@ -99,7 +117,6 @@ public class CommentCallback implements Callback<Comment> {
 
         @Override
         public void onFailure(Call<List<Comment>> call, Throwable t) {
-            Log.d(TAG, "onFailure: 서버로부터 데이터를 가져오지 못했습니다.");
         }
     }
 }

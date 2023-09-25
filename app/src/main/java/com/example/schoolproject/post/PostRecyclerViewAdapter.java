@@ -34,6 +34,9 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
     public PostRecyclerViewAdapter(List<Object> dataList){
         this.dataList = dataList;
     }
+    public void clearData(){
+        dataList.clear();
+    }
     public void setData(Object data){
         dataList.add(data);
         notifyDataSetChanged();
@@ -41,8 +44,6 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
     public void setCommentList(List<Comment> list){
         dataList.addAll(list);
         notifyDataSetChanged();
-        Log.d(TAG, "setCommentList: enabled");
-        Log.d(TAG, dataList.toString());
     }
     public int getItemViewType(int position){
         if (dataList.get(position) instanceof Board){
@@ -77,6 +78,7 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
                 @Override
                 public void onClick(View v) {
                     Log.d(TAG, "onClick: =========Like버튼 클릭========");
+
                 }
             });
             this.btn_scrap.setOnClickListener(new View.OnClickListener() {

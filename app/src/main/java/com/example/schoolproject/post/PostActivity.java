@@ -38,7 +38,9 @@ import java.util.List;
 import retrofit2.Call;
 
 public class PostActivity extends AppCompatActivity {
+    private boolean isCallbackCompleted = false;  // callback 상태 변수
     private Long postId;
+    private Long postAuthorId = Long.valueOf(-1);  // callback 클래스 호출시 저장됨(기본값: -1)
     private Long memberId;
     private String loginId;
     private String boardKind;
@@ -50,6 +52,13 @@ public class PostActivity extends AppCompatActivity {
     private boolean isNotificationEnabled = false;
     private Menu menu;
 
+    public void setPostAuthorId(Long postAuthorId) {
+        this.postAuthorId = postAuthorId;
+    }
+
+    public void setCallbackCompleted(boolean callbackCompleted) {
+        isCallbackCompleted = callbackCompleted;
+    }
 
     @Override
     protected void onResume() {
@@ -117,9 +126,19 @@ public class PostActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.toolbar_menu_post, menu);
-        this.menu = menu;
-        return super.onCreateOptionsMenu(menu);
+        if(isCallbackCompleted){
+            if (postAuthorId == Long.valueOf(-1)){
+                Toast.makeText(this, "fatal Error: postAuthorId is NULL", Toast.LENGTH_SHORT).show();
+            } else if (postAuthorId == memberId) {
+                getMenuInflater().inflate(R.menu.toolbar_menu_post_author, menu);
+                this.menu = menu;
+            } else {
+                getMenuInflater().inflate(R.menu.toolbar_menu_post, menu);
+                this.menu = menu;
+            }
+            return super.onCreateOptionsMenu(menu);
+        }
+        return false;  // 콜백 완료 전까지는 메뉴를 표시하지 않음
     }
 
     @Override
@@ -144,17 +163,17 @@ public class PostActivity extends AppCompatActivity {
                     }
                 }
                 return true;
-            case R.id.sendMessage:
+            case R.id.item_message:
                 Toast.makeText(this, "메시지 전송", Toast.LENGTH_SHORT).show();
                 return true;
-            case R.id.report:
+            case R.id.item_report:
                 Toast.makeText(this, "해당 사용자를 신고합니다.", Toast.LENGTH_SHORT).show();
                 return true;
-            case R.id.block:
-                Toast.makeText(this, "해당 사용자를 차단합니다.", Toast.LENGTH_SHORT).show();
+            case R.id.item_update:
+                Toast.makeText(this, "게시글 수정", Toast.LENGTH_SHORT).show();
                 return true;
-            case R.id.delete:
-                Toast.makeText(this, "게시글 삭제가 완료되었습니다.", Toast.LENGTH_SHORT).show();
+            case R.id.item_delete:
+                Toast.makeText(this, "게시글 삭제", Toast.LENGTH_SHORT).show();
                 return true;
 
             case android.R.id.home:

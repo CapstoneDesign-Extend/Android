@@ -22,17 +22,12 @@ import com.example.schoolproject.model.BoardKind;
 import com.example.schoolproject.model.Member;
 import com.example.schoolproject.model.retrofit.BoardApiService;
 import com.example.schoolproject.model.retrofit.BoardCallback;
-import com.example.schoolproject.model.retrofit.MemberApiService;
-import com.example.schoolproject.model.retrofit.MemberCallback;
-import com.example.schoolproject.test.DataBaseHelper;
 import com.google.gson.Gson;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class PostWriteActivity extends AppCompatActivity {
     private String boardKind;
@@ -84,7 +79,7 @@ public class PostWriteActivity extends AppCompatActivity {
                     board.setContent(et_post_content.getText().toString());
                     board.setMember(member);
                     board.setLikeCnt(0);
-                    board.setViewCnt(0);
+                    board.setChatCnt(0);
                     board.setFinalDate(getCurrentTime("default"));
                     if (cb_isAnon.isChecked()){
                         author = "익명";

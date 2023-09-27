@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 public class Comment {
     private Long id;
 
-    //private Board board;  // 게시판 id를 가져오기위해
+    private Long boardId;
 
     private String content; // 본문
 
@@ -13,7 +13,7 @@ public class Comment {
 
     private int likeCount; // 좋아요 갯수
 
-    //private Member member;
+    private Long memberId;
     private String author;
 
     public Long getId() {
@@ -25,8 +25,21 @@ public class Comment {
     }
 
 
+    public Long getBoardId() {
+        return boardId;
+    }
 
+    public void setBoardId(Long boardId) {
+        this.boardId = boardId;
+    }
 
+    public Long getMemberId() {
+        return memberId;
+    }
+
+    public void setMemberId(Long memberId) {
+        this.memberId = memberId;
+    }
 
     public String getContent() {
         return content;

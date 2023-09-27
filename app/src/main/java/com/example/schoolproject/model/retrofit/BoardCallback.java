@@ -12,6 +12,7 @@ import com.example.schoolproject.model.Comment;
 import com.example.schoolproject.model.retrofit.cnet.CommentCallback;
 import com.example.schoolproject.model.ui.DataHomeBoard;
 import com.example.schoolproject.nav.home.HomeRecyclerViewAdapter;
+import com.example.schoolproject.post.PostActivity;
 import com.example.schoolproject.post.PostPreviewRecyclerViewAdapter;
 import com.example.schoolproject.post.PostRecyclerViewAdapter;
 
@@ -65,6 +66,10 @@ public class BoardCallback implements Callback<Board> {
             if (call.request().method().equals("GET")){
                 PostRecyclerViewAdapter postAdapter = (PostRecyclerViewAdapter) adapter;
                 postAdapter.setData(board);
+                PostActivity postActivity = (PostActivity) activity;
+                postActivity.setPostAuthorId(board.getMemberId());  // set postAuthorId to delete post or comments
+                postActivity.setCallbackCompleted(true);  // 콜백 완료 알림
+                postActivity.invalidateOptionsMenu();  // 메뉴 표시
                 // 두 번째 콜백 호출(1: Post 2: Comment <--)
                 CommentApiService commentApiService = new CommentApiService();
                 Call<List<Comment>> call2 = commentApiService.getCommentsByBoardId(postId);

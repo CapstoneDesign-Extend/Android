@@ -1,19 +1,17 @@
 package com.example.schoolproject.model;
 
-import com.google.gson.annotations.SerializedName;
-
 import java.util.List;
 
 public class Board {
     private Long id;
-
     private String title; // 제목
     private String content; // 본문
     private String author; // 작성자
-
-    private Member member;
-
+    private Member member; // 데이터 객체 호환성 문제로 다시 추가함(createBoard 할때 member 가 필요)
+    private Long memberId;  // member's id
     private int viewCnt; // 조회수
+
+    private int chatCnt; // 댓글수
 
     private int likeCnt; // 좋아요 개수
 
@@ -27,6 +25,14 @@ public class Board {
 
 
     // getters and setters
+
+    public Member getMember() {
+        return member;
+    }
+
+    public void setMember(Member member) {
+        this.member = member;
+    }
 
     public Long getId() {
         return id;
@@ -68,12 +74,12 @@ public class Board {
         this.likeCnt = likeCnt;
     }
 
-    public Member getMember() {
-        return member;
+    public Long getMemberId() {
+        return memberId;
     }
 
-    public void setMember(Member member) {
-        this.member = member;
+    public void setMemberId(Long memberId) {
+        this.memberId = memberId;
     }
 
     public int getViewCnt() {
@@ -82,6 +88,14 @@ public class Board {
 
     public void setViewCnt(int viewCnt) {
         this.viewCnt = viewCnt;
+    }
+
+    public int getChatCnt() {
+        return chatCnt;
+    }
+
+    public void setChatCnt(int chatCnt) {
+        this.chatCnt = chatCnt;
     }
 
     public String getFinalDate() {

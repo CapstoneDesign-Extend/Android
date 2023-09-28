@@ -39,14 +39,18 @@ public class PostWriteActivity extends AppCompatActivity {
     private CheckBox cb_isAnon;
     private String author;
     private Member member;
+    private boolean isUpdate = false;  // 이 값에 따라 Create or Update 결정
+    private Long postId;  // update 위한 postId
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post_write);
-        // get current boardName + saved ID + Member, set author
+        // get current boardName + saved ID + Member, set author ...etc from Intent
         boardKind = getIntent().getStringExtra("boardKind");
+        postId = getIntent().getLongExtra("postId", -1);
+        isUpdate = getIntent().getBooleanExtra("isUpdate", false);
         SharedPreferences sharedPrefs = getSharedPreferences("loginPrefs", Context.MODE_PRIVATE);
         loginId = sharedPrefs.getString("loginId","error:ID is NULL");
         String memberJson = sharedPrefs.getString("memberJson", "error:Member is NULL");
@@ -62,6 +66,11 @@ public class PostWriteActivity extends AppCompatActivity {
         et_post_content = findViewById(R.id.et_post_content);
         cb_isAnon = findViewById(R.id.cb_isAnon);
 
+        // 게시글 수정 버튼을 통해 진입하면 해당 로직 실행
+        if (isUpdate){
+            et_post_title.setText(getIntent().getStringExtra("postTitle"));
+            et_post_content.setText(getIntent().getStringExtra("postContent"));
+        }
 
         // setting listener
         btn_done.setOnClickListener(new View.OnClickListener() {
@@ -72,23 +81,40 @@ public class PostWriteActivity extends AppCompatActivity {
                     Toast.makeText(PostWriteActivity.this, "제목과 내용을 모두 입력해주세요.", Toast.LENGTH_SHORT).show();
                 } else {
 
-                    BoardApiService apiService = new BoardApiService();
-                    Board board = new Board();
-                    board.setBoardKind(BoardKind.valueOf(boardKind));
-                    board.setTitle(et_post_title.getText().toString());
-                    board.setContent(et_post_content.getText().toString());
-                    board.setMember(member);
-                    board.setLikeCnt(0);
-                    board.setChatCnt(0);
-                    board.setFinalDate(getCurrentTime("default"));
-                    if (cb_isAnon.isChecked()){
-                        author = "익명";
-                    }
-                    board.setAuthor(author);
+                    if (!isUpdate){
+                        // 새로운 게시글 작성 동작
+                        BoardApiService apiService = new BoardApiService();
+                        Board board = new Board();
+                        board.setBoardKind(BoardKind.valueOf(boardKind));
+                        board.setTitle(et_post_title.getText().toString());
+                        board.setContent(et_post_content.getText().toString());
+                        board.setMember(member);
+                        board.setLikeCnt(0);
+                        board.setChatCnt(0);
+                        board.setFinalDate(getCurrentTime("default"));
+                        if (cb_isAnon.isChecked()) {author = "익명";}
+                        board.setAuthor(author);
 
-                    Call<Board> call = apiService.createBoard(board);
-                    BoardCallback callback = new BoardCallback(PostWriteActivity.this, getApplicationContext());
-                    call.enqueue(callback);
+                        Call<Board> call = apiService.createBoard(board);
+                        BoardCallback callback = new BoardCallback(PostWriteActivity.this, getApplicationContext());
+                        call.enqueue(callback);
+                    }else {
+                        // 게시글 수정 동작
+                        BoardApiService apiService = new BoardApiService();
+                        Board board = new Board();
+                        board.setTitle(et_post_title.getText().toString());
+                        board.setContent(et_post_content.getText().toString());
+                        if (cb_isAnon.isChecked()) {author = "익명";}
+                        else {author = loginId;}
+                        board.setAuthor(author);
+                        Toast.makeText(getApplicationContext(), author, Toast.LENGTH_SHORT).show();
+
+                        Call<Board> call = apiService.updateBoard(postId, board);
+                        BoardCallback callback = new BoardCallback(PostWriteActivity.this, getApplicationContext());
+                        call.enqueue(callback);
+                    }
+
+
 
                 }
             }

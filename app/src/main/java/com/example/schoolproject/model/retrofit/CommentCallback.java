@@ -1,4 +1,4 @@
-package com.example.schoolproject.model.retrofit.cnet;
+package com.example.schoolproject.model.retrofit;
 
 import static android.content.ContentValues.TAG;
 
@@ -63,9 +63,7 @@ public class CommentCallback implements Callback<Comment> {
             } else if (call.request().method().equals("UPDATE")){
                 //Toast.makeText(context, "댓글 수정이 완료되었습니다.", Toast.LENGTH_SHORT).show();
 
-            } else if (call.request().method().equals("DELETE")){
-                // warning:: deleteComment's return type is "Void"
-                Toast.makeText(context, "댓글이 정상적으로 삭제되었습니다.", Toast.LENGTH_SHORT).show();
+            // 댓글 삭제는 void를 리턴하므로 별도 클래스에 작성
             }
 
         } else {  // response를 아예 못받았을떄
@@ -79,7 +77,7 @@ public class CommentCallback implements Callback<Comment> {
         t.printStackTrace();
 
     }
-
+    // inner Class:: List<Comment>
     public static class CommentListCallBack implements Callback<List<Comment>>{
         private Context context;
         private RecyclerView.Adapter adapter;
@@ -117,6 +115,40 @@ public class CommentCallback implements Callback<Comment> {
 
         @Override
         public void onFailure(Call<List<Comment>> call, Throwable t) {
+        }
+    }
+
+    public static class DeleteCommentCallBack implements Callback<Void>{
+        private Activity activity;
+        private Context context;
+        private RecyclerView.Adapter adapter;
+        private Long postId;
+
+        public DeleteCommentCallBack(Context context) {
+            this.context = context;
+        }
+
+        public DeleteCommentCallBack(Activity activity, Context context, RecyclerView.Adapter adapter, Long postId) {
+            this.activity = activity;
+            this.context = context;
+            this.adapter = adapter;
+            this.postId = postId;
+        }
+
+        @Override
+        public void onResponse(Call<Void> call, Response<Void> response) {
+            Toast.makeText(context, "댓글이 삭제되었습니다.", Toast.LENGTH_SHORT).show();
+            // dataList 초기화
+            ((PostRecyclerViewAdapter) adapter).clearData();
+            // 두 번째 콜백 호출 : 댓글 갱신용
+            BoardApiService boardApiService = new BoardApiService();
+            Call<Board> call1 = boardApiService.getBoardById(postId);
+            call1.enqueue(new BoardCallback(postId, activity, context, adapter));
+        }
+
+        @Override
+        public void onFailure(Call<Void> call, Throwable t) {
+            Toast.makeText(context, "Delete_onFailure", Toast.LENGTH_SHORT).show();
         }
     }
 }

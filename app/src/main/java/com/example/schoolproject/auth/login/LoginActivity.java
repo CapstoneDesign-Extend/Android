@@ -89,7 +89,7 @@ public class LoginActivity extends AppCompatActivity {
         });
         btn_login.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v) {  // 로그인 버튼 클릭시 동작
                 String id = et_id.getText().toString();
                 String pw = et_pw.getText().toString();
 

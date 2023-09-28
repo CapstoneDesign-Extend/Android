@@ -9,7 +9,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.schoolproject.model.Board;
 import com.example.schoolproject.model.BoardKind;
 import com.example.schoolproject.model.Comment;
-import com.example.schoolproject.model.retrofit.cnet.CommentCallback;
 import com.example.schoolproject.model.ui.DataHomeBoard;
 import com.example.schoolproject.nav.home.HomeRecyclerViewAdapter;
 import com.example.schoolproject.post.PostActivity;
@@ -21,7 +20,7 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
+// BoardCallBack(Create/Read/Update)
 public class BoardCallback implements Callback<Board> {
     private Long postId;
     private Activity activity;
@@ -68,6 +67,8 @@ public class BoardCallback implements Callback<Board> {
                 postAdapter.setData(board);
                 PostActivity postActivity = (PostActivity) activity;
                 postActivity.setPostAuthorId(board.getMemberId());  // set postAuthorId to delete post or comments
+                postActivity.setPostTitle(board.getTitle());
+                postActivity.setPostContent(board.getContent());
                 postActivity.setCallbackCompleted(true);  // 콜백 완료 알림
                 postActivity.invalidateOptionsMenu();  // 메뉴 표시
                 // 두 번째 콜백 호출(1: Post 2: Comment <--)
@@ -80,13 +81,10 @@ public class BoardCallback implements Callback<Board> {
                 showShortToast(context, "게시글 작성이 완료되었습니다.");
                 finishActivity(activity);
 
-            } else if (call.request().method().equals("UPDATE")){
+            } else if (call.request().method().equals("PUT")){
                 showShortToast(context, "게시글 수정이 완료되었습니다.");
-
-            } else if (call.request().method().equals("DELETE")){
-                // warning:: deleteBoard's return type is "Void"
-                showShortToast(context, "게시글이 정상적으로 삭제되었습니다.");
-            }
+                finishActivity(activity);
+            } // delete 는 리턴이 Void 이기 때문에, 별도의 클래스로 작성함
 
         } else {
             showShortToast(context, "서버로부터 응답을 받을 수 없습니다.");
@@ -100,8 +98,7 @@ public class BoardCallback implements Callback<Board> {
 
 
 
-    // public inner class : BoardListCallBack
-
+    // public inner class : BoardListCallBack(리스트 형태인 경우)
 
     public static class BoardListCallBack implements Callback<List<Board>>{
         private Context context;
@@ -168,6 +165,28 @@ public class BoardCallback implements Callback<Board> {
         @Override
         public void onFailure(Call<List<Board>> call, Throwable t) {
             showShortToast(context, "인터넷 연결을 확인해주세요.");
+        }
+    }
+
+    // public inner class : Delete
+    public static class DeleteBoardCallBack implements Callback<Void>{
+        private Activity activity;
+        private Context context;
+
+        public DeleteBoardCallBack(Activity activity, Context context) {
+            this.activity = activity;
+            this.context = context;
+        }
+
+        @Override
+        public void onResponse(Call<Void> call, Response<Void> response) {
+            showShortToast(context, "게시글이 삭제되었습니다.");
+            activity.finish();
+        }
+
+        @Override
+        public void onFailure(Call<Void> call, Throwable t) {
+            showShortToast(context, "Delete_onFailure");
         }
     }
 

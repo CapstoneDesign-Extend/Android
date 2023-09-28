@@ -91,8 +91,6 @@ public class FragHome extends Fragment {
         adapter = new HomeRecyclerViewAdapter(getContext(), dataList);
         recyclerView.setAdapter(adapter);
 
-
-
         return view;
     }  // onCreateView ended
 
@@ -100,7 +98,6 @@ public class FragHome extends Fragment {
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.toolbar_menu_home, menu);
-
     }
 
 
@@ -186,7 +183,7 @@ public class FragHome extends Fragment {
 
                 }, throwable -> {
                     // 에러 처리
-                    Log.e("Error", throwable.getMessage());
+                    //Log.e("Error", throwable.getMessage());
                 });
 
 

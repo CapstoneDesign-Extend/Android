@@ -9,12 +9,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -29,9 +28,8 @@ import com.example.schoolproject.model.Comment;
 import com.example.schoolproject.model.retrofit.BoardApiService;
 import com.example.schoolproject.model.retrofit.BoardCallback;
 import com.example.schoolproject.model.retrofit.CommentApiService;
-import com.example.schoolproject.model.retrofit.cnet.CommentCallback;
+import com.example.schoolproject.model.retrofit.CommentCallback;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,6 +49,8 @@ public class PostActivity extends AppCompatActivity {
     private RecyclerView.Adapter adapter;
     private boolean isNotificationEnabled = false;
     private Menu menu;
+    private String postTitle;
+    private String postContent;
 
     public void setPostAuthorId(Long postAuthorId) {
         this.postAuthorId = postAuthorId;
@@ -58,6 +58,14 @@ public class PostActivity extends AppCompatActivity {
 
     public void setCallbackCompleted(boolean callbackCompleted) {
         isCallbackCompleted = callbackCompleted;
+    }
+
+    public void setPostTitle(String postTitle) {
+        this.postTitle = postTitle;
+    }
+
+    public void setPostContent(String postContent) {
+        this.postContent = postContent;
     }
 
     @Override
@@ -98,13 +106,13 @@ public class PostActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
 
         dataList = new ArrayList<>(); // initialize empty data
-        adapter = new PostRecyclerViewAdapter(dataList);
+        adapter = new PostRecyclerViewAdapter(PostActivity.this, getApplicationContext(), dataList);
         recyclerView.setAdapter(adapter);
 
         // setting listeners
         binding.ivCommentAdd.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v) {  // 댓글 작성 로직
                 if (binding.tvPostComment.getText().toString().isEmpty()){
                     Toast.makeText(getApplicationContext(), "댓글을 입력해주세요.", Toast.LENGTH_SHORT).show();
                 }else {
@@ -145,19 +153,19 @@ public class PostActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()){
 
-            case R.id.notification:
+            case R.id.item_notification:
                 isNotificationEnabled = !isNotificationEnabled; // toggle notificationFlag
                 if (isNotificationEnabled){
                     Toast.makeText(this, "알림이 설정되었습니다.", Toast.LENGTH_SHORT).show();
-                    menu.findItem(R.id.notification).setIcon(R.drawable.icon_notification_on_gicon);
-                    Drawable drawable = menu.findItem(R.id.notification).getIcon();
+                    menu.findItem(R.id.item_notification).setIcon(R.drawable.icon_notification_on_gicon);
+                    Drawable drawable = menu.findItem(R.id.item_notification).getIcon();
                     if (drawable != null){
                         DrawableCompat.setTint(drawable, ContextCompat.getColor(this, R.color.black));
                     }
                 } else {
                     Toast.makeText(this, "알림이 해제되었습니다.", Toast.LENGTH_SHORT).show();
-                    menu.findItem(R.id.notification).setIcon(R.drawable.icon_notification_off_gicon);
-                    Drawable drawable = menu.findItem(R.id.notification).getIcon();
+                    menu.findItem(R.id.item_notification).setIcon(R.drawable.icon_notification_off_gicon);
+                    Drawable drawable = menu.findItem(R.id.item_notification).getIcon();
                     if (drawable != null){
                         DrawableCompat.setTint(drawable, ContextCompat.getColor(this, R.color.colorBasicGray));
                     }
@@ -169,11 +177,19 @@ public class PostActivity extends AppCompatActivity {
             case R.id.item_report:
                 Toast.makeText(this, "해당 사용자를 신고합니다.", Toast.LENGTH_SHORT).show();
                 return true;
-            case R.id.item_update:
-                Toast.makeText(this, "게시글 수정", Toast.LENGTH_SHORT).show();
+            case R.id.item_update:  // 게시글 수정
+                Intent intent = new Intent(getApplicationContext(), PostWriteActivity.class);
+                intent.putExtra("boardKind", boardKind);
+                intent.putExtra("postId", postId);
+                intent.putExtra("isUpdate", true);
+                intent.putExtra("postTitle", postTitle);
+                intent.putExtra("postContent", postContent);
+                startActivity(intent);
                 return true;
             case R.id.item_delete:
-                Toast.makeText(this, "게시글 삭제", Toast.LENGTH_SHORT).show();
+                BoardApiService apiService = new BoardApiService();
+                Call<Void> call = apiService.deleteBoard(postId);
+                call.enqueue(new BoardCallback.DeleteBoardCallBack(PostActivity.this, getApplicationContext()));
                 return true;
 
             case android.R.id.home:
@@ -186,8 +202,9 @@ public class PostActivity extends AppCompatActivity {
     }
 
     private void loadData(){
+        dataList.clear();
         BoardApiService boardApiService = new BoardApiService();
-        Call<Board> call1 = boardApiService.getBoardById(postId);
-        call1.enqueue(new BoardCallback(postId, PostActivity.this, getApplicationContext(), adapter));
+        Call<Board> call = boardApiService.getBoardById(postId);
+        call.enqueue(new BoardCallback(postId, PostActivity.this, getApplicationContext(), adapter));
     }
 }

@@ -3,12 +3,17 @@ package com.example.schoolproject.post;
 import static android.content.ContentValues.TAG;
 import static com.example.schoolproject.model.DateConvertUtils.convertDate;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,20 +25,29 @@ import com.example.schoolproject.databinding.ItemCommentBinding;
 import com.example.schoolproject.model.Board;
 import com.example.schoolproject.model.Comment;
 import com.example.schoolproject.model.DateConvertUtils;
+import com.example.schoolproject.model.retrofit.CommentApiService;
+import com.example.schoolproject.model.retrofit.CommentCallback;
 
 import java.util.List;
+
+import retrofit2.Call;
 
 public class PostRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final int VIEW_TYPE_POST = 0;
     private static final int VIEW_TYPE_COMMENT = 1;
     private static final int VIEW_TYPE_REPLY = 2;
-
+    private Activity activity;
     private Context context;
     private List<Object> dataList;
+    private Long postId;  // postViewHolder에서 초기화
 
-    public PostRecyclerViewAdapter(List<Object> dataList){
+
+    public PostRecyclerViewAdapter(Activity activity, Context context, List<Object> dataList) {
+        this.activity = activity;
+        this.context = context;
         this.dataList = dataList;
     }
+
     public void clearData(){
         dataList.clear();
     }
@@ -73,6 +87,7 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
             this.btn_like = itemView.findViewById(R.id.btn_like);
             this.btn_scrap = itemView.findViewById(R.id.btn_scrap);
 
+
             // set listeners
             this.btn_like.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -97,18 +112,70 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
             tv_content.setText(data.getContent());
             tv_heart_count.setText(String.valueOf(data.getLikeCnt()));
             tv_chat_count.setText("0");
+            postId = data.getId();  // 상위 클래스로 넘긴 후 CommentViewHolder클래스에서 사용(댓글 삭제 후 갱신 로직)
         }
 
     }
     // viewHolder 2: Comments
     public class CommentViewHolder extends RecyclerView.ViewHolder{
         private ItemCommentBinding binding;
+        private Long memberId; // 댓글을 작성한 사람의 id (DB SEQ)
+        private Long currentUserId;  // 현재 접속자의 id (SharedPref에서 가져옴)
+        private Long commentId; // 댓글 id
+        private SharedPreferences sharedPrefs;
         public CommentViewHolder(ItemCommentBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
+            sharedPrefs = context.getSharedPreferences("loginPrefs", Context.MODE_PRIVATE);
+            // 현재 userId를 꺼내서 저장
+            currentUserId = sharedPrefs.getLong("id", -1);
+            binding.ivCommentLike.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
+            binding.ivCommentMore.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    View anchorView = binding.ivCommentMore;  // 이 뷰 주변에 팝업 메뉴 표시
+                    PopupMenu popupMenu = new PopupMenu(context, anchorView);
+                    MenuInflater inflater = popupMenu.getMenuInflater();
+                    // 현재 접속자가 작성한 댓글에만 삭제 메뉴 표시
+                    if (currentUserId == memberId){
+                        inflater.inflate(R.menu.comment_menu_author, popupMenu.getMenu());
+                    }else{
+                        inflater.inflate(R.menu.comment_menu, popupMenu.getMenu());
+                    }
+                    popupMenu.show();
+                    popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem item) {
+                            switch (item.getItemId()){
+                                case R.id.item_message:  // 메시지 전송
+                                    Toast.makeText(context, "메시지 전송", Toast.LENGTH_SHORT).show();
+                                    return true;
+                                case R.id.item_report:  // 댓글 신고
+                                    Toast.makeText(context, "해당 댓글을 신고합니다.", Toast.LENGTH_SHORT).show();
+                                    return true;
+                                case R.id.item_delete:  // 댓글 삭제 로직
+                                    CommentApiService apiService = new CommentApiService();
+                                    Call<Void> call = apiService.deleteCommentById(commentId);
+                                    call.enqueue(new CommentCallback.DeleteCommentCallBack(activity, context, PostRecyclerViewAdapter.this, postId));
+                                    return true;
+                                default: return false;
+                            }
+
+                        }
+                    });
+
+                }
+            });
         }
         public void bindData(Comment data){
             //binding.ivCommentLike.setImageResource(data.getImageResourceId());
+            memberId = data.getMemberId();
+            commentId = data.getId();
             binding.tvCommentAuthor.setText(data.getAuthor());
             binding.tvCommentContents.setText(data.getContent());
             binding.tvCommentDate.setText(DateConvertUtils.convertDate(data.getFinalDate().toString(), "date"));

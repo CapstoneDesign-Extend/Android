@@ -25,8 +25,11 @@ import com.example.schoolproject.databinding.ItemCommentBinding;
 import com.example.schoolproject.model.Board;
 import com.example.schoolproject.model.Comment;
 import com.example.schoolproject.model.DateConvertUtils;
+import com.example.schoolproject.model.Like;
 import com.example.schoolproject.model.retrofit.CommentApiService;
 import com.example.schoolproject.model.retrofit.CommentCallback;
+import com.example.schoolproject.model.retrofit.LikeApiService;
+import com.example.schoolproject.model.retrofit.LikeCallback;
 
 import java.util.List;
 
@@ -40,12 +43,16 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
     private Context context;
     private List<Object> dataList;
     private Long postId;  // postViewHolder에서 초기화
+    private Long currentUserId;  // sharedPerf에서 가져오기
+    private SharedPreferences sharedPrefs;
 
 
     public PostRecyclerViewAdapter(Activity activity, Context context, List<Object> dataList) {
         this.activity = activity;
         this.context = context;
         this.dataList = dataList;
+        sharedPrefs = context.getSharedPreferences("loginPrefs", Context.MODE_PRIVATE);
+        this.currentUserId = sharedPrefs.getLong("id", -1);
     }
 
     public void clearData(){
@@ -91,12 +98,14 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
             // set listeners
             this.btn_like.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View v) {
-                    Log.d(TAG, "onClick: =========Like버튼 클릭========");
+                public void onClick(View v) {  // Post의 Like 버튼 클릭 시 동작
 
+                    LikeApiService apiService = new LikeApiService();
+                    Call<Like> call = apiService.addLikeToBoard(postId, currentUserId);
+                    call.enqueue(new LikeCallback(activity, context));
                 }
             });
-            this.btn_scrap.setOnClickListener(new View.OnClickListener() {
+            this.btn_scrap.setOnClickListener(new View.OnClickListener() {  // Post의 Scrap 버튼 클릭 시 동작
                 @Override
                 public void onClick(View v) {
                     Log.d(TAG, "onClick: =========Scrap버튼 클릭========");
@@ -120,19 +129,21 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
     public class CommentViewHolder extends RecyclerView.ViewHolder{
         private ItemCommentBinding binding;
         private Long memberId; // 댓글을 작성한 사람의 id (DB SEQ)
-        private Long currentUserId;  // 현재 접속자의 id (SharedPref에서 가져옴)
+//        private Long currentUserId;  // 현재 접속자의 id (SharedPref에서 가져옴) --> 부모 클래스에서도 사용하므로 상위클래스로 이동
         private Long commentId; // 댓글 id
         private SharedPreferences sharedPrefs;
         public CommentViewHolder(ItemCommentBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
-            sharedPrefs = context.getSharedPreferences("loginPrefs", Context.MODE_PRIVATE);
-            // 현재 userId를 꺼내서 저장
-            currentUserId = sharedPrefs.getLong("id", -1);
+//            sharedPrefs = context.getSharedPreferences("loginPrefs", Context.MODE_PRIVATE);
+//            // 현재 userId를 꺼내서 저장
+//            currentUserId = sharedPrefs.getLong("id", -1);
             binding.ivCommentLike.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View v) {
-
+                public void onClick(View v) {  // Comment의 "좋아요" 로직
+                    LikeApiService apiService = new LikeApiService();
+                    Call<Like> call = apiService.addLikeToComment(commentId, currentUserId);
+                    call.enqueue(new LikeCallback(activity, context));
                 }
             });
             binding.ivCommentMore.setOnClickListener(new View.OnClickListener() {

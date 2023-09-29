@@ -124,6 +124,7 @@
             android:textSize="13dp"
             android:text="Like"/>
         <TextView
+            android:visibility="gone"
             android:id="@+id/btn_scrap"
             android:background="@drawable/shape_round_border"
             android:layout_width="65dp"

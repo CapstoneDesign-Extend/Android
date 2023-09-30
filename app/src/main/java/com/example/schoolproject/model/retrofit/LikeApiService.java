@@ -61,7 +61,7 @@ public class LikeApiService {
         @POST("/api/like/comment/{commentId}/member/{memberId}")
         Call<Like> addLikeToComment(@Path("commentId") Long commentId, @Path("memberId") Long memberId);
 
-        @GET("/liked/board-and-comments/{boardId}/member/{memberId}")
+        @GET("api/like/liked/board-and-comments/{boardId}/member/{memberId}")
         Call<LikeStatus> getLikedBoardAndComments(@Path("boardId") Long boardId, @Path("memberId") Long memberId);
 
         @GET("/api/like/board/{boardId}/member/{memberId}/exists")

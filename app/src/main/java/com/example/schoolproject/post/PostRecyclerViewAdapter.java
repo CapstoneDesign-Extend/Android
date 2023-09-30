@@ -27,10 +27,12 @@ import com.example.schoolproject.model.Board;
 import com.example.schoolproject.model.Comment;
 import com.example.schoolproject.model.DateConvertUtils;
 import com.example.schoolproject.model.Like;
+import com.example.schoolproject.model.LikeStatus;
 import com.example.schoolproject.model.retrofit.CommentApiService;
 import com.example.schoolproject.model.retrofit.CommentCallback;
 import com.example.schoolproject.model.retrofit.LikeApiService;
 import com.example.schoolproject.model.retrofit.LikeCallback;
+import com.google.gson.Gson;
 
 import java.util.List;
 
@@ -46,6 +48,7 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
     private Long postId;  // postViewHolder에서 초기화
     private Long currentUserId;  // sharedPerf에서 가져오기
     private SharedPreferences sharedPrefs;
+    private LikeStatus likeStatus;  // PostActivity에서 setter로 설정됨
 
 
     public PostRecyclerViewAdapter(Activity activity, Context context, List<Object> dataList) {
@@ -59,6 +62,11 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
     public void clearData(){
         dataList.clear();
     }
+
+    public void setLikeStatus(LikeStatus likeStatus) {
+        this.likeStatus = likeStatus;
+    }
+
     public void setData(Object data){
         dataList.add(data);
         notifyDataSetChanged();
@@ -81,7 +89,7 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
         private ImageView iv_profile;
         private TextView tv_author, tv_date, tv_time, tv_title, tv_content, tv_heart_count, tv_chat_count;
         private TextView btn_like, btn_scrap;
-        private boolean isPostLiked = false;
+        private boolean isPostLiked = false;  // 바인딩할때 업데이트됨
 
         public PostViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -147,6 +155,15 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
             });
         }
         public void bindData(Board data){
+            if (likeStatus.isLikedBoard()){
+                // 텍스트를 Like -> Liked! 로 바꾸기
+                btn_like.setText("Liked!");
+                isPostLiked = true;
+
+            }else {
+                btn_like.setText("Like");
+                isPostLiked = false;
+            }
             //iv_profile.setImageResource(data.getImageResourceId());  // (using default image)
             tv_author.setText(data.getAuthor());
             tv_date.setText(convertDate(data.getFinalDate(),"date"));
@@ -253,11 +270,23 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
             //binding.ivCommentLike.setImageResource(data.getImageResourceId());
             memberId = data.getMemberId();
             commentId = data.getId();
+
+            // "좋아요" 상태에 따라 Liked UI 업데이트
+            if (likeStatus.getLikedCommentIds().contains(commentId)){
+                // 아이콘 색 변경
+                binding.ivCommentLike.setImageResource(R.drawable.icon_heart_gicon_colored);
+                isCommentLiked = true;
+            } else {
+                // 아이콘 원래대로
+                binding.ivCommentLike.setImageResource(R.drawable.icon_heart_gicon);
+                isCommentLiked = false;
+            }
             binding.tvCommentAuthor.setText(data.getAuthor());
             binding.tvCommentContents.setText(data.getContent());
             binding.tvCommentDate.setText(DateConvertUtils.convertDate(data.getFinalDate().toString(), "date"));
             binding.tvCommentTime.setText(DateConvertUtils.convertDate(data.getFinalDate().toString(), "time"));
             binding.tvCommentHeartCount.setText(String.valueOf(data.getLikeCount()));
+
         }
     }
     @NonNull

@@ -64,7 +64,7 @@ public class BoardCallback implements Callback<Board> {
             Board board = response.body();
             if (call.request().method().equals("GET")){
                 PostRecyclerViewAdapter postAdapter = (PostRecyclerViewAdapter) adapter;
-                postAdapter.setData(board);
+                postAdapter.setData(board);  // UPDATE Data: Post
                 PostActivity postActivity = (PostActivity) activity;
                 postActivity.setPostAuthorId(board.getMemberId());  // set postAuthorId to delete post or comments
                 postActivity.setPostTitle(board.getTitle());

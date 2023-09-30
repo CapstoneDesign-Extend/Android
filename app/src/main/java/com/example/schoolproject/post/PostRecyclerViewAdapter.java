@@ -18,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.schoolproject.R;
@@ -80,6 +81,7 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
         private ImageView iv_profile;
         private TextView tv_author, tv_date, tv_time, tv_title, tv_content, tv_heart_count, tv_chat_count;
         private TextView btn_like, btn_scrap;
+        private boolean isPostLiked = false;
 
         public PostViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -95,14 +97,46 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
             this.btn_scrap = itemView.findViewById(R.id.btn_scrap);
 
 
+
+
             // set listeners
             this.btn_like.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View v) {  // Post의 Like 버튼 클릭 시 동작
-
+                public void onClick(View v) {  // Post의 "좋아요" 로직
                     LikeApiService apiService = new LikeApiService();
                     Call<Like> call = apiService.addLikeToBoard(postId, currentUserId);
                     call.enqueue(new LikeCallback(activity, context));
+                    if (!isPostLiked){
+                        // 텍스트를 Like -> Liked! 로 바꾸기
+                        btn_like.setText("Liked!");
+                        // 현재 좋아요 개수 가져와서 ++ 하는 로직(빠른 피드백을 위한 View 단독 업데이트, 실제 트랜잭션은 비동기 처리)
+                        String currentLikeCntStr = tv_heart_count.getText().toString();
+                        int currentLikeCount = -1;
+                        try {
+                            currentLikeCount = Integer.parseInt(currentLikeCntStr);
+                        }catch (NumberFormatException e){
+                            // 부적절한 값일 경우 예외 처리
+                        }
+                        currentLikeCount++;
+                        tv_heart_count.setText(String.valueOf(currentLikeCount));
+                        // isLiked 플래그 상태 업데이트
+                        isPostLiked = true;
+                    } else {
+                        // 텍스트를 다시 원래대로 바꾸기
+                        btn_like.setText("Like");
+                        // 현재 좋아요 개수 가져와서 -- 하는 로직(빠른 피드백을 위한 View 단독 업데이트, 실제 트랜잭션은 비동기 처리)
+                        String currentLikeCntStr = tv_heart_count.getText().toString();
+                        int currentLikeCount = -1;
+                        try {
+                            currentLikeCount = Integer.parseInt(currentLikeCntStr);
+                        }catch (NumberFormatException e){
+                            // 부적절한 값일 경우 예외 처리
+                        }
+                        currentLikeCount--;
+                        tv_heart_count.setText(String.valueOf(currentLikeCount));
+                        // isLiked 플래그 상태 업데이트
+                        isPostLiked = false;
+                    }
                 }
             });
             this.btn_scrap.setOnClickListener(new View.OnClickListener() {  // Post의 Scrap 버튼 클릭 시 동작
@@ -132,6 +166,7 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
 //        private Long currentUserId;  // 현재 접속자의 id (SharedPref에서 가져옴) --> 부모 클래스에서도 사용하므로 상위클래스로 이동
         private Long commentId; // 댓글 id
         private SharedPreferences sharedPrefs;
+        private boolean isCommentLiked = false;
         public CommentViewHolder(ItemCommentBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
@@ -144,6 +179,37 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
                     LikeApiService apiService = new LikeApiService();
                     Call<Like> call = apiService.addLikeToComment(commentId, currentUserId);
                     call.enqueue(new LikeCallback(activity, context));
+                    if (!isCommentLiked){
+                        // 현재 좋아요 개수 가져와서 ++ 하는 로직(빠른 피드백을 위한 View 단독 업데이트, 실제 트랜잭션은 비동기 처리)
+                        String currentLikeCntStr = binding.tvCommentHeartCount.getText().toString();
+                        int currentLikeCount = -1;
+                        try {
+                            currentLikeCount = Integer.parseInt(currentLikeCntStr);
+                        }catch (NumberFormatException e){
+                            // 부적절한 값일 경우 예외 처리
+                        }
+                        currentLikeCount++;
+                        binding.tvCommentHeartCount.setText(String.valueOf(currentLikeCount));
+                        // 아이콘 색 변경
+                        binding.ivCommentLike.setImageResource(R.drawable.icon_heart_gicon_colored);
+                        // update flag
+                        isCommentLiked = true;
+                    }else {
+                        // 현재 좋아요 개수 가져와서 ++ 하는 로직(빠른 피드백을 위한 View 단독 업데이트, 실제 트랜잭션은 비동기 처리)
+                        String currentLikeCntStr = binding.tvCommentHeartCount.getText().toString();
+                        int currentLikeCount = -1;
+                        try {
+                            currentLikeCount = Integer.parseInt(currentLikeCntStr);
+                        }catch (NumberFormatException e){
+                            // 부적절한 값일 경우 예외 처리
+                        }
+                        currentLikeCount--;
+                        binding.tvCommentHeartCount.setText(String.valueOf(currentLikeCount));
+                        // 아이콘 색 변경
+                        binding.ivCommentLike.setImageResource(R.drawable.icon_heart_gicon);
+                        // update flag
+                        isCommentLiked = false;
+                    }
                 }
             });
             binding.ivCommentMore.setOnClickListener(new View.OnClickListener() {

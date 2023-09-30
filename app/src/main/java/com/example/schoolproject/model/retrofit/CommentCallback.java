@@ -94,7 +94,7 @@ public class CommentCallback implements Callback<Comment> {
                 // distinguishing by instance
                 // 어댑터는 postRecyclerViewAdapter 하나만 들어오기때문에 구별할 필요없음
                 PostRecyclerViewAdapter postRecyclerViewAdapter = (PostRecyclerViewAdapter) adapter;
-                postRecyclerViewAdapter.setCommentList(commentList);
+                postRecyclerViewAdapter.setCommentList(commentList);  // UPDATE data:: Comment
 
                 // *주의*: request url에 해당 키워드가 실제로 포함되는지 확인 후 구현하기
                 if (call.request().url().toString().contains("member")) {

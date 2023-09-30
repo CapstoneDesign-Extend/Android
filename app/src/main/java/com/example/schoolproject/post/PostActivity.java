@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.drawable.DrawableCompat;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -25,10 +27,13 @@ import com.example.schoolproject.databinding.ActivityPostBinding;
 import com.example.schoolproject.model.Board;
 import com.example.schoolproject.model.BoardKindUtils;
 import com.example.schoolproject.model.Comment;
+import com.example.schoolproject.model.LikeStatus;
 import com.example.schoolproject.model.retrofit.BoardApiService;
 import com.example.schoolproject.model.retrofit.BoardCallback;
 import com.example.schoolproject.model.retrofit.CommentApiService;
 import com.example.schoolproject.model.retrofit.CommentCallback;
+import com.example.schoolproject.model.retrofit.LikeApiService;
+import com.example.schoolproject.model.retrofit.LikeCallback;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,6 +56,7 @@ public class PostActivity extends AppCompatActivity {
     private Menu menu;
     private String postTitle;
     private String postContent;
+    private MutableLiveData<LikeStatus> likeStatusLiveData = new MutableLiveData<>();  // 이 값을 받았을때 recyclerView에 아이템 연결
 
     public void setPostAuthorId(Long postAuthorId) {
         this.postAuthorId = postAuthorId;
@@ -71,9 +77,21 @@ public class PostActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        // get post matching postId
-        loadData();
-
+        // 현재 접속자의 좋아요 목록 가져오기(현재 post에 한함)
+        loadLikeStatus(postId, memberId, likeStatusLiveData);  // 비동기 Call 실행
+        // LiveData를 관찰하기
+        likeStatusLiveData.observe(this, new Observer<LikeStatus>() {
+            @Override
+            public void onChanged(LikeStatus likeStatus) {
+                if (adapter == null){
+                    // 여기서 LiveData도 함께 Adapter로 넘겨주기
+                    adapter = new PostRecyclerViewAdapter(PostActivity.this, getApplicationContext(), dataList);
+                    recyclerView.setAdapter(adapter);
+                }
+                // LikeStatus를 받은 후, 게시판 데이터 로드
+                loadData();  // BoardCallback + CommentCallback, notifyDataSetChanged() 포함됨
+            }
+        });
     }
 
     @Override
@@ -82,7 +100,7 @@ public class PostActivity extends AppCompatActivity {
         ActivityPostBinding binding = ActivityPostBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         SharedPreferences sPref = getSharedPreferences("loginPrefs", MODE_PRIVATE);
-
+        // 필요한 값 가져오기
         postId = getIntent().getLongExtra("postId",-1);
         memberId = sPref.getLong("id", -1);
         loginId = sPref.getString("loginId", null);
@@ -104,10 +122,8 @@ public class PostActivity extends AppCompatActivity {
         // setting RecyclerView
         recyclerView = findViewById(R.id.recyclerview_post);
         recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-
         dataList = new ArrayList<>(); // initialize empty data
-        adapter = new PostRecyclerViewAdapter(PostActivity.this, getApplicationContext(), dataList);
-        recyclerView.setAdapter(adapter);
+
 
         // setting listeners
         binding.ivCommentAdd.setOnClickListener(new View.OnClickListener() {
@@ -201,10 +217,15 @@ public class PostActivity extends AppCompatActivity {
         }
     }
 
-    private void loadData(){
+    private void loadData(){  // boardCallback 이 끝나면 commentCallback도 실행됨 (중첩 콜백)
         dataList.clear();
         BoardApiService boardApiService = new BoardApiService();
         Call<Board> call = boardApiService.getBoardById(postId);
         call.enqueue(new BoardCallback(postId, PostActivity.this, getApplicationContext(), adapter));
+    }
+    private void loadLikeStatus(Long postId, Long memberId, MutableLiveData<LikeStatus> liveData){
+        LikeApiService apiService = new LikeApiService();
+        Call<LikeStatus> call = apiService.getLikedBoardAndComments(postId, memberId);
+        call.enqueue(new LikeCallback.GetLikeStatusCallback(getApplicationContext(), liveData));
     }
 }

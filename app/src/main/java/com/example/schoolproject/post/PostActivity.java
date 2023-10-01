@@ -138,9 +138,12 @@ public class PostActivity extends AppCompatActivity {
                 }else {
                     if (binding.cbCommentIsAnon.isChecked()){ author = "익명"; }
                     else { author = loginId; }
+
+
+
                     CommentApiService apiService = new CommentApiService();
                     Call<Comment> call = apiService.createComment(postId, memberId, binding.tvPostComment.getText().toString(), author);
-                    call.enqueue(new CommentCallback(postId, PostActivity.this, getApplicationContext(), adapter));
+                    call.enqueue(new CommentCallback(postId, memberId, likeStatusLiveData, PostActivity.this, getApplicationContext(), adapter));
                     // 댓글 작성 후 입력폼 초기화 및 키보드 숨기기
                     binding.tvPostComment.setText("");
                     InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);

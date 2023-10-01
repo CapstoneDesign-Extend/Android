@@ -1,33 +1,24 @@
 package com.example.schoolproject.post;
 
-import static android.content.ContentValues.TAG;
 import static com.example.schoolproject.model.DateConvertUtils.convertDate;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.schoolproject.R;
 import com.example.schoolproject.model.Board;
-import com.example.schoolproject.model.BoardKind;
-import com.example.schoolproject.model.BoardKindUtils;
 import com.example.schoolproject.model.ui.DataPost;
-import com.google.android.material.snackbar.Snackbar;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class PostPreviewRecyclerViewAdapter extends RecyclerView.Adapter<PostPreviewRecyclerViewAdapter.postPreviewHolder>{
@@ -54,7 +45,7 @@ public class PostPreviewRecyclerViewAdapter extends RecyclerView.Adapter<PostPre
                 p.setDate(convertDate(b.getFinalDate(),"date"));
                 p.setTime(convertDate(b.getFinalDate(),"time"));
                 p.setHeart_count(String.valueOf(b.getLikeCnt()));
-                p.setChat_count("0");
+                p.setChat_count(String.valueOf(b.getChatCnt()));
 
                 dataList.add(p);
             }
@@ -82,6 +73,8 @@ public class PostPreviewRecyclerViewAdapter extends RecyclerView.Adapter<PostPre
         private Long postId;
         private String boardKind;
         protected LinearLayout boardWrapper;
+        protected LinearLayout heartWrapper;
+        protected LinearLayout chatWrapper;
         protected ImageView imageView;
         protected TextView tv_title;
         protected TextView tv_data;
@@ -100,6 +93,8 @@ public class PostPreviewRecyclerViewAdapter extends RecyclerView.Adapter<PostPre
             this.tv_chatCount = itemView.findViewById(R.id.tv_chat_count);
             this.tv_time = itemView.findViewById(R.id.tv_board_notice_time);
             this.tv_auth = itemView.findViewById(R.id.tv_board_notice_auth);
+            this.chatWrapper = itemView.findViewById(R.id.wrapper_chatCount);
+            this.heartWrapper = itemView.findViewById(R.id.wrapper_heartCount);
 
             // set OnClickListener for boardWrapper
             this.boardWrapper.setOnClickListener(new View.OnClickListener() {
@@ -115,6 +110,17 @@ public class PostPreviewRecyclerViewAdapter extends RecyclerView.Adapter<PostPre
             });
         }
         public void bindData(DataPost data){
+            // toggle counter visibility
+            if (data.getHeart_count().equals("0")){
+                heartWrapper.setVisibility(View.GONE);
+            }else {
+                heartWrapper.setVisibility(View.VISIBLE);
+            }
+            if (data.getChat_count().equals("0")){
+                chatWrapper.setVisibility(View.GONE);
+            }else {
+                chatWrapper.setVisibility(View.VISIBLE);
+            }
             // save postId+boardName and send to PostActivity in onClickListener
             this.postId = data.getPostId();
             this.boardKind = String.valueOf(data.getBoardType());
@@ -153,4 +159,5 @@ public class PostPreviewRecyclerViewAdapter extends RecyclerView.Adapter<PostPre
     public int getItemCount() {
         return dataList.size();
     }
+
 }

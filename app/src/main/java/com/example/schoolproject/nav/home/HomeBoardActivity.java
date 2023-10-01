@@ -105,8 +105,8 @@ public class HomeBoardActivity extends AppCompatActivity {
             case android.R.id.home:
                 finish();break;
             case R.id.search:
-                Snackbar.make(getWindow().getDecorView(), "search",100).show();
                 Intent intent = new Intent(this, SearchActivity.class);
+                intent.putExtra("searchType", "board");
                 startActivity(intent);
                 break;
         }

@@ -171,7 +171,7 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
             tv_title.setText(data.getTitle());
             tv_content.setText(data.getContent());
             tv_heart_count.setText(String.valueOf(data.getLikeCnt()));
-            tv_chat_count.setText("0");
+            tv_chat_count.setText(String.valueOf(data.getChatCnt()));
             postId = data.getId();  // 상위 클래스로 넘긴 후 CommentViewHolder클래스에서 사용(댓글 삭제 후 갱신 로직)
         }
 
@@ -180,16 +180,12 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
     public class CommentViewHolder extends RecyclerView.ViewHolder{
         private ItemCommentBinding binding;
         private Long memberId; // 댓글을 작성한 사람의 id (DB SEQ)
-//        private Long currentUserId;  // 현재 접속자의 id (SharedPref에서 가져옴) --> 부모 클래스에서도 사용하므로 상위클래스로 이동
         private Long commentId; // 댓글 id
         private SharedPreferences sharedPrefs;
         private boolean isCommentLiked = false;
         public CommentViewHolder(ItemCommentBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
-//            sharedPrefs = context.getSharedPreferences("loginPrefs", Context.MODE_PRIVATE);
-//            // 현재 userId를 꺼내서 저장
-//            currentUserId = sharedPrefs.getLong("id", -1);
             binding.ivCommentLike.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {  // Comment의 "좋아요" 로직
@@ -199,7 +195,7 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
                     if (!isCommentLiked){
                         // 현재 좋아요 개수 가져와서 ++ 하는 로직(빠른 피드백을 위한 View 단독 업데이트, 실제 트랜잭션은 비동기 처리)
                         String currentLikeCntStr = binding.tvCommentHeartCount.getText().toString();
-                        int currentLikeCount = -1;
+                        int currentLikeCount = -1;  // 초기화 값
                         try {
                             currentLikeCount = Integer.parseInt(currentLikeCntStr);
                         }catch (NumberFormatException e){
@@ -211,10 +207,15 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
                         binding.ivCommentLike.setImageResource(R.drawable.icon_heart_gicon_colored);
                         // update flag
                         isCommentLiked = true;
+
+                        if (currentLikeCount == 1){
+                            binding.wrapperHeartCount.setVisibility(View.VISIBLE);
+                        }
+
                     }else {
                         // 현재 좋아요 개수 가져와서 ++ 하는 로직(빠른 피드백을 위한 View 단독 업데이트, 실제 트랜잭션은 비동기 처리)
                         String currentLikeCntStr = binding.tvCommentHeartCount.getText().toString();
-                        int currentLikeCount = -1;
+                        int currentLikeCount = -1;  // 초기화 값
                         try {
                             currentLikeCount = Integer.parseInt(currentLikeCntStr);
                         }catch (NumberFormatException e){
@@ -226,6 +227,9 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
                         binding.ivCommentLike.setImageResource(R.drawable.icon_heart_gicon);
                         // update flag
                         isCommentLiked = false;
+                        if (currentLikeCount == 0){
+                            binding.wrapperHeartCount.setVisibility(View.GONE);
+                        }
                     }
                 }
             });
@@ -281,6 +285,13 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
                 binding.ivCommentLike.setImageResource(R.drawable.icon_heart_gicon);
                 isCommentLiked = false;
             }
+            // 아이콘 가시성 로직
+            if (data.getLikeCount() == 0){
+                binding.wrapperHeartCount.setVisibility(View.GONE);
+            } else {
+                binding.wrapperHeartCount.setVisibility(View.VISIBLE);
+            }
+
             binding.tvCommentAuthor.setText(data.getAuthor());
             binding.tvCommentContents.setText(data.getContent());
             binding.tvCommentDate.setText(DateConvertUtils.convertDate(data.getFinalDate().toString(), "date"));

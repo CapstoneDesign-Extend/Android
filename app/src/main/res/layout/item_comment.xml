@@ -87,21 +87,27 @@
             android:layout_marginLeft="7dp"
             android:text="00:00"
             android:textSize="14dp" />
-
-        <ImageView
-            android:src="@drawable/icon_heart"
-            android:layout_gravity="center_vertical"
-            android:layout_marginTop="1dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="3dp"
-            android:layout_width="13dp"
-            android:layout_height="13dp"/>
-        <TextView
-            android:id="@+id/tv_comment_heart_count"
+        <LinearLayout
+            android:id="@+id/wrapper_heartCount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/colorEveryTime"
-            android:text="00"/>
+            android:orientation="horizontal">
+            <ImageView
+                android:src="@drawable/icon_heart"
+                android:layout_gravity="center_vertical"
+                android:layout_marginTop="1dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="3dp"
+                android:layout_width="13dp"
+                android:layout_height="13dp"/>
+            <TextView
+                android:id="@+id/tv_comment_heart_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorEveryTime"
+                android:text="00"/>
+        </LinearLayout>
+
 
     </LinearLayout>
 

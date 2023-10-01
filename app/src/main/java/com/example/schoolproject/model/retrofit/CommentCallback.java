@@ -7,10 +7,13 @@ import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.schoolproject.model.Board;
 import com.example.schoolproject.model.Comment;
+import com.example.schoolproject.model.LikeStatus;
 import com.example.schoolproject.model.retrofit.BoardApiService;
 import com.example.schoolproject.model.retrofit.BoardCallback;
 import com.example.schoolproject.nav.home.HomeRecyclerViewAdapter;
@@ -26,20 +29,24 @@ import retrofit2.Response;
 
 public class CommentCallback implements Callback<Comment> {
     private Long postId;
+    private Long memberId;  // 현재 접속자 ID
     private Activity activity;
     private Context context;
     private RecyclerView.Adapter adapter;
+    private MutableLiveData<LikeStatus> liveData;
 
     public CommentCallback(Context context, RecyclerView.Adapter adapter) {
         this.context = context;
         this.adapter = adapter;
     }
 
-    public CommentCallback(Long postId, Activity activity, Context context, RecyclerView.Adapter adapter) {
+    public CommentCallback(Long postId, Long memberId, MutableLiveData liveData, Activity activity, Context context, RecyclerView.Adapter adapter) {
         this.postId = postId;
+        this.memberId = memberId;  // 현재 접속자 ID
         this.activity = activity;
         this.context = context;
         this.adapter = adapter;
+        this.liveData = liveData;
     }
 
     @Override
@@ -55,10 +62,16 @@ public class CommentCallback implements Callback<Comment> {
                 Toast.makeText(context, "댓글 작성이 완료되었습니다.", Toast.LENGTH_SHORT).show();
                 // dataList 초기화
                 ((PostRecyclerViewAdapter) adapter).clearData();
-                // 두 번째 콜백 호출 : 댓글 갱신용
-                BoardApiService boardApiService = new BoardApiService();
-                Call<Board> call1 = boardApiService.getBoardById(postId);
-                call1.enqueue(new BoardCallback(postId, activity, context, adapter));
+                // 두 번째 콜백 호출 : 화면 갱신용
+//                BoardApiService boardApiService = new BoardApiService(); // 이 콜백이 실행되면 Post + Comment 모두 갱신됨
+//                Call<Board> call1 = boardApiService.getBoardById(postId);
+//                call1.enqueue(new BoardCallback(postId, activity, context, adapter));
+
+                // 이 콜백으로 대체: liveData를 Activiy에서 관찰하고 있기 때문에, 상태를 변경하면 해당 액티비티에 정의된 화면갱신 콜백 실행
+                // 댓글을 새로 작성했을 때, 화면이 업데이트되면서 댓글의 좋아요 체크 상태가 풀리는 문제 해결 위함
+                LikeApiService apiService = new LikeApiService();
+                Call<LikeStatus> call1 = apiService.getLikedBoardAndComments(postId, memberId);
+                call1.enqueue(new LikeCallback.GetLikeStatusCallback(context, liveData));
 
             } else if (call.request().method().equals("UPDATE")){
                 //Toast.makeText(context, "댓글 수정이 완료되었습니다.", Toast.LENGTH_SHORT).show();

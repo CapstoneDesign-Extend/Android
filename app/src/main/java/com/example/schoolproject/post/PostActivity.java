@@ -125,7 +125,7 @@ public class PostActivity extends AppCompatActivity {
                 Log.e(TAG, "onChanged: "+ MyUtils.toJsonString(likeStatus));
                 // LikeStatus를 받은 후, 게시판 데이터 로드
                 PostRecyclerViewAdapter postRecyclerViewAdapter = (PostRecyclerViewAdapter) adapter;
-                postRecyclerViewAdapter.setLikeStatus(convertLikeStatusFromLiveData(likeStatusLiveData));
+                postRecyclerViewAdapter.setServerLikeStatus(convertLikeStatusFromLiveData(likeStatusLiveData));
                 loadData();  // BoardCallback + CommentCallback, notifyDataSetChanged() 포함됨
             }
         });

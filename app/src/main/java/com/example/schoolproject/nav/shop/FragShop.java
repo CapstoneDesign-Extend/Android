@@ -17,20 +17,41 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.schoolproject.model.Board;
+import com.example.schoolproject.model.BoardKind;
+import com.example.schoolproject.model.BoardKindUtils;
+import com.example.schoolproject.model.retrofit.BoardApiService;
+import com.example.schoolproject.model.retrofit.BoardCallback;
 import com.example.schoolproject.post.PostWriteActivity;
 import com.example.schoolproject.R;
 import com.example.schoolproject.notification.NotificationActivity;
 import com.example.schoolproject.search.SearchActivity;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.leinardi.android.speeddial.SpeedDialActionItem;
 import com.leinardi.android.speeddial.SpeedDialView;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import retrofit2.Call;
+
 public class FragShop extends Fragment {
     private View view;
+    private FloatingActionButton fab;
+    private List<Object> dataList;
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
     private RecyclerView.Adapter adapter;
-    private SpeedDialView speedDialView;
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        // Load Data
+        BoardApiService apiService = new BoardApiService();
+        Call<List<Board>> call = apiService.getBoardsByBoardKind(BoardKind.MARKET);
+        call.enqueue(new BoardCallback.BoardListCallBack(getContext(), adapter));
+    }
 
     @Nullable
     @Override
@@ -50,36 +71,22 @@ public class FragShop extends Fragment {
         layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
 
-        adapter = new ShopRecyclerViewAdapter();
+        dataList = new ArrayList<>();  // init with empty data
+        adapter = new ShopRecyclerViewAdapter(getContext(), dataList);
         recyclerView.setAdapter(adapter);
 
-        // setting SpeedDialView
-        speedDialView = view.findViewById(R.id.speedDial);
-        speedDialView.addActionItem(
-                new SpeedDialActionItem.Builder(R.id.fab_buy, android.R.drawable.ic_input_add)
-                        .setLabel("구매글 작성")
-                        .create()
-        );
-        speedDialView.addActionItem(
-                new SpeedDialActionItem.Builder(R.id.fab_sell, android.R.drawable.ic_input_add)
-                        .setLabel("판매글 작성")
-                        .create()
-        );
-        speedDialView.setOnActionSelectedListener(new SpeedDialView.OnActionSelectedListener(){
-
+        // setting fab
+        fab = view.findViewById(R.id.fab_write);
+        fab.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onActionSelected(SpeedDialActionItem actionItem) {
-                int id = actionItem.getId();
-                if (id == R.id.fab_buy){
-                    Intent intent = new Intent(getContext(), PostWriteActivity.class);
-                    getContext().startActivity(intent);
-                } else if (id == R.id.fab_sell) {
-                    Intent intent = new Intent(getContext(), PostWriteActivity.class);
-                    getContext().startActivity(intent);
-                }
-                return true;
+            public void onClick(View v) {
+                Intent intent = new Intent(view.getContext(), PostWriteActivity.class);
+                intent.putExtra("boardKind","MARKET");
+                startActivity(intent);
             }
         });
+
+
 
         return view;
     }
@@ -102,9 +109,7 @@ public class FragShop extends Fragment {
                                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
 
 
-        //notificationItem.setVisible(true);
-        //searchItem.setVisible(true);
-        //myPageItem.setVisible(false);
+
         super.onCreateOptionsMenu(menu, inflater);
     }
 

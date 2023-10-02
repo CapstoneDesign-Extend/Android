@@ -1,63 +1,107 @@
 package com.example.schoolproject.nav.shop;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.schoolproject.R;
+import com.example.schoolproject.databinding.ItemShopPreviewBinding;
+import com.example.schoolproject.model.Board;
+import com.example.schoolproject.model.DateConvertUtils;
 import com.google.android.material.snackbar.Snackbar;
 
-public class ShopRecyclerViewAdapter extends RecyclerView.Adapter<ShopRecyclerViewAdapter.myViewHolder>{
+import java.util.ArrayList;
+import java.util.List;
 
-    public class myViewHolder extends RecyclerView.ViewHolder{
-        protected LinearLayout shopWrapper;
-        protected TextView tv_title;
-        protected TextView tv_price;
-        protected TextView tv_time;
-        protected TextView tv_isANON;
+public class ShopRecyclerViewAdapter extends RecyclerView.Adapter<ShopRecyclerViewAdapter.postPreviewHolder>{
+    private Context context;
+    private List<Object> dataList;
 
-        public myViewHolder(@NonNull View itemView) {
-            super(itemView);
-            this.shopWrapper = itemView.findViewById(R.id.shop_wrapper);
-            this.tv_title = itemView.findViewById(R.id.tv_shop_title);
-            this.tv_price = itemView.findViewById(R.id.tv_shop_price);
-            this.tv_time = itemView.findViewById(R.id.tv_shop_time);
-            this.tv_isANON = itemView.findViewById(R.id.tv_shop_isANON);
+    public ShopRecyclerViewAdapter(Context context, List<Object> dataList) {
+        this.context = context;
+        this.dataList = dataList;
+    }
+    public void setData(List<Board> boardList) {
+        if (dataList == null){
+            dataList = new ArrayList<>();
+        }else {
+            dataList.clear();
+        }
+        this.dataList.addAll(boardList);
+        notifyDataSetChanged();
+    }
 
-            // set OnClickListener for boardWrapper
-            this.shopWrapper.setOnClickListener(new View.OnClickListener() {
+    public class postPreviewHolder extends RecyclerView.ViewHolder{
+        private ItemShopPreviewBinding binding;
+        private Long postId;
+
+
+        public postPreviewHolder(@NonNull ItemShopPreviewBinding binding) {
+            super(binding.getRoot());
+            this.binding = binding;
+
+
+            // set OnClickListener for postWrapper
+            binding.shopWrapper.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Snackbar.make(v, "move to post", 100).show();
                 }
             });
         }
-        public void bindData(){
+        public void bindData(Board board){
+            // toggle counter visibility
+            if (board.getLikeCnt() == 0){
+                binding.wrapperHeartCount.setVisibility(View.GONE);
+            }else {
+                binding.wrapperHeartCount.setVisibility(View.VISIBLE);
+            }
+            if (board.getChatCnt() == 0){
+                binding.wrapperChatCount.setVisibility(View.GONE);
+            }else {
+                binding.wrapperChatCount.setVisibility(View.VISIBLE);
+            }
+            // save postId+boardName and send to PostActivity in onClickListener
+            this.postId = board.getId();
 
+            // *************  서버에서 정의된 이미지 확인 후 수정 예정 *******************
+//            if (data.getImageResourceId() == 0 ){
+//                imageView.setVisibility(View.GONE);
+//            }else {
+//                imageView.setVisibility(View.VISIBLE);
+//                imageView.setImageResource(data.getImageResourceId());
+//            }
+            binding.tvShopTitle.setText(board.getTitle());
+            // Market preview는 Content를 미리 보여주지 않음(제목만 보여줌)
+            binding.tvHeartCount.setText(Integer.toString(board.getLikeCnt()));
+            binding.tvChatCount.setText(Integer.toString(board.getChatCnt()));
+            binding.tvShopTime.setText(DateConvertUtils.convertDate(board.getFinalDate(), "date"));
+            binding.tvShopAuthor.setText(board.getAuthor());
+            // 가격 정보 가져오는 getter가 아직 없음
+            //binding.tvShopPrice.setText(board.getPrice().toString() + "원");
         }
     }
 
     @NonNull
     @Override
-    public myViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_shop,parent,false);
-        myViewHolder viewHolder = new myViewHolder(itemView);
-        return viewHolder;
+    public postPreviewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+        ItemShopPreviewBinding binding = ItemShopPreviewBinding.inflate(inflater, parent, false);
+        return new postPreviewHolder(binding);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull myViewHolder holder, int position) {
-
+    public void onBindViewHolder(@NonNull postPreviewHolder holder, int position) {
+        holder.bindData((Board)dataList.get(position));
     }
 
     @Override
     public int getItemCount() {
-        return 20;
+        return dataList.size();
     }
 
 }

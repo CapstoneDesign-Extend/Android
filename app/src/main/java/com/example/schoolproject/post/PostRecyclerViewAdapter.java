@@ -22,6 +22,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.schoolproject.R;
 import com.example.schoolproject.databinding.ItemCommentBinding;
+import com.example.schoolproject.databinding.ItemPostBinding;
 import com.example.schoolproject.model.Board;
 import com.example.schoolproject.model.Comment;
 import com.example.schoolproject.model.DateConvertUtils;
@@ -88,30 +89,17 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
 
     // ViewHolder 1: Post
     public class PostViewHolder extends RecyclerView.ViewHolder{
-        private ImageView iv_profile;
-        private TextView tv_author, tv_date, tv_time, tv_title, tv_content, tv_heart_count, tv_chat_count;
-        private TextView btn_like, btn_scrap;
+        private ItemPostBinding binding;
+
         private boolean isPostLiked = false;  // 바인딩할때 업데이트됨
         private int currentPostLikeCnt = -1; // 기본값 -1 설정
 
-        public PostViewHolder(@NonNull View itemView) {
-            super(itemView);
-            this.iv_profile = itemView.findViewById(R.id.iv_post_profile);
-            this.tv_author = itemView.findViewById(R.id.tv_post_author);
-            this.tv_date = itemView.findViewById(R.id.tv_post_date);
-            this.tv_time = itemView.findViewById(R.id.tv_post_time);
-            this.tv_title = itemView.findViewById(R.id.tv_post_title);
-            this.tv_content = itemView.findViewById(R.id.tv_post_content);
-            this.tv_heart_count = itemView.findViewById(R.id.tv_heart_count);
-            this.tv_chat_count = itemView.findViewById(R.id.tv_chat_count);
-            this.btn_like = itemView.findViewById(R.id.btn_like);
-            this.btn_scrap = itemView.findViewById(R.id.btn_scrap);
-
-
-
+        public PostViewHolder(ItemPostBinding binding) {
+            super(binding.getRoot());
+            this.binding = binding;
 
             // set listeners
-            this.btn_like.setOnClickListener(new View.OnClickListener() {
+            binding.btnLike.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {  // Post의 "좋아요" 로직
                     LikeApiService apiService = new LikeApiService();
@@ -119,38 +107,38 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
                     call.enqueue(new LikeCallback(activity, context));
                     if (!isPostLiked){
                         // 텍스트를 Like -> Liked! 로 바꾸기
-                        btn_like.setText("Liked!");
+                        binding.btnLike.setText("Liked!");
                         // 현재 좋아요 개수 가져와서 ++ 하는 로직(빠른 피드백을 위한 View 단독 업데이트, 실제 트랜잭션은 비동기 처리)
-                        String currentLikeCntStr = tv_heart_count.getText().toString();
+                        String currentLikeCntStr = binding.tvHeartCount.getText().toString();
                         try {
                             currentPostLikeCnt = Integer.parseInt(currentLikeCntStr);
                         }catch (NumberFormatException e){
                             // 부적절한 값일 경우 예외 처리
                         }
                         currentPostLikeCnt++;
-                        tv_heart_count.setText(String.valueOf(currentPostLikeCnt));
+                        binding.tvHeartCount.setText(String.valueOf(currentPostLikeCnt));
                         // isLiked 플래그 상태 업데이트
                         isPostLiked = true;
                         localLikeStatus.put("post", true);  // post 아이템 스크롤out 후 재결합될때 활용
                     } else {
                         // 텍스트를 다시 원래대로 바꾸기
-                        btn_like.setText("Like");
+                        binding.btnLike.setText("Like");
                         // 현재 좋아요 개수 가져와서 -- 하는 로직(빠른 피드백을 위한 View 단독 업데이트, 실제 트랜잭션은 비동기 처리)
-                        String currentLikeCntStr = tv_heart_count.getText().toString();
+                        String currentLikeCntStr = binding.tvHeartCount.getText().toString();
                         try {
                             currentPostLikeCnt = Integer.parseInt(currentLikeCntStr);
                         }catch (NumberFormatException e){
                             // 부적절한 값일 경우 예외 처리
                         }
                         currentPostLikeCnt--;
-                        tv_heart_count.setText(String.valueOf(currentPostLikeCnt));
+                        binding.tvHeartCount.setText(String.valueOf(currentPostLikeCnt));
                         // isLiked 플래그 상태 업데이트
                         isPostLiked = false;
                         localLikeStatus.put("post", false);  // post 아이템 스크롤out 후 재결합될때 활용
                     }
                 }
             });
-            this.btn_scrap.setOnClickListener(new View.OnClickListener() {  // Post의 Scrap 버튼 클릭 시 동작
+            binding.btnScrap.setOnClickListener(new View.OnClickListener() {  // Post의 Scrap 버튼 클릭 시 동작
                 @Override
                 public void onClick(View v) {
                     Log.d(TAG, "onClick: =========Scrap버튼 클릭========");
@@ -163,35 +151,40 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
             if (localLikeStatus.get("post") != null){        // 로컬 상태가 존재한다면, 로컬의 값을 기준으로 UI 변경
                 if (localLikeStatus.get("post")){
                     // 텍스트를 Like -> Liked! 로 바꾸기
-                    btn_like.setText("Liked!");
+                    binding.btnLike.setText("Liked!");
                     isPostLiked = true;
                 } else {
                     // 텍스트를 기본값으로 변경
-                    btn_like.setText("Like");
+                    binding.btnLike.setText("Like");
                     isPostLiked = false;
                 }
-                tv_heart_count.setText(String.valueOf(currentPostLikeCnt));  // 로컬의 cnt값 표시
+                binding.tvHeartCount.setText(String.valueOf(currentPostLikeCnt));  // 로컬의 cnt값 표시
             } else {                                // 로컬 상태가 존재하지 않는다면, 서버에서 가져온 LikedState에 따라 UI 설정
                 if (serverLikeStatus.isLikedBoard()){
                     // 텍스트를 Like -> Liked! 로 바꾸기
-                    btn_like.setText("Liked!");
+                    binding.btnLike.setText("Liked!");
                     isPostLiked = true;
                 }else {
                     // 텍스트를 기본값으로 변경
-                    btn_like.setText("Like");
+                    binding.btnLike.setText("Like");
                     isPostLiked = false;
                 }
-                tv_heart_count.setText(String.valueOf(data.getLikeCnt()));  // 서버의 cnt 값 표시
+                binding.tvHeartCount.setText(String.valueOf(data.getLikeCnt()));  // 서버의 cnt 값 표시
             }
             // 나머지 값 설정
             // iv_profile.setImageResource(data.getImageResourceId());  // (using default image)
-            tv_author.setText(data.getAuthor());
-            tv_date.setText(convertDate(data.getFinalDate(),"date"));
-            tv_time.setText(convertDate(data.getFinalDate(),"time"));
-            tv_title.setText(data.getTitle());
-            tv_content.setText(data.getContent());
-            tv_chat_count.setText(String.valueOf(data.getChatCnt()));
+            binding.tvPostAuthor.setText(data.getAuthor());
+            binding.tvPostDate.setText(convertDate(data.getFinalDate(),"date"));
+            binding.tvPostTime.setText(convertDate(data.getFinalDate(),"time"));
+            binding.tvPostTitle.setText(data.getTitle());
+            binding.tvPostContent.setText(data.getContent());
+            binding.tvChatCount.setText(String.valueOf(data.getChatCnt()));
             postId = data.getId();  // 상위 클래스로 넘긴 후 CommentViewHolder클래스에서 사용(댓글 삭제 후 갱신 로직)
+
+            // 이미지 처리
+//            if (data.hasImages()){
+//
+//            }
         }
 
     }
@@ -347,11 +340,13 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         switch (viewType){
             case VIEW_TYPE_POST:
-                View view1 = inflater.inflate(R.layout.item_post, parent, false);
-                return new PostViewHolder(view1);
+                ItemPostBinding postBinding = ItemPostBinding.inflate(LayoutInflater.from(parent.getContext()),parent, false);
+                return new PostViewHolder(postBinding);
+
             case VIEW_TYPE_COMMENT:
                 ItemCommentBinding commentBinding = ItemCommentBinding.inflate(LayoutInflater.from(parent.getContext()),parent, false);
                 return new CommentViewHolder(commentBinding);
+
             default:
                 throw new IllegalArgumentException("Invalid view type: " + viewType);
         }

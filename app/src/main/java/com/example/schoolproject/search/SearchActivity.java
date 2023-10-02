@@ -65,7 +65,7 @@ public class SearchActivity extends AppCompatActivity {
                         (event != null && event.getKeyCode() == KeyEvent.KEYCODE_ENTER)){
                     switch (searchType){
                         case "board": searchBoard(); break;
-                        case "shop": searchMarket(); break;
+                        case "market": searchMarket(); break;
                     }
                     return true;
                 }

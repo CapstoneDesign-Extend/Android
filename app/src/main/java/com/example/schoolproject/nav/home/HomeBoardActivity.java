@@ -86,10 +86,6 @@ public class HomeBoardActivity extends AppCompatActivity {
         adapter = new PostPreviewRecyclerViewAdapter(this, dataPosts);
         recyclerView.setAdapter(adapter);
 
-        BoardApiService apiService = new BoardApiService();
-        Call<List<Board>> call = apiService.getBoardsByBoardKind(BoardKindUtils.getBoardKindByKorean(receivedBoardName));
-        call.enqueue(new BoardCallback.BoardListCallBack(getApplicationContext(), adapter));
-
 
     }
 

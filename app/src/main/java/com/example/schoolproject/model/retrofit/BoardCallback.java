@@ -11,6 +11,7 @@ import com.example.schoolproject.model.BoardKind;
 import com.example.schoolproject.model.Comment;
 import com.example.schoolproject.model.ui.DataHomeBoard;
 import com.example.schoolproject.nav.home.HomeRecyclerViewAdapter;
+import com.example.schoolproject.nav.shop.ShopRecyclerViewAdapter;
 import com.example.schoolproject.post.PostActivity;
 import com.example.schoolproject.post.PostPreviewRecyclerViewAdapter;
 import com.example.schoolproject.post.PostRecyclerViewAdapter;
@@ -123,16 +124,17 @@ public class BoardCallback implements Callback<Board> {
             if (response.isSuccessful()) {
                 List<Board> boardList = response.body();
                 // distinguishing by instance
-                if (adapter instanceof PostPreviewRecyclerViewAdapter) {
+                if (adapter instanceof PostPreviewRecyclerViewAdapter) {    // PreviewPost
                     PostPreviewRecyclerViewAdapter postPrevAdapter = (PostPreviewRecyclerViewAdapter) adapter;
-                    postPrevAdapter.convertAndSetData(boardList);
+                    postPrevAdapter.convertAndSetData(boardList);  // 레거시 코드::서버 모델을 클라이언트 자체 모델로 변환
 
-                } else if (adapter instanceof PostRecyclerViewAdapter) {
-                    PostRecyclerViewAdapter postAdapter = (PostRecyclerViewAdapter) adapter;
-                    //postAdapter.convertAndSetData(boardList);
-                } else if (adapter instanceof HomeRecyclerViewAdapter){
+                } else if (adapter instanceof HomeRecyclerViewAdapter){  // Home
                     HomeRecyclerViewAdapter homeAdapter = (HomeRecyclerViewAdapter) adapter;
                     homeAdapter.convertData(boardKind, boardList, dataHomeBoardList);
+
+                } else if (adapter instanceof ShopRecyclerViewAdapter){  // PreviewShop
+                    ShopRecyclerViewAdapter shopAdapter = (ShopRecyclerViewAdapter) adapter;
+                    shopAdapter.setData(boardList);
                 }
 
                 adapter.notifyDataSetChanged();

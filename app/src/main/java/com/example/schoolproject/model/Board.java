@@ -6,6 +6,7 @@ public class Board {
     private Long id;
     private String title; // 제목
     private String content; // 본문
+    private Integer price; // Market 게시판용 가격 정보
     private String author; // 작성자
     private Member member; // 데이터 객체 호환성 문제로 다시 추가함(createBoard 할때 member 가 필요)
     private Long memberId;  // member's id
@@ -56,6 +57,14 @@ public class Board {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public Integer getPrice() {
+        return price;
+    }
+
+    public void setPrice(Integer price) {
+        this.price = price;
     }
 
     public String getAuthor() {

@@ -19,13 +19,26 @@ public class Board {
     private String finalDate; // LocalDateTime을 String으로 변환
 
     private BoardKind boardKind; // 게시판 종류
+    private List<String> images; // 이미지 URL 목록
 
     private List<Comment> comments;
 
     private List<File> files;
 
+    // additional fn
+    public boolean hasImages(){
+        return images != null && !images.isEmpty();
+    }
 
     // getters and setters
+
+    public List<String> getImages() {
+        return images;
+    }
+
+    public void setImages(List<String> images) {
+        this.images = images;
+    }
 
     public Member getMember() {
         return member;

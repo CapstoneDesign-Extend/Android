@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:paddingHorizontal="10dp"
     android:orientation="vertical">
     <LinearLayout
@@ -71,10 +72,38 @@
         android:text="Content"
         android:textColor="@color/black" />
 
-    <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/post_image_viewpager"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp">
+
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/post_image_viewpager"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"/>
+
+        <!-- CircleIndicator -->
+        <me.relex.circleindicator.CircleIndicator3
+            android:id="@+id/post_Image_indicator"
+            android:layout_width="match_parent"
+            android:layout_height="10dp"
+            android:layout_alignBottom="@+id/post_image_viewpager"
+            android:layout_marginBottom="12dp"
+            android:layout_gravity="center"
+            android:visibility="gone"
+
+            app:ci_width="5dp"
+            app:ci_margin="5dp"
+            app:ci_drawable="@drawable/white_radius"
+            app:ci_drawable_unselected="@drawable/white_radius"
+            app:ci_animator="@animator/scale_with_alpha"
+            app:ci_orientation="horizontal"
+            app:ci_gravity="center" />
+
+    </RelativeLayout>
+
+
 
     <LinearLayout
         android:paddingLeft="5dp"

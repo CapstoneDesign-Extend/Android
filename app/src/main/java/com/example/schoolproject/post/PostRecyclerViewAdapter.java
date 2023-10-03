@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.schoolproject.R;
 import com.example.schoolproject.databinding.ItemCommentBinding;
@@ -33,10 +34,13 @@ import com.example.schoolproject.model.retrofit.CommentCallback;
 import com.example.schoolproject.model.retrofit.LikeApiService;
 import com.example.schoolproject.model.retrofit.LikeCallback;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import me.relex.circleindicator.CircleIndicator;
+import me.relex.circleindicator.CircleIndicator3;
 import retrofit2.Call;
 
 public class PostRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -182,9 +186,28 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
             postId = data.getId();  // 상위 클래스로 넘긴 후 CommentViewHolder클래스에서 사용(댓글 삭제 후 갱신 로직)
 
             // 이미지 처리
-//            if (data.hasImages()){
-//
-//            }
+            //if (data.hasImages()){
+
+
+                binding.postImageViewpager.setVisibility(View.VISIBLE);
+                binding.postImageIndicator.setVisibility(View.VISIBLE);
+                // viewpager2 초기화 + 어댑터 설정
+
+                List<String> urls = new ArrayList<>();
+                urls.add("https://picsum.photos/200/300");
+                urls.add("https://picsum.photos/1920/1080");
+                urls.add("https://picsum.photos/400/300");
+                //ImageSliderAdapter imageAdapter = new ImageSliderAdapter(context, data.getImages());
+                ImageSliderAdapter imageAdapter = new ImageSliderAdapter(context, urls);
+                binding.postImageViewpager.setAdapter(imageAdapter);
+                // CircleIndicator 연결
+                binding.postImageIndicator.setViewPager(binding.postImageViewpager);
+
+
+
+            //}else {
+            //    binding.postImageViewpager.setVisibility(View.GONE);
+            //}
         }
 
     }

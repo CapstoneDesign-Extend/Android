@@ -1,5 +1,6 @@
 package com.example.schoolproject.post;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,36 +9,47 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.schoolproject.R;
+import com.example.schoolproject.databinding.ItemImageSliderBinding;
 
 import java.util.List;
 
 public class ImageSliderAdapter extends RecyclerView.Adapter<ImageSliderAdapter.ImageViewHolder> {
-    private List<Integer> imageList;  // 이미지 리소스 ID 리스트
+    private Context context;
+    private List<String> imageURLs;  // 이미지 리소스 ID 리스트
+
+    public ImageSliderAdapter(Context context, List<String> imageURLs) {
+        this.context = context;
+        this.imageURLs = imageURLs;
+    }
 
     @NonNull
     @Override
     public ImageSliderAdapter.ImageViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_image_slider, parent, false);
-        return new ImageViewHolder(view);    }
+        return new ImageViewHolder(view);
+    }
 
     @Override
     public void onBindViewHolder(@NonNull ImageSliderAdapter.ImageViewHolder holder, int position) {
-        int imageResId = imageList.get(position);
-        holder.imageView.setImageResource(imageResId);
+        String imageURL = imageURLs.get(position);
+        Glide.with(context)
+                        .load(imageURL)
+                                .into(holder.binding.ivImageSlider);
     }
 
     @Override
     public int getItemCount() {
-        return imageList.size();
+        return imageURLs.size();
     }
 
     public class ImageViewHolder extends RecyclerView.ViewHolder{
-        ImageView imageView;
+        private ItemImageSliderBinding binding;
 
         public ImageViewHolder(@NonNull View itemView) {
             super(itemView);
-            itemView = itemView.findViewById(R.id.iv_image_slider);
+            binding = ItemImageSliderBinding.bind(itemView);
         }
     }
 }

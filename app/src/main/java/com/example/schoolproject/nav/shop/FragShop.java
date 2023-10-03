@@ -80,9 +80,16 @@ public class FragShop extends Fragment {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(view.getContext(), PostWriteActivity.class);
-                intent.putExtra("boardKind","MARKET");
-                startActivity(intent);
+//                Intent intent = new Intent(view.getContext(), PostWriteActivity.class);
+//                intent.putExtra("boardKind","MARKET");
+//                startActivity(intent);
+
+
+
+
+                // 테스트 게시글 작성:
+
+
             }
         });
 

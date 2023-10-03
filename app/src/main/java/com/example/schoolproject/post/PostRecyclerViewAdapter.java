@@ -5,6 +5,7 @@ import static com.example.schoolproject.model.DateConvertUtils.convertDate;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -295,10 +297,28 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
                                     Toast.makeText(context, "해당 댓글을 신고합니다.", Toast.LENGTH_SHORT).show();
                                     return true;
                                 case R.id.item_delete:  // 댓글 삭제 로직
-                                    CommentApiService apiService = new CommentApiService();
-                                    Call<Void> call = apiService.deleteCommentById(commentId);
-                                    call.enqueue(new CommentCallback.DeleteCommentCallBack(activity, context, PostRecyclerViewAdapter.this, postId));
+
+                                    AlertDialog dialog = new AlertDialog.Builder(activity, R.style.RoundedDialog)
+                                            .setTitle("댓글 삭제")
+                                            .setMessage("댓글을 삭제할까요?")
+                                            .setPositiveButton("예", new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    CommentApiService apiService = new CommentApiService();
+                                                    Call<Void> call = apiService.deleteCommentById(commentId);
+                                                    call.enqueue(new CommentCallback.DeleteCommentCallBack(activity, context, PostRecyclerViewAdapter.this, postId));
+                                                }
+                                            })
+                                            .setNegativeButton("아니오", null)
+                                            .show();
+                                    // 긍정적인 버튼 (예)의 텍스트 색상 변경
+                                    dialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(activity.getResources().getColor(R.color.colorAccent));
+
+                                    // 부정적인 버튼 (아니오)의 텍스트 색상 변경
+                                    dialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(activity.getResources().getColor(R.color.colorAccent));
+
                                     return true;
+
                                 default: return false;
                             }
 

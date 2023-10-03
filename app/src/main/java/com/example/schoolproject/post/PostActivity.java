@@ -3,6 +3,7 @@ package com.example.schoolproject.post;
 import static android.content.ContentValues.TAG;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
@@ -13,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
@@ -209,10 +211,26 @@ public class PostActivity extends AppCompatActivity {
                 intent.putExtra("postContent", postContent);
                 startActivity(intent);
                 return true;
-            case R.id.item_delete:
-                BoardApiService apiService = new BoardApiService();
-                Call<Void> call = apiService.deleteBoard(postId);
-                call.enqueue(new BoardCallback.DeleteBoardCallBack(PostActivity.this, getApplicationContext()));
+            case R.id.item_delete:  // 게시글 삭제
+                AlertDialog dialog = new AlertDialog.Builder(this, R.style.RoundedDialog)
+                        .setTitle("게시글 삭제")
+                        .setMessage("게시글을 삭제할까요?")
+                        .setPositiveButton("예", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                BoardApiService apiService = new BoardApiService();
+                                Call<Void> call = apiService.deleteBoard(postId);
+                                call.enqueue(new BoardCallback.DeleteBoardCallBack(PostActivity.this, getApplicationContext()));
+                            }
+                        })
+                        .setNegativeButton("아니오", null)
+                        .show();
+                // 긍정적인 버튼 (예)의 텍스트 색상 변경
+                dialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.colorAccent));
+
+                // 부정적인 버튼 (아니오)의 텍스트 색상 변경
+                dialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.colorAccent));
+
                 return true;
 
             case android.R.id.home:

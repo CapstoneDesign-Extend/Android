@@ -130,7 +130,7 @@ public class CommentCallback implements Callback<Comment> {
         public void onFailure(Call<List<Comment>> call, Throwable t) {
         }
     }
-
+    // inner Class:: List<Void>
     public static class DeleteCommentCallBack implements Callback<Void>{
         private Activity activity;
         private Context context;

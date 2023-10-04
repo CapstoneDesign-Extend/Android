@@ -17,6 +17,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -46,6 +47,8 @@ import com.example.schoolproject.model.retrofit.BoardCallback;
 import com.example.schoolproject.model.retrofit.FileApiService;
 import com.example.schoolproject.model.retrofit.FileCallback;
 import com.google.gson.Gson;
+import com.gun0912.tedpermission.PermissionListener;
+import com.gun0912.tedpermission.normal.TedPermission;
 
 import org.apache.commons.io.IOUtils;
 
@@ -53,7 +56,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -85,6 +90,7 @@ public class PostWriteActivity extends AppCompatActivity {
     private static final int REQUEST_STORAGE_PERMISSION = 1;
     private HorizontalScrollView horizontalScrollView;
     private LinearLayout imageWrapper;
+    private List<Uri> selectedImageUriList = new ArrayList<>();
 
 
     @Override
@@ -124,19 +130,36 @@ public class PostWriteActivity extends AppCompatActivity {
         iv_camera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                PermissionListener permissionlistener = new PermissionListener() {
+                    @Override
+                    public void onPermissionGranted() {
+                        //Toast.makeText(getApplicationContext(), "권한이 허용되었습니다.", Toast.LENGTH_SHORT).show();
+                        launchImagePicker();
+                    }
 
-                // 사용자에게 권한 허가 요청
-                if (ContextCompat.checkSelfPermission(PostWriteActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-                    // 권한이 이미 허용되어 있으면 사진 선택 액티비티를 바로 실행합니다.
-                    launchImagePicker();
+                    @Override
+                    public void onPermissionDenied(List<String> deniedPermissions) {
+                        Toast.makeText(getApplicationContext(), "권한이 거부되었습니다.\n" + deniedPermissions.toString(), Toast.LENGTH_SHORT).show();
+                    }
+
+                };
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    TedPermission.create()
+                            .setPermissionListener(permissionlistener)
+                            .setDeniedMessage("사진을 업로드하기 위해 권한이 필요합니다.\n\n[설정] > [권한] 에서 권한을 허용해주세요.")
+                            .setPermissions(Manifest.permission.READ_MEDIA_IMAGES, Manifest.permission.READ_MEDIA_VIDEO, Manifest.permission.READ_MEDIA_AUDIO)
+                            .check();
                 } else {
-                    // 권한을 요청합니다.
-                    requestStoragePermission();
+                    TedPermission.create()
+                            .setPermissionListener(permissionlistener)
+                            .setDeniedMessage("사진을 업로드하기 위해 권한이 필요합니다.\n\n[설정] > [권한] 에서 권한을 허용해주세요.")
+                            .setPermissions(Manifest.permission.READ_EXTERNAL_STORAGE)
+                            .check();
                 }
+
 
             }
         });
-
 
         btn_done.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -159,7 +182,11 @@ public class PostWriteActivity extends AppCompatActivity {
                         board.setFinalDate(getCurrentTime("default"));
                         if (cb_isAnon.isChecked()) {author = "익명";}
                         board.setAuthor(author);
-
+                        // 이미지 업로드 콜백 호출
+                        for (Uri imageUri : selectedImageUriList) {
+                            uploadImage(imageUri);
+                        }
+                        // 게시글 작성 콜백 호출
                         Call<Board> call = apiService.createBoard(board);
                         BoardCallback callback = new BoardCallback(PostWriteActivity.this, getApplicationContext());
                         call.enqueue(callback);
@@ -247,24 +274,13 @@ public class PostWriteActivity extends AppCompatActivity {
 
 
 
-    // 이미지 업로드 함수
-    private void uploadImage(Uri imageUri) {
-        try {
-            InputStream inputStream = getContentResolver().openInputStream(imageUri);
-            byte[] imageBytes = IOUtils.toByteArray(inputStream);  // Apache Commons IO 라이브러리를 사용합니다.
-            RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), imageBytes);
-            MultipartBody.Part body = MultipartBody.Part.createFormData("file", "image.jpg", requestFile);  // 파일 이름을 직접 제공합니다.
+    //  ========================   파일 업로드 메소드 정의   =========================
 
-            FileApiService apiService = new FileApiService();
-            Call<ResponseBody> call = apiService.uploadImage(body);
-            // 이 콜백이 끝나면 addImageToScrollView() 호출됨
-            call.enqueue(new FileCallback.ImageCallBack(PostWriteActivity.this, getApplicationContext(), imageUri));
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+    // 갤러리에서 선택한 이미지를 글 작성 화면에 미리 보여주기
     public void addImageToScrollView(Uri imageUri) {
+        // 리스트에 이미지uri 추가
+        selectedImageUriList.add(imageUri);
+        
         Log.e(TAG, "addImageToScrollView: URI :"+ imageUri );
         horizontalScrollView.setVisibility(View.VISIBLE);
         ImageView imageView = new ImageView(PostWriteActivity.this);
@@ -293,6 +309,7 @@ public class PostWriteActivity extends AppCompatActivity {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 imageWrapper.removeView(imageView); // 이미지뷰 제거
+                                selectedImageUriList.remove(imageUri);  // 이미지 URI를 리스트에서 제거
                             }
                         })
                         .setNegativeButton("아니오", null)
@@ -311,54 +328,8 @@ public class PostWriteActivity extends AppCompatActivity {
         imageWrapper.addView(imageView);
     }
 
-    // URI에서 실제 파일 경로 가져오기  *** 안드로이드 10 이상에서는 호환 안됨 ***
-    private String getRealPathFromURI(Uri contentUri) {
-        if (contentUri == null){
-            return null;
-        }
 
-        String[] proj = {MediaStore.Images.Media.DATA};
-        Cursor cursor = getContentResolver().query(contentUri, proj, null, null, null);
-
-        if (cursor != null && cursor.moveToFirst()){
-            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-            String path = cursor.getString(column_index);
-            cursor.close();
-            return path;
-        } else {
-            Log.e(TAG, "getRealPathFromURI: 경로를 가져올 수 없습니다." );
-            return null;  // 경로를 가져올 수 없는 경우
-        }
-
-    }
-
-    // 권한을 요청하는 메서드
-    private void requestStoragePermission() {
-        // 권한을 이미 허용한 경우, 권한 요청 대화상자를 표시하지 않고 바로 실행할 수 있습니다.
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-            // 권한이 이미 허용되어 있음
-            // 이곳에서 파일 읽기 작업을 수행할 수 있습니다.
-        } else {
-            // 권한을 요청합니다.
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_STORAGE_PERMISSION);
-        }
-    }
-
-    // 권한 요청 결과 처리
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == REQUEST_STORAGE_PERMISSION) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // 권한이 허용되었을 때의 처리: 여기서 이미지 선택 액티비티를 실행합니다.
-                launchImagePicker();
-            } else {
-                // 권한이 거부되었을 때의 처리
-                Toast.makeText(this, "권한이 필요합니다.", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
-    // 이미지 선택 액티비티를 실행하는 메서드
+    // 이미지 선택 액티비티 실행
     private void launchImagePicker() {
         Intent intent = new Intent();
         intent.setType("image/*");
@@ -366,6 +337,7 @@ public class PostWriteActivity extends AppCompatActivity {
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
     }
+
     // 이미지 선택 결과 처리
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -376,14 +348,33 @@ public class PostWriteActivity extends AppCompatActivity {
                 int count = data.getClipData().getItemCount();
                 for (int i = 0; i < count; i++) {
                     Uri imageUri = data.getClipData().getItemAt(i).getUri();
-                    uploadImage(imageUri);  // 각 이미지를 업로드합니다.
+                    addImageToScrollView(imageUri);
                 }
             } else if (data.getData() != null) {  // 단일 이미지가 선택된 경우
                 Uri imageUri = data.getData();
-                uploadImage(imageUri);
+                addImageToScrollView(imageUri);
             }
         } else {
             Log.e(TAG, "onActivityResult: 이미지를 선택하지 않았거나 오류가 발생했습니다.");
         }
     }
+    // 이미지 업로드 함수
+    private void uploadImage(Uri imageUri) {
+        try {
+            InputStream inputStream = getContentResolver().openInputStream(imageUri);
+            byte[] imageBytes = IOUtils.toByteArray(inputStream);  // Apache Commons IO 라이브러리를 사용합니다.
+            RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), imageBytes);
+            MultipartBody.Part body = MultipartBody.Part.createFormData("file", "image.jpg", requestFile);  // 파일 이름을 직접 제공합니다.
+
+            FileApiService apiService = new FileApiService();
+            Call<ResponseBody> call = apiService.uploadImage(body);
+            // 이 콜백이 끝나면 addImageToScrollView() 호출됨  --> 로직 변경으로 다시 제거함
+            call.enqueue(new FileCallback.ImageCallBack(PostWriteActivity.this, getApplicationContext(), imageUri));
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
 }

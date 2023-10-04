@@ -68,8 +68,9 @@ public class FileCallback implements Callback<File> {
         public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
             if (response.isSuccessful()) {
                 // 이미지 업로드 성공
-                // 서버 응답 처리
-                ((PostWriteActivity) activity).addImageToScrollView(imageUri);
+
+                // 이미지 추가 로직 제거:: 이미지를 최종 선택한 후 일괄 업로드하는 방식으로 기능 수정
+                //((PostWriteActivity) activity).addImageToScrollView(imageUri);
 
             } else {
                 // 이미지 업로드 실패

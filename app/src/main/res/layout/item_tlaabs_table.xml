@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:layout_marginVertical="5dp"
+    android:paddingHorizontal="10dp"
+    android:background="@drawable/shape_round_border"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:paddingLeft="10dp"
+        android:paddingVertical="15dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="시간표"
+            android:textColor="@color/black"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            />
+        <ImageButton
+            android:id="@+id/btn_edit_table"
+            android:layout_alignParentEnd="true"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="3dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/icon_pen"
+            android:background="@color/white"
+            app:tint="@color/black"
+            />
+
+    </RelativeLayout>
+
+
+    <com.example.schoolproject.timetableview.TimetableView
+        android:paddingBottom="10dp"
+        android:stretchColumns="1"
+        android:id="@+id/timetable"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:column_count="6"
+        app:row_count="12"
+        app:side_cell_width="15dp"/>
+
+</LinearLayout>

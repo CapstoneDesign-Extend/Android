@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.schoolproject.R;
 import com.example.schoolproject.databinding.ItemGpBinding;
 import com.example.schoolproject.databinding.ItemTableBinding;
+import com.example.schoolproject.databinding.ItemTlaabsTableBinding;
 import com.example.schoolproject.model.ui.DataGP;
 import com.example.schoolproject.model.ui.DataTimeTable;
 
@@ -40,27 +41,6 @@ public class GPRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         else if (dataList.get(position) instanceof DataGP)
             return VIEW_TYPE_GP;
         return -1;
-    }
-    // ViewHolders
-    public class TableViewHolder extends RecyclerView.ViewHolder{
-        // declare views
-        ImageButton btn_editTable;
-        public TableViewHolder(@NonNull View itemView) {
-            super(itemView);
-            // connecting resources
-            btn_editTable = itemView.findViewById(R.id.btn_edit_table);
-            btn_editTable.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    //Intent intent = new Intent(itemView.getContext(), PostWriteActivity.class);
-                    //itemView.getContext().startActivity(intent);
-                }
-            });
-        }
-        public void bindData(DataTimeTable data){
-            // binding data
-        }
-
     }
     // 학점입력 뷰홀더
     public class GPViewHolder extends RecyclerView.ViewHolder{
@@ -119,10 +99,10 @@ public class GPRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     }
     // 시간표 뷰홀더 클래스
     public class TimetableViewHolder extends RecyclerView.ViewHolder{
-        private final ItemTableBinding binding;
+        private final ItemTlaabsTableBinding binding;
         public TimetableViewHolder(@NonNull View itemView) {
             super(itemView);
-            binding = ItemTableBinding.bind(itemView);
+            binding = ItemTlaabsTableBinding.bind(itemView);
         }
     }
 
@@ -130,14 +110,13 @@ public class GPRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         switch (viewType){
             case VIEW_TYPE_TABLE:
-                ItemTableBinding itemTableBinding = ItemTableBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
-                return new TableViewHolder(itemTableBinding.getRoot());
+                ItemTlaabsTableBinding itemTableBinding = ItemTlaabsTableBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
+                return new TimetableViewHolder(itemTableBinding.getRoot());
             case VIEW_TYPE_GP:
                 ItemGpBinding itemGpBinding = ItemGpBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
-                return new TableViewHolder(itemGpBinding.getRoot());
+                return new GPViewHolder(itemGpBinding.getRoot());
             default:
                 throw new IllegalArgumentException("Invalid view type: "+viewType);
         }

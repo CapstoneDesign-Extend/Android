@@ -65,7 +65,7 @@ dependencies {
     // TedPermission
     implementation 'io.github.ParkSangGwon:tedpermission-normal:3.3.0'
 
-    // TimeTableView  --> 4년전 라이브러리라 작동이 안됨
+    // TimeTableView  --> tableLayout 잘림 문제 발생
     implementation 'com.github.tlaabs:TimetableView:1.0.3-fx1'
 
 

@@ -17,11 +17,16 @@ import java.util.List;
 
 public class ImageSliderAdapter extends RecyclerView.Adapter<ImageSliderAdapter.ImageViewHolder> {
     private Context context;
-    private List<String> imageURLs;  // 이미지 리소스 ID 리스트
+//    private List<String> imageURLs;  // 이미지 url 리스트
+    List<Integer> imageResources;  // 이미지 리소스 id 리스트
 
-    public ImageSliderAdapter(Context context, List<String> imageURLs) {
+//    public ImageSliderAdapter(Context context, List<String> imageURLs) {
+//        this.context = context;
+//        this.imageURLs = imageURLs;
+//    }
+    public ImageSliderAdapter(Context context, List<Integer> imageResources) {
         this.context = context;
-        this.imageURLs = imageURLs;
+        this.imageResources = imageResources;
     }
 
     @NonNull
@@ -33,15 +38,16 @@ public class ImageSliderAdapter extends RecyclerView.Adapter<ImageSliderAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull ImageSliderAdapter.ImageViewHolder holder, int position) {
-        String imageURL = imageURLs.get(position);
+//        String imageURL = imageURLs.get(position);
+        int resId = imageResources.get(position);
         Glide.with(context)
-                        .load(imageURL)
+                        .load(resId)
                                 .into(holder.binding.ivImageSlider);
     }
 
     @Override
     public int getItemCount() {
-        return imageURLs.size();
+        return imageResources.size();
     }
 
     public class ImageViewHolder extends RecyclerView.ViewHolder{

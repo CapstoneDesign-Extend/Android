@@ -1,6 +1,9 @@
 package com.example.schoolproject.model.retrofit;
 
+import com.example.schoolproject.model.Board;
 import com.example.schoolproject.model.File;
+
+import java.util.List;
 
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
@@ -38,8 +41,12 @@ public class FileApiService {
         fileApi = retrofit.create(FileApi.class);
     }
 
-    public Call<ResponseBody> uploadImage(MultipartBody.Part image){
-        return fileApi.uploadImage(image);
+    public Call<Board> uploadImageFiles(List<MultipartBody.Part> images, Long boardId){
+        return fileApi.uploadImageFiles(images, boardId);
+    }
+
+    public Call<Board> uploadAttachFile(MultipartBody.Part attachFile, Long boardId) {
+        return fileApi.uploadAttachFile(attachFile, boardId);
     }
     public Call<File> saveFile(File file) {
         return fileApi.saveFile(file);
@@ -55,8 +62,14 @@ public class FileApiService {
 
     interface FileApi {
         @Multipart
-        @POST("api/files/upload") // 서버 엔드포인트 URL
-        Call<ResponseBody> uploadImage(@Part MultipartBody.Part image);
+        @POST("api/files/uploadImage")
+        Call<Board> uploadImageFiles(@Part List<MultipartBody.Part> images, @Part("boardId") Long boardId);
+
+        @Multipart
+        @POST("api/files/uploadAttach")
+        Call<Board> uploadAttachFile(@Part MultipartBody.Part attachFile, @Part("boardId") Long boardId);
+
+
         @POST("/api/files")
         Call<File> saveFile(@Body File file);
 

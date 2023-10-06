@@ -1,7 +1,109 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:paddingHorizontal="15dp"
+        android:paddingVertical="15dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/shape_linearlayout_border_bottom">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/iv_comment_profile"
+                android:padding="3dp"
+                android:layout_gravity="center_vertical"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/img_extend_logo"
+                android:visibility="visible"/>
+            <TextView
+                android:id="@+id/tv_comment_author"
+                android:layout_gravity="center_vertical"
+                android:paddingLeft="2dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Extend"
+                android:textColor="@color/black"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/tv_comment_time"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="3dp"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:paddingLeft="5dp"
+                android:text="방금 전"
+                android:textSize="14dp" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="3dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_marginLeft="3dp"
+                    android:id="@+id/iv_comment_more"
+                    android:layout_gravity="center_vertical"
+                    android:background="@drawable/shape_round_border"
+                    android:padding="5dp"
+                    android:layout_width="26dp"
+                    android:layout_height="26dp"
+                    android:src="@drawable/icon_more_gicon"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_comment_contents1"
+            android:paddingLeft="3dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="오늘은 강의가 2개 있어요."
+            android:textColor="@color/black"/>
+        <TextView
+            android:id="@+id/tv_comment_contents2"
+            android:layout_marginTop="2dp"
+            android:paddingLeft="3dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="09:00 캡스톤디자인, 13:00 모바일프로그래밍"
+            android:textColor="@color/black"/>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:paddingLeft="3dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:visibility="gone"
+                android:id="@+id/tv_comment_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14dp"
+                android:text="00/00" />
+
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+
+
+</LinearLayout>

@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -14,6 +15,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.schoolproject.R;
+import com.example.schoolproject.databinding.ItemGpBinding;
+import com.example.schoolproject.databinding.ItemTableBinding;
 import com.example.schoolproject.model.ui.DataGP;
 import com.example.schoolproject.model.ui.DataTimeTable;
 
@@ -59,17 +62,16 @@ public class GPRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         }
 
     }
+    // 학점입력 뷰홀더
     public class GPViewHolder extends RecyclerView.ViewHolder{
-        ImageButton btn_editGP;
-        TextView tv_currentGPA, tv_targetGPA;
+        private final ItemGpBinding binding;
 
         public GPViewHolder(@NonNull View itemView) {
             super(itemView);
+            binding = ItemGpBinding.bind(itemView);
             // connect resources
-            tv_currentGPA = itemView.findViewById(R.id.tv_current_gpa);
-            tv_targetGPA = itemView.findViewById(R.id.tv_target_gpa);
-            btn_editGP = itemView.findViewById(R.id.btn_edit_gp);
-            btn_editGP.setOnClickListener(new View.OnClickListener() {
+
+            binding.btnEditGp.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     // inflate dialog layout
@@ -88,8 +90,8 @@ public class GPRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             // save user's input data
-                            tv_currentGPA.setText(et_currentGPA.getText());
-                            tv_targetGPA.setText(et_targetGPA.getText());
+                            binding.tvCurrentGpa.setText(et_currentGPA.getText());
+                            binding.tvTargetGpa.setText(et_targetGPA.getText());
                         }
                     });
                     // set Cancel button
@@ -102,11 +104,25 @@ public class GPRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                     // show dialog
                     AlertDialog dialog = builder.create();
                     dialog.show();
-                }
+                    // 긍정적인 버튼 (저장)의 텍스트 색상 변경
+                    Button positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+                    positiveButton.setTextColor(context.getResources().getColor(R.color.colorAccent));
+
+                    // 부정적인 버튼 (예를 들면 "취소")의 텍스트 색상도 동일한 방식으로 변경 가능합니다.
+                    Button negativeButton = dialog.getButton(AlertDialog.BUTTON_NEGATIVE);
+                    negativeButton.setTextColor(context.getResources().getColor(R.color.colorAccent));                }
             });
         }
         public void bindData(DataGP data){
             // bind data
+        }
+    }
+    // 시간표 뷰홀더 클래스
+    public class TimetableViewHolder extends RecyclerView.ViewHolder{
+        private final ItemTableBinding binding;
+        public TimetableViewHolder(@NonNull View itemView) {
+            super(itemView);
+            binding = ItemTableBinding.bind(itemView);
         }
     }
 
@@ -117,11 +133,11 @@ public class GPRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         switch (viewType){
             case VIEW_TYPE_TABLE:
-                View v1 = inflater.inflate(R.layout.item_table, parent, false);
-                return new TableViewHolder(v1);
+                ItemTableBinding itemTableBinding = ItemTableBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
+                return new TableViewHolder(itemTableBinding.getRoot());
             case VIEW_TYPE_GP:
-                View v2 = inflater.inflate(R.layout.item_gp, parent, false);
-                return new GPViewHolder(v2);
+                ItemGpBinding itemGpBinding = ItemGpBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
+                return new TableViewHolder(itemGpBinding.getRoot());
             default:
                 throw new IllegalArgumentException("Invalid view type: "+viewType);
         }

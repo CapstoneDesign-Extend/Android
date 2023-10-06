@@ -84,7 +84,8 @@
             <TextView
                 android:background="@drawable/shape_table_border"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"/>
+                android:layout_height="match_parent"
+                android:text=""/>
             <TextView
                 android:background="@drawable/shape_table_border"
                 android:layout_width="wrap_content"

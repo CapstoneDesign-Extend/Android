@@ -6,20 +6,15 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 
 import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -52,7 +47,6 @@ import com.gun0912.tedpermission.normal.TedPermission;
 
 import org.apache.commons.io.IOUtils;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
@@ -65,12 +59,6 @@ import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.http.Multipart;
-import retrofit2.http.POST;
-import retrofit2.http.Part;
 
 public class PostWriteActivity extends AppCompatActivity {
     private String boardKind;
@@ -119,14 +107,14 @@ public class PostWriteActivity extends AppCompatActivity {
         imageWrapper = findViewById(R.id.write_image_container);
         horizontalScrollView = findViewById(R.id.hsv_write_image_scroll);
 
-        // 게시글 수정 버튼을 통해 진입하면 해당 로직 실행
+        // 게시글 수정 버튼을 통해 진입하면, 작성된 글 불러와서 표시
         if (isUpdate){
             et_post_title.setText(getIntent().getStringExtra("postTitle"));
             et_post_content.setText(getIntent().getStringExtra("postContent"));
         }
 
         // setting listener
-        // 이미지 선택 버튼 클릭시 동작
+        // 이미지 선택 버튼 클릭시 동작 : 권한 요청 및 이미지 선택기 열기
         iv_camera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -182,14 +170,14 @@ public class PostWriteActivity extends AppCompatActivity {
                         board.setFinalDate(getCurrentTime("default"));
                         if (cb_isAnon.isChecked()) {author = "익명";}
                         board.setAuthor(author);
-                        // 이미지 업로드 콜백 호출
-                        for (Uri imageUri : selectedImageUriList) {
-                            uploadImage(imageUri);
-                        }
-                        // 게시글 작성 콜백 호출
+                        // 게시글 작성 콜백 호출 :: 해당 콜백에서 하단에 정의된 uploadImageList() 호출함.
                         Call<Board> call = apiService.createBoard(board);
-                        BoardCallback callback = new BoardCallback(PostWriteActivity.this, getApplicationContext());
+                        BoardCallback callback = new BoardCallback(PostWriteActivity.this, getApplicationContext(), selectedImageUriList);
                         call.enqueue(callback);
+
+                        // 이미지 업로드 콜백 호출 --> 게시글 작성 콜백에 포함시킴
+                        //uploadImageList(selectedImageUriList);
+
                     }else {
                         // 게시글 수정 동작
                         BoardApiService apiService = new BoardApiService();
@@ -251,6 +239,7 @@ public class PostWriteActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    // 시간 형식 변환 메소드
     private String getCurrentTime(String type){
         Date currentTime = new Date();
         SimpleDateFormat sdf_fullDate = new SimpleDateFormat("yy/MM/dd");
@@ -359,17 +348,23 @@ public class PostWriteActivity extends AppCompatActivity {
         }
     }
     // 이미지 업로드 함수
-    private void uploadImage(Uri imageUri) {
+    public void uploadImageList(List<Uri> imageUriList) {
+        List<MultipartBody.Part> imageParts = new ArrayList<>();
         try {
-            InputStream inputStream = getContentResolver().openInputStream(imageUri);
-            byte[] imageBytes = IOUtils.toByteArray(inputStream);  // Apache Commons IO 라이브러리를 사용합니다.
-            RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), imageBytes);
-            MultipartBody.Part body = MultipartBody.Part.createFormData("file", "image.jpg", requestFile);  // 파일 이름을 직접 제공합니다.
+            for (Uri imageUri : imageUriList){
+                InputStream inputStream = getContentResolver().openInputStream(imageUri);
+                byte[] imageBytes = IOUtils.toByteArray(inputStream);  // Apache Commons IO 라이브러리를 사용합니다.
+                RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), imageBytes);
+                MultipartBody.Part body = MultipartBody.Part.createFormData("imageFiles", "image.jpg", requestFile);  // 파일 이름을 직접 제공
+                imageParts.add(body);
+            }
 
             FileApiService apiService = new FileApiService();
-            Call<ResponseBody> call = apiService.uploadImage(body);
+            Call<Board> call = apiService.uploadImageFiles(imageParts, postId);
             // 이 콜백이 끝나면 addImageToScrollView() 호출됨  --> 로직 변경으로 다시 제거함
-            call.enqueue(new FileCallback.ImageCallBack(PostWriteActivity.this, getApplicationContext(), imageUri));
+            // 주의 : 콜백 클래스 FileCallback 에서 BoardCallback으로 변경됨
+            //call.enqueue(new FileCallback.ImageCallBack(PostWriteActivity.this, getApplicationContext(), imageUri));
+            call.enqueue(new BoardCallback(this, getApplicationContext()));
 
         } catch (IOException e) {
             e.printStackTrace();

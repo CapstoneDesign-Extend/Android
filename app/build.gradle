@@ -65,6 +65,11 @@ dependencies {
     // TedPermission
     implementation 'io.github.ParkSangGwon:tedpermission-normal:3.3.0'
 
+    // TimeTableView  --> 4년전 라이브러리라 작동이 안됨
+    implementation 'com.github.tlaabs:TimetableView:1.0.3-fx1'
+
+
+
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'

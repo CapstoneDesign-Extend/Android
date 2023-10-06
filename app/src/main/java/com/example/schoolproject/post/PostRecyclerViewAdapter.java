@@ -195,12 +195,24 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
                 binding.postImageIndicator.setVisibility(View.VISIBLE);
                 // viewpager2 초기화 + 어댑터 설정
 
-                List<String> urls = new ArrayList<>();
-                urls.add("https://picsum.photos/200/300");
-                urls.add("https://picsum.photos/1920/1080");
-                urls.add("https://picsum.photos/400/300");
+//                List<String> urls = new ArrayList<>();
+//                urls.add("https://picsum.photos/200/300");
+//                urls.add("https://picsum.photos/1920/1080");
+//                urls.add("https://picsum.photos/400/300");
+
+            // 영상용 로컬 이미지 사용
+            List<Integer> localImages = new ArrayList<>();
+            localImages.add(R.drawable._p1);
+            localImages.add(R.drawable._p2);
+            localImages.add(R.drawable._p3);
+
+
                 //ImageSliderAdapter imageAdapter = new ImageSliderAdapter(context, data.getImages());
-                ImageSliderAdapter imageAdapter = new ImageSliderAdapter(context, urls);
+            // 임시 비활성화 (아래)
+                //ImageSliderAdapter imageAdapter = new ImageSliderAdapter(context, urls);
+
+                ImageSliderAdapter imageAdapter = new ImageSliderAdapter(context, localImages);
+
                 binding.postImageViewpager.setAdapter(imageAdapter);
                 // CircleIndicator 연결
                 binding.postImageIndicator.setViewPager(binding.postImageViewpager);

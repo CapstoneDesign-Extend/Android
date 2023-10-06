@@ -2,6 +2,7 @@ package com.example.schoolproject.model.retrofit;
 
 import android.app.Activity;
 import android.content.Context;
+import android.net.Uri;
 import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
@@ -15,7 +16,9 @@ import com.example.schoolproject.nav.shop.ShopRecyclerViewAdapter;
 import com.example.schoolproject.post.PostActivity;
 import com.example.schoolproject.post.PostPreviewRecyclerViewAdapter;
 import com.example.schoolproject.post.PostRecyclerViewAdapter;
+import com.example.schoolproject.post.PostWriteActivity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -27,11 +30,19 @@ public class BoardCallback implements Callback<Board> {
     private Activity activity;
     private Context context;
     private RecyclerView.Adapter adapter;
+    private List<Uri> imageUriList = new ArrayList<>();  // 게시글 작성 시의 이미지Uri  받아오기
 
     public BoardCallback(Activity activity, Context context) {
         this.activity = activity;
         this.context = context;
     }
+
+    public BoardCallback(Activity activity, Context context, List<Uri> imageUriList) {
+        this.activity = activity;
+        this.context = context;
+        this.imageUriList = imageUriList;
+    }
+
     public BoardCallback(Activity activity, Context context, RecyclerView.Adapter adapter) {
         this.activity = activity;
         this.context = context;
@@ -63,6 +74,7 @@ public class BoardCallback implements Callback<Board> {
     public void onResponse(Call<Board> call, Response<Board> response) {
         if (response.isSuccessful()) {
             Board board = response.body();
+            String requestUrl = call.request().url().toString();  // 이 값을 구별해 적절한 로직 처리
             if (call.request().method().equals("GET")){
                 PostRecyclerViewAdapter postAdapter = (PostRecyclerViewAdapter) adapter;
                 postAdapter.setData(board);  // UPDATE Data: Post
@@ -79,8 +91,20 @@ public class BoardCallback implements Callback<Board> {
 
 
             }else if (call.request().method().equals("POST")){
-                showShortToast(context, "게시글 작성이 완료되었습니다.");
-                finishActivity(activity);
+                if (requestUrl.contains("uploadImage")){
+                    // 이미지를 업로드할 경우 콜백 처리
+                    showShortToast(context, "이미지 업로드가 완료되었습니다.");
+                    finishActivity(activity);
+                }else{
+                    // 일반 게시글 작성 시 동작
+                    // 이미지 업로드 콜백 호출
+                    PostWriteActivity postWriteActivity = (PostWriteActivity) activity;
+                    postWriteActivity.uploadImageList(imageUriList);
+
+                    showShortToast(context, "게시글 작성이 완료되었습니다.");
+                    finishActivity(activity);
+                }
+
 
             } else if (call.request().method().equals("PUT")){
                 showShortToast(context, "게시글 수정이 완료되었습니다.");

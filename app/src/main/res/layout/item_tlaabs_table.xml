@@ -39,12 +39,11 @@
 
     <com.example.schoolproject.timetableview.TimetableView
         android:paddingBottom="10dp"
-        android:stretchColumns="1"
         android:id="@+id/timetable"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:column_count="6"
-        app:row_count="12"
+        app:row_count="10"
         app:side_cell_width="15dp"/>
 
 </LinearLayout>

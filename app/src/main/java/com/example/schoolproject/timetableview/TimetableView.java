@@ -1,5 +1,7 @@
 package com.example.schoolproject.timetableview;
 
+import static android.content.ContentValues.TAG;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
@@ -22,6 +24,7 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import com.example.schoolproject.R;
 import com.github.tlaabs.timetableview.HighlightMode;
 import com.github.tlaabs.timetableview.SaveManager;
 import com.github.tlaabs.timetableview.Schedule;
@@ -60,12 +63,12 @@ public class TimetableView extends LinearLayout {
 
     private Context context;
 
-    HashMap<Integer, com.github.tlaabs.timetableview.Sticker> stickers = new HashMap<Integer, com.github.tlaabs.timetableview.Sticker>();
+    HashMap<Integer, Sticker> stickers = new HashMap<Integer, Sticker>();
     private int stickerCount = -1;
 
     private OnStickerSelectedListener stickerSelectedListener = null;
 
-    private com.github.tlaabs.timetableview.HighlightMode highlightMode = com.github.tlaabs.timetableview.HighlightMode.COLOR;
+    private HighlightMode highlightMode = HighlightMode.COLOR;
     private int headerHighlightImageSize;
     private Drawable headerHighlightImage = null;
 
@@ -86,33 +89,34 @@ public class TimetableView extends LinearLayout {
     }
 
     private void getAttrs(AttributeSet attrs) {
-        TypedArray a = context.obtainStyledAttributes(attrs, com.github.tlaabs.timetableview.R.styleable.TimetableView);
-        rowCount = a.getInt(com.github.tlaabs.timetableview.R.styleable.TimetableView_row_count, DEFAULT_ROW_COUNT) - 1;
-        columnCount = a.getInt(com.github.tlaabs.timetableview.R.styleable.TimetableView_column_count, DEFAULT_COLUMN_COUNT);
-        cellHeight = a.getDimensionPixelSize(com.github.tlaabs.timetableview.R.styleable.TimetableView_cell_height, dp2Px(DEFAULT_CELL_HEIGHT_DP));
-        sideCellWidth = a.getDimensionPixelSize(com.github.tlaabs.timetableview.R.styleable.TimetableView_side_cell_width, dp2Px(DEFAULT_SIDE_CELL_WIDTH_DP));
-        int titlesId = a.getResourceId(com.github.tlaabs.timetableview.R.styleable.TimetableView_header_title, com.github.tlaabs.timetableview.R.array.default_header_title);
+        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.TimetableView);
+        rowCount = a.getInt(R.styleable.TimetableView_row_count, DEFAULT_ROW_COUNT) - 1;
+        columnCount = a.getInt(R.styleable.TimetableView_column_count, DEFAULT_COLUMN_COUNT);
+        cellHeight = a.getDimensionPixelSize(R.styleable.TimetableView_cell_height, dp2Px(DEFAULT_CELL_HEIGHT_DP));
+        sideCellWidth = a.getDimensionPixelSize(R.styleable.TimetableView_side_cell_width, dp2Px(DEFAULT_SIDE_CELL_WIDTH_DP));
+        int titlesId = a.getResourceId(R.styleable.TimetableView_header_title, R.array.default_header_title);
         headerTitle = a.getResources().getStringArray(titlesId);
-        int colorsId = a.getResourceId(com.github.tlaabs.timetableview.R.styleable.TimetableView_sticker_colors, com.github.tlaabs.timetableview.R.array.default_sticker_color);
+        int colorsId = a.getResourceId(R.styleable.TimetableView_sticker_colors, R.array.default_sticker_color);
         stickerColors = a.getResources().getStringArray(colorsId);
-        startTime = a.getInt(com.github.tlaabs.timetableview.R.styleable.TimetableView_start_time, DEFAULT_START_TIME);
-        headerHighlightColor = a.getColor(com.github.tlaabs.timetableview.R.styleable.TimetableView_header_highlight_color, getResources().getColor(com.github.tlaabs.timetableview.R.color.default_header_highlight_color));
-        int highlightTypeValue = a.getInteger(com.github.tlaabs.timetableview.R.styleable.TimetableView_header_highlight_type,0);
-        if(highlightTypeValue == 0) highlightMode = com.github.tlaabs.timetableview.HighlightMode.COLOR;
-        else if(highlightTypeValue == 1) highlightMode = com.github.tlaabs.timetableview.HighlightMode.IMAGE;
-        headerHighlightImageSize = a.getDimensionPixelSize(com.github.tlaabs.timetableview.R.styleable.TimetableView_header_highlight_image_size, dp2Px(24));
-        headerHighlightImage = a.getDrawable(com.github.tlaabs.timetableview.R.styleable.TimetableView_header_highlight_image);
+        startTime = a.getInt(R.styleable.TimetableView_start_time, DEFAULT_START_TIME);
+        headerHighlightColor = a.getColor(R.styleable.TimetableView_header_highlight_color, getResources().getColor(R.color.default_header_highlight_color));
+        int highlightTypeValue = a.getInteger(R.styleable.TimetableView_header_highlight_type,0);
+        if(highlightTypeValue == 0) highlightMode = HighlightMode.COLOR;
+        else if(highlightTypeValue == 1) highlightMode = HighlightMode.IMAGE;
+        headerHighlightImageSize = a.getDimensionPixelSize(R.styleable.TimetableView_header_highlight_image_size, dp2Px(24));
+        headerHighlightImage = a.getDrawable(R.styleable.TimetableView_header_highlight_image);
         a.recycle();
     }
 
     private void init() {
         LayoutInflater layoutInflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View view = layoutInflater.inflate(com.github.tlaabs.timetableview.R.layout.view_timetable, this, false);
+        View view = layoutInflater.inflate(R.layout.view_timetable, this, false);
         addView(view);
 
-        stickerBox = view.findViewById(com.github.tlaabs.timetableview.R.id.sticker_box);
-        tableHeader = view.findViewById(com.github.tlaabs.timetableview.R.id.table_header);
-        tableBox = view.findViewById(com.github.tlaabs.timetableview.R.id.table_box);
+        stickerBox = view.findViewById(R.id.sticker_box);
+        tableHeader = view.findViewById(R.id.table_header);
+        tableBox = view.findViewById(R.id.table_box);
+
 
         createTable();
     }
@@ -125,10 +129,10 @@ public class TimetableView extends LinearLayout {
      * date : 2019-02-08
      * get all schedules TimetableView has.
      */
-    public ArrayList<com.github.tlaabs.timetableview.Schedule> getAllSchedulesInStickers() {
-        ArrayList<com.github.tlaabs.timetableview.Schedule> allSchedules = new ArrayList<com.github.tlaabs.timetableview.Schedule>();
+    public ArrayList<Schedule> getAllSchedulesInStickers() {
+        ArrayList<Schedule> allSchedules = new ArrayList<Schedule>();
         for (int key : stickers.keySet()) {
-            for (com.github.tlaabs.timetableview.Schedule schedule : stickers.get(key).getSchedules()) {
+            for (Schedule schedule : stickers.get(key).getSchedules()) {
                 allSchedules.add(schedule);
             }
         }
@@ -139,25 +143,25 @@ public class TimetableView extends LinearLayout {
      * date : 2019-02-08
      * Used in Edit mode, To check a invalidate schedule.
      */
-    public ArrayList<com.github.tlaabs.timetableview.Schedule> getAllSchedulesInStickersExceptIdx(int idx) {
-        ArrayList<com.github.tlaabs.timetableview.Schedule> allSchedules = new ArrayList<com.github.tlaabs.timetableview.Schedule>();
+    public ArrayList<Schedule> getAllSchedulesInStickersExceptIdx(int idx) {
+        ArrayList<Schedule> allSchedules = new ArrayList<Schedule>();
         for (int key : stickers.keySet()) {
             if (idx == key) continue;
-            for (com.github.tlaabs.timetableview.Schedule schedule : stickers.get(key).getSchedules()) {
+            for (Schedule schedule : stickers.get(key).getSchedules()) {
                 allSchedules.add(schedule);
             }
         }
         return allSchedules;
     }
 
-    public void add(ArrayList<com.github.tlaabs.timetableview.Schedule> schedules) {
+    public void add(ArrayList<Schedule> schedules) {
         add(schedules, -1);
     }
 
-    private void add(final ArrayList<com.github.tlaabs.timetableview.Schedule> schedules, int specIdx) {
+    private void add(final ArrayList<Schedule> schedules, int specIdx) {
         final int count = specIdx < 0 ? ++stickerCount : specIdx;
-        com.github.tlaabs.timetableview.Sticker sticker = new com.github.tlaabs.timetableview.Sticker();
-        for (com.github.tlaabs.timetableview.Schedule schedule : schedules) {
+        Sticker sticker = new Sticker();
+        for (Schedule schedule : schedules) {
             TextView tv = new TextView(context);
 
             RelativeLayout.LayoutParams param = createStickerParam(schedule);
@@ -185,7 +189,7 @@ public class TimetableView extends LinearLayout {
     }
 
     public String createSaveData() {
-        return com.github.tlaabs.timetableview.SaveManager.saveSticker(stickers);
+        return SaveManager.saveSticker(stickers);
     }
 
     public void load(String data) {
@@ -193,7 +197,7 @@ public class TimetableView extends LinearLayout {
         stickers = SaveManager.loadSticker(data);
         int maxKey = 0;
         for (int key : stickers.keySet()) {
-            ArrayList<com.github.tlaabs.timetableview.Schedule> schedules = stickers.get(key).getSchedules();
+            ArrayList<Schedule> schedules = stickers.get(key).getSchedules();
             add(schedules, key);
             if (maxKey < key) maxKey = key;
         }
@@ -203,7 +207,7 @@ public class TimetableView extends LinearLayout {
 
     public void removeAll() {
         for (int key : stickers.keySet()) {
-            com.github.tlaabs.timetableview.Sticker sticker = stickers.get(key);
+            Sticker sticker = stickers.get(key);
             for (TextView tv : sticker.getView()) {
                 stickerBox.removeView(tv);
             }
@@ -211,7 +215,7 @@ public class TimetableView extends LinearLayout {
         stickers.clear();
     }
 
-    public void edit(int idx, ArrayList<com.github.tlaabs.timetableview.Schedule> schedules) {
+    public void edit(int idx, ArrayList<Schedule> schedules) {
         remove(idx);
         add(schedules, idx);
     }
@@ -229,7 +233,7 @@ public class TimetableView extends LinearLayout {
         if(idx < 0)return;
         TableRow row = (TableRow) tableHeader.getChildAt(0);
         View element = row.getChildAt(idx);
-        if(highlightMode == com.github.tlaabs.timetableview.HighlightMode.COLOR) {
+        if(highlightMode == HighlightMode.COLOR) {
             TextView tx = (TextView)element;
             tx.setTextColor(Color.parseColor("#FFFFFF"));
             tx.setBackgroundColor(headerHighlightColor);
@@ -277,6 +281,7 @@ public class TimetableView extends LinearLayout {
 
     private void createTable() {
         createTableHeader();
+
         for (int i = 0; i < rowCount; i++) {
             TableRow tableRow = new TableRow(context);
             tableRow.setLayoutParams(createTableLayoutParam());
@@ -286,14 +291,14 @@ public class TimetableView extends LinearLayout {
                 tv.setLayoutParams(createTableRowParam(cellHeight));
                 if (k == 0) {
                     tv.setText(getHeaderTime(i));
-                    tv.setTextColor(getResources().getColor(com.github.tlaabs.timetableview.R.color.colorHeaderText));
+                    tv.setTextColor(getResources().getColor(R.color.colorHeaderText));
                     tv.setTextSize(TypedValue.COMPLEX_UNIT_DIP, DEFAULT_SIDE_HEADER_FONT_SIZE_DP);
-                    tv.setBackgroundColor(getResources().getColor(com.github.tlaabs.timetableview.R.color.colorHeader));
+                    tv.setBackgroundColor(getResources().getColor(R.color.colorHeader));
                     tv.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL);
                     tv.setLayoutParams(createTableRowParam(sideCellWidth, cellHeight));
                 } else {
                     tv.setText("");
-                    tv.setBackground(getResources().getDrawable(com.github.tlaabs.timetableview.R.drawable.item_border));
+                    tv.setBackground(getResources().getDrawable(R.drawable.item_border));
                     tv.setGravity(Gravity.RIGHT);
                 }
                 tableRow.addView(tv);
@@ -312,8 +317,10 @@ public class TimetableView extends LinearLayout {
                 tv.setLayoutParams(createTableRowParam(sideCellWidth, cellHeight));
             } else {
                 tv.setLayoutParams(createTableRowParam(cellHeight));
+                // ************* 첫 번째 열을 제외한 나머지 열들을 stretch가능하게 설정    **********
+                tableHeader.setColumnStretchable(i, true);
             }
-            tv.setTextColor(getResources().getColor(com.github.tlaabs.timetableview.R.color.colorHeaderText));
+            tv.setTextColor(getResources().getColor(R.color.colorHeaderText));
             tv.setTextSize(TypedValue.COMPLEX_UNIT_DIP, DEFAULT_HEADER_FONT_SIZE_DP);
             tv.setText(headerTitle[i]);
             tv.setGravity(Gravity.CENTER);
@@ -323,7 +330,7 @@ public class TimetableView extends LinearLayout {
         tableHeader.addView(tableRow);
     }
 
-    private RelativeLayout.LayoutParams createStickerParam(com.github.tlaabs.timetableview.Schedule schedule) {
+    private RelativeLayout.LayoutParams createStickerParam(Schedule schedule) {
         int cell_w = calCellWidth();
 
         RelativeLayout.LayoutParams param = new RelativeLayout.LayoutParams(cell_w, calStickerHeightPx(schedule));
@@ -333,16 +340,25 @@ public class TimetableView extends LinearLayout {
 
         return param;
     }
-
+        //  ***********************    셀 너비 계산    ****************************
     private int calCellWidth(){
         Display display = ((Activity) context).getWindowManager().getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);
-        int cell_w = (size.x-getPaddingLeft() - getPaddingRight()- sideCellWidth) / (columnCount - 1);
-        return cell_w;
+
+        //int cell_w = (size.x-getPaddingLeft() - getPaddingRight()- sideCellWidth) / (columnCount - 1);
+        //return cell_w;
+
+        // 중간 계산 단계에서 float를 사용하여 소수점 손실을 최소화
+        float totalAvailableWidth = size.x - getPaddingLeft() - getPaddingRight() - sideCellWidth;
+        float cellWidthFloat = (float) (totalAvailableWidth / (columnCount - 0.35));
+
+        //Log.e(TAG, "calCellWidth: "+cellWidthFloat);
+
+        return Math.round(cellWidthFloat);
     }
 
-    private int calStickerHeightPx(com.github.tlaabs.timetableview.Schedule schedule) {
+    private int calStickerHeightPx(Schedule schedule) {
         int startTopPx = calStickerTopPxByTime(schedule.getStartTime());
         int endTopPx = calStickerTopPxByTime(schedule.getEndTime());
         int d = endTopPx - startTopPx;
@@ -412,10 +428,10 @@ public class TimetableView extends LinearLayout {
             columnCount = DEFAULT_COLUMN_COUNT;
             cellHeight = dp2Px(DEFAULT_CELL_HEIGHT_DP);
             sideCellWidth = dp2Px(DEFAULT_SIDE_CELL_WIDTH_DP);
-            headerTitle = context.getResources().getStringArray(com.github.tlaabs.timetableview.R.array.default_header_title);
-            stickerColors = context.getResources().getStringArray(com.github.tlaabs.timetableview.R.array.default_sticker_color);
+            headerTitle = context.getResources().getStringArray(R.array.default_header_title);
+            stickerColors = context.getResources().getStringArray(R.array.default_sticker_color);
             startTime = DEFAULT_START_TIME;
-            headerHighlightColor = context.getResources().getColor(com.github.tlaabs.timetableview.R.color.default_header_highlight_color);
+            headerHighlightColor = context.getResources().getColor(R.color.default_header_highlight_color);
         }
 
         public Builder setRowCount(int n) {

@@ -2,16 +2,18 @@
     <!-- Base application theme. -->
     <style name="Theme.SchoolProject" parent="Theme.AppCompat.DayNight.NoActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/purple_500</item>
+        <item name="colorPrimary">@color/white</item>
         <item name="colorPrimaryVariant">@color/white</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/teal_200</item>
+        <item name="colorSecondary">@color/colorAccentTest</item>
         <item name="colorSecondaryVariant">@color/colorAccent</item>
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
+
+
 
     </style>
     <style name="RoundedDialog" parent="Theme.AppCompat.Light.Dialog">
@@ -25,7 +27,20 @@
     </style>
 
     <style name="CustomEditTextStyle" parent="Widget.AppCompat.EditText">
+        <item name="android:colorAccent">@color/colorAccent</item>
+        <item name="android:backgroundTint">@color/colorAccent</item>
         <item name="colorControlActivated">@color/colorAccent</item>
+        <item name="android:textCursorDrawable">@drawable/cursor_drawable</item>
     </style>
+
+
+    <style name="InfoNumberPickerTheme">
+        <item name="android:textSize">17sp</item>
+        <item name="android:colorAccent">@color/colorAccent</item>
+        <item name="colorControlActivated">@color/colorAccent</item>
+        <item name="android:textColorPrimary">@color/colorAccent</item>
+    </style>
+
+
 
 </resources>

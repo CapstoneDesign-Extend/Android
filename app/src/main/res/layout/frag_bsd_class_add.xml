@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorAccent"
+        android:textStyle="bold"
+        android:textSize="27dp"
+        android:paddingVertical="5dp"
+        android:text="수업 추가"/>
+    <!-- 첫번째 행: 수업명, 교수명 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="3">
+
+        <EditText
+            android:id="@+id/et_class_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:inputType="text"
+            style="@style/CustomEditTextStyle"
+            android:nextFocusForward="@id/et_professor_name"
+            android:imeOptions="actionNext"
+            android:hint="수업명" />
+
+        <EditText
+            android:id="@+id/et_professor_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            style="@style/CustomEditTextStyle"
+            android:inputType="text"
+            android:layout_weight="1"
+            android:imeOptions="actionNext"
+            android:nextFocusForward="@id/et_classroom"
+            android:hint="교수명" />
+
+    </LinearLayout>
+
+    <!-- 두번째 행: 요일선택, 시작시간, 끝나는시간, 강의실 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="100dp"
+        android:weightSum="3">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="2">
+            <!-- 요일 선택을 위한 Spinner -->
+            <Spinner
+                android:id="@+id/spinnerDay"
+                android:layout_width="110dp"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:entries="@array/days_array" />
+
+            <!-- 시작시간 선택 버튼 -->
+            <TextView
+                android:id="@+id/et_start_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="17dp"
+                android:text="00:00" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="8dp"
+                android:textSize="17dp"
+                android:text="~" />
+
+            <!-- 끝나는 시간 선택 버튼 -->
+            <TextView
+                android:id="@+id/et_end_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="17dp"
+                android:text="00:00" />
+        </LinearLayout>
+
+
+        <!-- 강의실 EditText -->
+        <EditText
+            android:id="@+id/et_classroom"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:inputType="text"
+            android:layout_height="wrap_content"
+            style="@style/CustomEditTextStyle"
+            android:hint="강의실" />
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="0" />
+        <Button
+            android:id="@+id/btn_save"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="@color/white"
+            android:textSize="17dp"
+            android:paddingVertical="7dp"
+            android:paddingHorizontal="25dp"
+            android:background="@drawable/shape_round_border_accent"
+            android:layout_marginBottom="15dp"
+            android:text="저장"/>
+    </LinearLayout>
+
+</LinearLayout>

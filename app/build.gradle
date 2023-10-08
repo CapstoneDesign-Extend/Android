@@ -68,6 +68,12 @@ dependencies {
     // TimeTableView  --> tableLayout 잘림 문제 발생
     implementation 'com.github.tlaabs:TimetableView:1.0.3-fx1'
 
+    // Room DB
+    implementation 'androidx.room:room-runtime:2.5.2'
+    annotationProcessor 'androidx.room:room-compiler:2.5.2'
+
+
+
 
 
 

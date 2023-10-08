@@ -12,6 +12,14 @@
         <item>Fri</item>
     </string-array>
 
+    <string-array name="days_array">
+        <item>월요일</item>
+        <item>화요일</item>
+        <item>수요일</item>
+        <item>목요일</item>
+        <item>금요일</item>
+    </string-array>
+
     <string name="terms_service">서비스이용약관
 \n
 \n제1조(목적)

@@ -20,6 +20,7 @@ import com.example.schoolproject.model.Board;
 import com.example.schoolproject.model.BoardKind;
 import com.example.schoolproject.model.retrofit.BoardApiService;
 import com.example.schoolproject.model.retrofit.BoardCallback;
+import com.example.schoolproject.nav.shop.ShopRecyclerViewAdapter;
 import com.example.schoolproject.post.PostPreviewRecyclerViewAdapter;
 
 import java.util.ArrayList;
@@ -45,7 +46,12 @@ public class SearchActivity extends AppCompatActivity {
         // setting recyclerView
         binding.recyclerViewSearch.setLayoutManager(new LinearLayoutManager(this));
         dataList = new ArrayList<>();
-        adapter = new PostPreviewRecyclerViewAdapter(this, dataList);
+
+        if (searchType.equals("board")){
+            adapter = new PostPreviewRecyclerViewAdapter(this, dataList);
+        } else if (searchType.equals("market")) {
+            adapter = new ShopRecyclerViewAdapter(this, dataList);
+        }
         binding.recyclerViewSearch.setAdapter(adapter);
 
         binding.btnSearch.setOnClickListener(new View.OnClickListener() {

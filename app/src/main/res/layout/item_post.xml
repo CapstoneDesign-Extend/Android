@@ -62,6 +62,18 @@
         android:textStyle="bold"
         android:textColor="@color/black"
         />
+    <TextView
+        android:visibility="gone"
+        android:id="@+id/tv_post_price"
+        android:paddingLeft="5dp"
+        android:layout_marginBottom="3dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Price"
+        android:textSize="16dp"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        />
 
     <TextView
         android:id="@+id/tv_post_content"

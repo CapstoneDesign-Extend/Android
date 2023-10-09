@@ -7,6 +7,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
@@ -33,9 +35,11 @@ import com.example.schoolproject.model.retrofit.CommentCallback;
 import com.example.schoolproject.model.retrofit.LikeApiService;
 import com.example.schoolproject.model.retrofit.LikeCallback;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import retrofit2.Call;
@@ -180,6 +184,19 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
             binding.tvPostTitle.setText(data.getTitle());
             binding.tvPostContent.setText(data.getContent());
             binding.tvChatCount.setText(String.valueOf(data.getChatCnt()));
+
+            // ====== price 를 갖고 있으면, 가격 표시 처리  ======
+            if (data.getPrice() != null){
+                binding.tvPostPrice.setVisibility(View.VISIBLE);
+
+                // 가격 필드 콤마 + "원" 처리
+                int price = data.getPrice();
+                NumberFormat numberFormat = NumberFormat.getInstance(Locale.KOREA);
+                String formattedPrice = numberFormat.format(price) + "원";
+                binding.tvPostPrice.setText(formattedPrice);
+
+            }
+
             postId = data.getId();  // 상위 클래스로 넘긴 후 CommentViewHolder클래스에서 사용(댓글 삭제 후 갱신 로직)
 
             // 이미지 처리

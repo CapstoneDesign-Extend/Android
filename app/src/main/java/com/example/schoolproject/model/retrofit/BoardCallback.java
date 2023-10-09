@@ -1,6 +1,7 @@
 package com.example.schoolproject.model.retrofit;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.net.Uri;
 import android.widget.Toast;
@@ -101,11 +102,15 @@ public class BoardCallback implements Callback<Board> {
                     // 이미지 업로드 시
                     PostWriteActivity postWriteActivity = (PostWriteActivity) activity;
                     postWriteActivity.setPostId(board.getId());
-                    showShortToast(context, "이미지 업로드 중입니다.");
 
-                    postWriteActivity.uploadImageList(imageUriList);
+                    // 이미지 업로드하는 동안 사용자 입력 막기
+                    ProgressDialog progressDialog = new ProgressDialog(activity);
+                    progressDialog.setMessage("이미지 업로드 중입니다.");
+                    progressDialog.setCancelable(false);  // 사용자가 취소할 수 없도록 설정
+                    progressDialog.show();
 
-                    finishActivity(activity);
+                    postWriteActivity.uploadImageList(imageUriList, progressDialog);  // 이 안에서 액티비티 종료
+
                 }
 
 
@@ -122,11 +127,14 @@ public class BoardCallback implements Callback<Board> {
                             // 이미지 업로드
                             PostWriteActivity postWriteActivity = (PostWriteActivity) activity;
                             postWriteActivity.setPostId(board.getId());
-                            showShortToast(context, "이미지 업로드 중입니다.");
 
-                            postWriteActivity.uploadImageList(imageUriList);
+                            ProgressDialog progressDialog = new ProgressDialog(activity);
+                            progressDialog.setMessage("이미지 업로드 중입니다.");
+                            progressDialog.setCancelable(false);  // 사용자가 취소할 수 없도록 설정
+                            progressDialog.show();
 
-                            finishActivity(activity);
+                            postWriteActivity.uploadImageList(imageUriList, progressDialog);  // 이 함수 안에서 액티비티 종료
+
                         } else {
                             showShortToast(context, "게시글 수정이 완료되었습니다.");
                             finishActivity(activity);
@@ -140,6 +148,7 @@ public class BoardCallback implements Callback<Board> {
 
         } else {
             showShortToast(context, "서버로부터 응답을 받을 수 없습니다.");
+
         }
     }
 

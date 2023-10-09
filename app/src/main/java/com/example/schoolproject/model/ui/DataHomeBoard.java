@@ -12,16 +12,36 @@ public class DataHomeBoard {
     private List<String> post_titles;
     private List<String> post_contents;
     private List<String> post_ids;
-    public DataHomeBoard(){}
+    private List<List<String>> imageURLsList;
+
+    public DataHomeBoard() {
+    }
 
     public DataHomeBoard(String board_name, List<String> post_titles, List<String> post_contents, List<String> post_ids){
         this.board_name = board_name;
         this.post_titles = post_titles;
         this.post_contents = post_contents;
         this.post_ids = post_ids;
+        this.imageURLsList = imageURLsList;
     }
 
+    public DataHomeBoard(BoardKind boardKind, String board_name, List<String> post_titles, List<String> post_contents, List<String> post_ids, List<List<String>> imageURLsList) {
+        this.boardKind = boardKind;
+        this.board_name = board_name;
+        this.post_titles = post_titles;
+        this.post_contents = post_contents;
+        this.post_ids = post_ids;
+        this.imageURLsList = imageURLsList;
+    }
     // getters and setters
+
+    public List<List<String>> getImageURLsList() {
+        return imageURLsList;
+    }
+
+    public void setImageURLsList(List<List<String>> imageURLsList) {
+        this.imageURLsList = imageURLsList;
+    }
 
     public BoardKind getBoardKind() {
         return boardKind;

@@ -47,8 +47,10 @@ import java.util.List;
 import retrofit2.Call;
 
 public class PostActivity extends AppCompatActivity {
+    private boolean isShop = false;
     private boolean isCallbackCompleted = false;  // callback 상태 변수
     private ArrayList<String> imageURLs;
+    private Integer price;
     private Long postId;
     private Long postAuthorId = Long.valueOf(-1);  // callback 클래스 호출시 저장됨(기본값: -1)
     private Long memberId;
@@ -98,9 +100,11 @@ public class PostActivity extends AppCompatActivity {
         // 필요한 값 가져오기
         imageURLs = getIntent().getStringArrayListExtra("imageURLs");
         postId = getIntent().getLongExtra("postId",-1);
+        price = getIntent().getIntExtra("price", -1);
         memberId = sPref.getLong("id", -1);
         loginId = sPref.getString("loginId", null);
         boardKind = getIntent().getStringExtra("boardKind");
+        Log.e(TAG, "모든 인텐트 출력: " + getIntent().getExtras());
         if (postId == -1){
             Toast.makeText(getApplicationContext(), "Fatal Error: postId is null", Toast.LENGTH_SHORT).show();
         }
@@ -108,6 +112,12 @@ public class PostActivity extends AppCompatActivity {
         // set boardName
         tv_boardName = findViewById(R.id.tv_post_board_name);
         tv_boardName.setText(BoardKindUtils.getBoardTitleByString(boardKind));
+
+        //  ======== 장터 게시판인 경우 ========
+        if (boardKind.equals("MARKET")){
+            isShop = true;
+
+        }
 
         // setting Toolbar
         Toolbar toolbar = findViewById(R.id.toolbar_post);
@@ -204,7 +214,8 @@ public class PostActivity extends AppCompatActivity {
             case R.id.item_report:
                 Toast.makeText(this, "해당 사용자를 신고합니다.", Toast.LENGTH_SHORT).show();
                 return true;
-            case R.id.item_update:  // 게시글 수정
+                // =========================  게시글 수정  ================================
+            case R.id.item_update:
                 Intent intent = new Intent(getApplicationContext(), PostWriteActivity.class);
                 intent.putExtra("boardKind", boardKind);
                 intent.putExtra("postId", postId);
@@ -212,6 +223,7 @@ public class PostActivity extends AppCompatActivity {
                 intent.putExtra("postTitle", postTitle);
                 intent.putExtra("postContent", postContent);
                 intent.putExtra("imageURLs", imageURLs);
+                intent.putExtra("price", price);
                 startActivity(intent);
                 return true;
             case R.id.item_delete:  // 게시글 삭제

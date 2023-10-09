@@ -1,9 +1,11 @@
 package com.example.schoolproject.post;
 
+import static android.content.ContentValues.TAG;
 import static com.example.schoolproject.model.DateConvertUtils.convertDate;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,6 +52,7 @@ public class PostPreviewRecyclerViewAdapter extends RecyclerView.Adapter<PostPre
                 p.setHeart_count(String.valueOf(b.getLikeCnt()));
                 p.setChat_count(String.valueOf(b.getChatCnt()));
                 p.setImageURLs(b.getImageURLs());
+                p.setPrice(b.getPrice());
 
                 dataList.add(p);
             }
@@ -77,6 +80,7 @@ public class PostPreviewRecyclerViewAdapter extends RecyclerView.Adapter<PostPre
         private Long postId;
         private String boardKind;
         private ArrayList<String> imageURLs = new ArrayList<>();
+        private Integer price;
         protected LinearLayout boardWrapper;
         protected LinearLayout heartWrapper;
         protected LinearLayout chatWrapper;
@@ -103,16 +107,15 @@ public class PostPreviewRecyclerViewAdapter extends RecyclerView.Adapter<PostPre
             this.chatWrapper = itemView.findViewById(R.id.wrapper_chatCount);
             this.heartWrapper = itemView.findViewById(R.id.wrapper_heartCount);
 
-            // set OnClickListener for boardWrapper
+            //  ===================  Post로 이동  ======================
             this.boardWrapper.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(context, PostActivity.class);
                     intent.putExtra("postId", postId);
                     intent.putExtra("imageURLs", imageURLs);
-                    //Toast.makeText(context, postId.toString(), Toast.LENGTH_SHORT).show();
-
                     intent.putExtra("boardKind", boardKind);
+                    intent.putExtra("price", price);
                     context.startActivity(intent);
                 }
             });
@@ -130,6 +133,7 @@ public class PostPreviewRecyclerViewAdapter extends RecyclerView.Adapter<PostPre
                 chatWrapper.setVisibility(View.VISIBLE);
             }
             // *******************  여기서 값을 저장 후 리스너에서 인텐트로 전달  ***********************
+            this.price = data.getPrice();
             this.postId = data.getPostId();
             this.boardKind = String.valueOf(data.getBoardType());
             this.imageURLs = (ArrayList<String>) data.getImageURLs();

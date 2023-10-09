@@ -17,6 +17,7 @@ public class DataPost {
     private String heart_count;
     private String chat_count;
     private List<String> imageURLs;
+    private Integer price;
 
 
 
@@ -53,6 +54,14 @@ public class DataPost {
         this.time = time;
         this.heart_count = heart_count;
         this.chat_count = chat_count;
+    }
+
+    public Integer getPrice() {
+        return price;
+    }
+
+    public void setPrice(Integer price) {
+        this.price = price;
     }
 
     public List<String> getImageURLs() {

@@ -7,8 +7,10 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -16,6 +18,8 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -54,6 +58,7 @@ import org.apache.commons.io.IOUtils;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -71,12 +76,12 @@ public class PostWriteActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private TextView btn_done;
     private ImageView iv_camera;
-    private EditText et_post_title;
-    private EditText et_post_content;
+    private EditText et_post_title, et_post_content, et_price;
     private CheckBox cb_isAnon;
     private String author;
     private Member member;
     private boolean isUpdate = false;  // 이 값에 따라 Create or Update 결정
+    private boolean isShop = false;
     private Long postId;  // update 위한 postId
     private static final int PICK_IMAGE_REQUEST = 1;
     // 권한 요청을 위한 고유한 요청 코드
@@ -85,8 +90,16 @@ public class PostWriteActivity extends AppCompatActivity {
     private LinearLayout imageWrapper;
     private List<Uri> selectedImageUriList = new ArrayList<>();
 
+
+
     public void setPostId(Long postId) {
         this.postId = postId;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
     }
 
     @Override
@@ -114,13 +127,68 @@ public class PostWriteActivity extends AppCompatActivity {
         iv_camera = findViewById(R.id.iv_post_camera);
         imageWrapper = findViewById(R.id.write_image_container);
         horizontalScrollView = findViewById(R.id.hsv_write_image_scroll);
+        et_price = findViewById(R.id.et_post_price);
+
+        // 장터게시판일 경우, 뷰 구조 변경
+        if (boardKind.equals("MARKET")){
+            et_price.setVisibility(View.VISIBLE);
+            isShop = true;
+            // 가격 입력 필드 콤마 + "원" 처리
+            et_price.addTextChangedListener(new TextWatcher() {
+               private String current = "";
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+                    if (!s.toString().equals(current)) {
+                        et_price.removeTextChangedListener(this);
+
+                        // 입력값을 숫자로 파싱
+                        String cleanString = s.toString().replaceAll("[^\\d.]", "");
+                        double parsed;
+                        try {
+                            parsed = Double.parseDouble(cleanString);
+                        } catch (NumberFormatException e) {
+                            parsed = 0.0;
+                        }
+
+                        // 콤마가 있는 포맷으로 변환
+                        String formatted = NumberFormat.getInstance().format(parsed) + " 원";
+
+                        current = formatted;
+                        et_price.setText(formatted);
+                        et_price.setSelection(formatted.length() - 2);
+
+                        et_price.addTextChangedListener(this);
+                    }
+                }
+            });
+
+
+
+        }
+
+
 
         // 게시글 수정 버튼을 통해 진입하면, 작성된 글 불러와서 표시
         if (isUpdate){
+            if (isShop){
+                Integer price = getIntent().getIntExtra("price", -1);
+                Log.e(TAG, "price: ===================================" + price);
+                et_price.setText(String.valueOf(price));
+            }
             et_post_title.setText(getIntent().getStringExtra("postTitle"));
             et_post_content.setText(getIntent().getStringExtra("postContent"));
             imageURLs = getIntent().getStringArrayListExtra("imageURLs");
-            Log.e(TAG, "onCreate:************************************************ " + imageURLs);
+            Log.e(TAG, "onCreate: imageURLs ************************************************ " + imageURLs);
             // 기존에 저장된 이미지 url을 미리보기에 로드
             for (Object imageUrl : imageURLs){
                 Log.e(TAG, "onClick: " + (String) imageUrl );
@@ -164,56 +232,41 @@ public class PostWriteActivity extends AppCompatActivity {
             }
         });
 
+        // ====================================  게시글 작성 버튼 클릭시 동작  ===================================================
         btn_done.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {  // 게시글 작성 버튼 로직
 
-                if (et_post_title.getText().toString().equals("") || et_post_content.getText().toString().equals("")){
+                if (et_post_title.getText().toString().equals("") || et_post_content.getText().toString().equals("")) {
                     Toast.makeText(PostWriteActivity.this, "제목과 내용을 모두 입력해주세요.", Toast.LENGTH_SHORT).show();
-                } else {
-
-                    if (!isUpdate){
-                        // 새로운 게시글 작성 동작
-                        BoardApiService apiService = new BoardApiService();
-                        Board board = new Board();
-                        board.setBoardKind(BoardKind.valueOf(boardKind));
-                        board.setTitle(et_post_title.getText().toString());
-                        board.setContent(et_post_content.getText().toString());
-                        board.setMember(member);
-                        board.setLikeCnt(0);
-                        board.setChatCnt(0);
-                        board.setFinalDate(getCurrentTime("default"));
-                        if (cb_isAnon.isChecked()) {author = "익명";}
-                        board.setAuthor(author);
-                        // 게시글 작성 콜백 호출 :: 해당 콜백에서 하단에 정의된 uploadImageList() 호출함.
-                        Call<Board> call = apiService.createBoard(board);
-                        BoardCallback callback = new BoardCallback(PostWriteActivity.this, getApplicationContext(), selectedImageUriList);
-                        call.enqueue(callback);
-
-                        // 이미지 업로드 콜백 호출 --> 게시글 작성 콜백에 포함시킴
-                        //uploadImageList(selectedImageUriList);
-
-                    }else {
-                        // 게시글 수정 동작
-
-                        BoardApiService apiService = new BoardApiService();
-                        Board board = new Board();
-                        board.setTitle(et_post_title.getText().toString());
-                        board.setContent(et_post_content.getText().toString());
-                        if (cb_isAnon.isChecked()) {author = "익명";}
-                        else {author = loginId;}
-                        board.setAuthor(author);
-
-                        Call<Board> call = apiService.updateBoard(postId, board);
-                        BoardCallback callback = new BoardCallback(PostWriteActivity.this, getApplicationContext(), selectedImageUriList);
-                        call.enqueue(callback);
+                    return;
+                }
+                if (isShop){
+                    String cleanString = et_price.getText().toString().replaceAll("[^\\d]", "");
+                    if (cleanString.equals("")) {
+                        Toast.makeText(PostWriteActivity.this, "가격을 입력해주세요.", Toast.LENGTH_SHORT).show();
+                        return;
                     }
+                }
 
+                BoardApiService apiService = new BoardApiService();
+                Board board = createBoardFromInput();
 
-
+                if (isUpdate) {
+                    // 게시글 수정 동작
+                    Call<Board> call = apiService.updateBoard(postId, board);
+                    BoardCallback callback = new BoardCallback(PostWriteActivity.this, getApplicationContext(), selectedImageUriList);
+                    call.enqueue(callback);
+                } else {
+                    // 새로운 게시글 작성 동작
+                    Call<Board> call = apiService.createBoard(board);
+                    BoardCallback callback = new BoardCallback(PostWriteActivity.this, getApplicationContext(), selectedImageUriList);
+                    call.enqueue(callback);
                 }
             }
         });
+
+
         // checkbox:: set Initial State
         if (cb_isAnon.isChecked()){
             author = "익명";
@@ -242,6 +295,33 @@ public class PostWriteActivity extends AppCompatActivity {
         et_post_title.requestFocus();
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.showSoftInput(et_post_title, InputMethodManager.SHOW_IMPLICIT);
+    }
+    private Board createBoardFromInput() {
+        Board board = new Board();
+
+        if (isShop) {
+            String cleanString = et_price.getText().toString().replaceAll("[^\\d]", "");
+            board.setPrice(Integer.parseInt(cleanString));
+        }
+
+        board.setBoardKind(BoardKind.valueOf(boardKind));
+        board.setTitle(et_post_title.getText().toString());
+        board.setContent(et_post_content.getText().toString());
+        board.setLikeCnt(0);
+        board.setChatCnt(0);
+        board.setFinalDate(getCurrentTime("default"));
+
+        if (cb_isAnon.isChecked()) {
+            board.setAuthor("익명");
+        } else {
+            board.setAuthor(loginId);
+        }
+
+        if (!isUpdate) {
+            board.setMember(member);
+        }
+
+        return board;
     }
 
     @Override
@@ -424,7 +504,7 @@ public class PostWriteActivity extends AppCompatActivity {
         }
     }
     // 이미지 업로드 함수
-    public void uploadImageList(List<Uri> imageUriList) {
+    public void uploadImageList(List<Uri> imageUriList, ProgressDialog dialog) {
         List<MultipartBody.Part> imageParts = new ArrayList<>();
         try {
             for (Uri imageUri : imageUriList){
@@ -441,7 +521,12 @@ public class PostWriteActivity extends AppCompatActivity {
                 call.enqueue(new FileCallback<List<FileEntity>>() {
                     @Override
                     public void onSuccess(List<FileEntity> result) {
+
+                        dialog.dismiss();
                         Toast.makeText(getApplicationContext(), "이미지 업로드가 완료되었습니다.", Toast.LENGTH_SHORT).show();
+
+                        finish();
+
                     }
                 });
             }else {

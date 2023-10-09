@@ -150,6 +150,8 @@ public class FragHome extends Fragment {
                         List<String> postIds = new ArrayList<>();
                         List<String> titles = new ArrayList<>();
                         List<String> contents = new ArrayList<>();
+                        List<List<String>> imageURLsList = new ArrayList<>();
+
                         // 각 Board를 DataHomeBoard로 변환하고 dataHomeBoardList에 추가하는 로직
                         List<Board> boardList = (List<Board>) responses[i];  // response 하나는 요청한 board 수만큼의 board가 들어있는 boardList임
                         DataHomeBoard dataHomeBoard = new DataHomeBoard();
@@ -159,6 +161,7 @@ public class FragHome extends Fragment {
                             postIds.add(String.valueOf(b.getId()));
                             titles.add(b.getTitle());
                             contents.add(b.getContent());
+                            imageURLsList.add(b.getImageURLs());
                         }
 
                         dataHomeBoard.setBoardKind(customOrder.get(i));
@@ -166,6 +169,7 @@ public class FragHome extends Fragment {
                         dataHomeBoard.setPost_ids(postIds);
                         dataHomeBoard.setPost_titles(titles);
                         dataHomeBoard.setPost_contents(contents);
+                        dataHomeBoard.setImageURLsList(imageURLsList);
                         // 완성된 모델을 여기 넣고 정렬 후 Data Setting
                         dataHomeBoardList.add(dataHomeBoard);
                     }

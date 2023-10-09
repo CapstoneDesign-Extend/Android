@@ -66,7 +66,7 @@ public class HomeRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
         }
         return -1;
     }
-    // ViewHolder 1: DynamicMessage
+    // ===================     ViewHolder 1: DynamicMessage   ====================
     public class HomeDynamicMorningViewHolder extends RecyclerView.ViewHolder{
         protected TextView tv_title;
         protected TextView tv_lecture1;
@@ -84,10 +84,11 @@ public class HomeRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
             tv_lecture2.setText(data.getLecture2());
         }
     }
-    // ViewHolder 2: HomeBoards
+    // ====================    ViewHolder 2: HomeBoards    =======================
     public class HomeBoardViewHolder extends RecyclerView.ViewHolder{
         private String boardName;  // more를 클릭시 BoardActivity 에 넘겨줄 이름
         private int postId1, postId2;  // 게시글 preview 클릭시 postActivity 로 id 전달용
+        private List<String> imageURLs1, imageURLs2;  // // 게시글 preview 클릭시 postActivity 로 이미지 url 전달용
         protected List<LinearLayout> rowWrappers;
         protected LinearLayout boardMore;
         protected TextView tv_boardTitle;
@@ -138,6 +139,7 @@ public class HomeRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
                                 Intent intent1 = new Intent(context, PostActivity.class);
                                 intent1.putExtra("postId", Long.valueOf(postId1));
                                 intent1.putExtra("boardKind", BoardKindUtils.getBoardKindByKorean(boardName).toString());
+                                intent1.putExtra("imageURLs", (ArrayList<String>)imageURLs1);
                                 context.startActivity(intent1);
                                 break;
                             case R.id.home_board_wrapper2:
@@ -145,6 +147,7 @@ public class HomeRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
                                 Intent intent2 = new Intent(context, PostActivity.class);
                                 intent2.putExtra("postId", Long.valueOf(postId2));
                                 intent2.putExtra("boardKind", BoardKindUtils.getBoardKindByKorean(boardName).toString());
+                                intent2.putExtra("imageURLs", (ArrayList<String>)imageURLs2) ;
                                 context.startActivity(intent2);
                                 break;
                             case R.id.home_board_wrapper3:  // 작성된 게시글이 없을 때 표시됨
@@ -172,6 +175,7 @@ public class HomeRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
             boardName = data.getBoard_name();
             List<String> postIds = data.getPost_ids();
             List<String> titles = data.getPost_titles();
+            List<List<String>> imageURLsList = data.getImageURLsList();
             List<String> contents = data.getPost_contents();
             tv_boardTitle.setText(boardName);
 
@@ -184,6 +188,7 @@ public class HomeRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
             if (size==1){
                 // set postId
                 postId1 = Integer.parseInt(postIds.get(0));
+                imageURLs1 = imageURLsList.get(0);
 
                 rowWrappers.get(0).setVisibility(View.VISIBLE);
                 rowWrappers.get(1).setVisibility(View.GONE);
@@ -194,6 +199,8 @@ public class HomeRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
                 // set postId
                 postId1 = Integer.parseInt(postIds.get(0));
                 postId2 = Integer.parseInt(postIds.get(1));
+                imageURLs1 = imageURLsList.get(0);
+                imageURLs2 = imageURLsList.get(1);
 
                 rowWrappers.get(0).setVisibility(View.VISIBLE);
                 rowWrappers.get(1).setVisibility(View.VISIBLE);

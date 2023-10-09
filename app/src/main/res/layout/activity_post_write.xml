@@ -57,13 +57,27 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar_write" />
+    <EditText
+        android:visibility="gone"
+        android:id="@+id/et_post_price"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="15dp"
+        android:ems="10"
+        android:inputType="numberDecimal"
+        android:hint="가격"
+        android:backgroundTint="@color/colorAccent"
+        android:textCursorDrawable="@drawable/cursor_drawable"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/et_post_title" />
     <HorizontalScrollView
         android:id="@+id/hsv_write_image_scroll"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingHorizontal="15dp"
         android:scrollbars="none"
-        app:layout_constraintTop_toBottomOf="@+id/et_post_title"
+        app:layout_constraintTop_toBottomOf="@+id/et_post_price"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:visibility="gone">

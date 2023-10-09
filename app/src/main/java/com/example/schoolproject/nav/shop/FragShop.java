@@ -48,9 +48,9 @@ public class FragShop extends Fragment {
     public void onResume() {
         super.onResume();
         // Load Data
-//        BoardApiService apiService = new BoardApiService();
-//        Call<List<Board>> call = apiService.getBoardsByBoardKind(BoardKind.MARKET);
-//        call.enqueue(new BoardCallback.BoardListCallBack(getContext(), adapter));
+        BoardApiService apiService = new BoardApiService();
+        Call<List<Board>> call = apiService.getBoardsByBoardKind(BoardKind.MARKET);
+        call.enqueue(new BoardCallback.BoardListCallBack(getContext(), adapter));
     }
 
     @Nullable
@@ -67,27 +67,25 @@ public class FragShop extends Fragment {
         activity.getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         // setting RecyclerView
-//        recyclerView = view.findViewById(R.id.recycler_view_shop);
-//        layoutManager = new LinearLayoutManager(getContext());
-//        recyclerView.setLayoutManager(layoutManager);
-//
-//        dataList = new ArrayList<>();  // init with empty data
-//        adapter = new ShopRecyclerViewAdapter(getContext(), dataList);
-//        recyclerView.setAdapter(adapter);
+        recyclerView = view.findViewById(R.id.recycler_view_shop);
+        layoutManager = new LinearLayoutManager(getContext());
+        recyclerView.setLayoutManager(layoutManager);
+
+        dataList = new ArrayList<>();  // init with empty data
+        adapter = new ShopRecyclerViewAdapter(getContext(), dataList);
+        recyclerView.setAdapter(adapter);
 
         // setting fab
         fab = view.findViewById(R.id.fab_write);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Intent intent = new Intent(view.getContext(), PostWriteActivity.class);
-//                intent.putExtra("boardKind","MARKET");
-//                startActivity(intent);
+                Intent intent = new Intent(view.getContext(), PostWriteActivity.class);
+                intent.putExtra("boardKind","MARKET");
+                startActivity(intent);
 
 
 
-
-                // 테스트 게시글 작성:
 
 
             }

@@ -248,7 +248,7 @@ public class PostActivity extends AppCompatActivity {
         Call<Board> call = boardApiService.getBoardById(postId);
         call.enqueue(new BoardCallback(postId, PostActivity.this, getApplicationContext(), adapter));
     }
-    private void loadLikeStatus(Long postId, Long memberId, MutableLiveData<LikeStatus> liveData){
+    private void loadLikeStatus(Long postId, Long memberId, MutableLiveData<LikeStatus> liveData){  //
         LikeApiService apiService = new LikeApiService();
         Call<LikeStatus> call = apiService.getLikedBoardAndComments(postId, memberId);
         call.enqueue(new LikeCallback.GetLikeStatusCallback(getApplicationContext(), liveData));

@@ -13,15 +13,12 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.PopupMenu;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.schoolproject.R;
 import com.example.schoolproject.databinding.ItemCommentBinding;
@@ -41,8 +38,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import me.relex.circleindicator.CircleIndicator;
-import me.relex.circleindicator.CircleIndicator3;
 import retrofit2.Call;
 
 public class PostRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -93,7 +88,7 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
         return -1;
     }
 
-    // ViewHolder 1: Post
+    // ====================  ViewHolder 1: Post  ========================
     public class PostViewHolder extends RecyclerView.ViewHolder{
         private ItemPostBinding binding;
 
@@ -188,30 +183,22 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
             postId = data.getId();  // 상위 클래스로 넘긴 후 CommentViewHolder클래스에서 사용(댓글 삭제 후 갱신 로직)
 
             // 이미지 처리
-            //if (data.hasImages()){
-
-
+            if (data.hasImageURLs()){
                 binding.postImageViewpager.setVisibility(View.VISIBLE);
                 binding.postImageIndicator.setVisibility(View.VISIBLE);
                 // viewpager2 초기화 + 어댑터 설정
 
-//                List<String> urls = new ArrayList<>();
-//                urls.add("https://picsum.photos/200/300");
-//                urls.add("https://picsum.photos/1920/1080");
-//                urls.add("https://picsum.photos/400/300");
-
-            // 영상용 로컬 이미지 사용
-            List<Integer> localImages = new ArrayList<>();
-            localImages.add(R.drawable._p1);
-            localImages.add(R.drawable._p2);
-            localImages.add(R.drawable._p3);
+                List<String> urls = new ArrayList<>();
+                for (String url : data.getImageURLs()){
+                    urls.add("http://www.extends.online:5438"+url);
+                }
+//              http://www.extends.online:5438
+//              urls.add("http://www.extends.online:5438/api/file/download/8");
+//              urls.add("https://picsum.photos/1920/1080");
 
 
-                //ImageSliderAdapter imageAdapter = new ImageSliderAdapter(context, data.getImages());
-            // 임시 비활성화 (아래)
-                //ImageSliderAdapter imageAdapter = new ImageSliderAdapter(context, urls);
+                ImageSliderAdapter imageAdapter = new ImageSliderAdapter(context, urls);
 
-                ImageSliderAdapter imageAdapter = new ImageSliderAdapter(context, localImages);
 
                 binding.postImageViewpager.setAdapter(imageAdapter);
                 // CircleIndicator 연결
@@ -219,13 +206,13 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
 
 
 
-            //}else {
-            //    binding.postImageViewpager.setVisibility(View.GONE);
-            //}
+            }else {
+                binding.postImageViewpager.setVisibility(View.GONE);
+            }
         }
 
     }
-    // viewHolder 2: Comments
+    // =========================   viewHolder 2: Comments   ============================
     public class CommentViewHolder extends RecyclerView.ViewHolder{
         private ItemCommentBinding binding;
         private Long memberId; // 댓글을 작성한 사람의 id (DB SEQ)

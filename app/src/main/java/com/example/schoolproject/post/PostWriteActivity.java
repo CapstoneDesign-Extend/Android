@@ -36,6 +36,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.example.schoolproject.R;
 import com.example.schoolproject.model.Board;
 import com.example.schoolproject.model.BoardKind;
+import com.example.schoolproject.model.FileEntity;
 import com.example.schoolproject.model.Member;
 import com.example.schoolproject.model.retrofit.BoardApiService;
 import com.example.schoolproject.model.retrofit.BoardCallback;
@@ -80,6 +81,9 @@ public class PostWriteActivity extends AppCompatActivity {
     private LinearLayout imageWrapper;
     private List<Uri> selectedImageUriList = new ArrayList<>();
 
+    public void setPostId(Long postId) {
+        this.postId = postId;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -355,16 +359,25 @@ public class PostWriteActivity extends AppCompatActivity {
                 InputStream inputStream = getContentResolver().openInputStream(imageUri);
                 byte[] imageBytes = IOUtils.toByteArray(inputStream);  // Apache Commons IO 라이브러리를 사용합니다.
                 RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), imageBytes);
-                MultipartBody.Part body = MultipartBody.Part.createFormData("imageFiles", "image.jpg", requestFile);  // 파일 이름을 직접 제공
+                MultipartBody.Part body = MultipartBody.Part.createFormData("files", "image.jpg", requestFile);  // 파일 이름을 직접 제공
                 imageParts.add(body);
             }
 
             FileApiService apiService = new FileApiService();
-            Call<Board> call = apiService.uploadImageFiles(imageParts, postId);
+            if (postId != null && postId != -1){
+                Call<List<FileEntity>> call = apiService.uploadFiles(imageParts, postId);
+                call.enqueue(new FileCallback<List<FileEntity>>() {
+                    @Override
+                    public void onSuccess(List<FileEntity> result) {
+                        Toast.makeText(getApplicationContext(), "이미지 업로드 성공", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }else {
+                Toast.makeText(getApplicationContext(), "Error: postId is NULL.", Toast.LENGTH_SHORT).show();
+            }
             // 이 콜백이 끝나면 addImageToScrollView() 호출됨  --> 로직 변경으로 다시 제거함
-            // 주의 : 콜백 클래스 FileCallback 에서 BoardCallback으로 변경됨
             //call.enqueue(new FileCallback.ImageCallBack(PostWriteActivity.this, getApplicationContext(), imageUri));
-            call.enqueue(new BoardCallback(this, getApplicationContext()));
+
 
         } catch (IOException e) {
             e.printStackTrace();

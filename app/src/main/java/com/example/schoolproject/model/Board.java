@@ -19,25 +19,25 @@ public class Board {
     private String finalDate; // LocalDateTime을 String으로 변환
 
     private BoardKind boardKind; // 게시판 종류
-    private List<String> images; // 이미지 URL 목록
+    private List<String> imageURLs; // 이미지 URL 목록
 
     private List<Comment> comments;
 
-    private List<File> files;
+    private List<FileEntity> files;
 
     // additional fn
-    public boolean hasImages(){
-        return images != null && !images.isEmpty();
+    public boolean hasImageURLs(){
+        return imageURLs != null && !imageURLs.isEmpty();
     }
 
     // getters and setters
 
-    public List<String> getImages() {
-        return images;
+    public List<String> getImageURLs() {
+        return imageURLs;
     }
 
-    public void setImages(List<String> images) {
-        this.images = images;
+    public void setImageURLs(List<String> imageURLs) {
+        this.imageURLs = imageURLs;
     }
 
     public Member getMember() {
@@ -144,11 +144,11 @@ public class Board {
         this.comments = comments;
     }
 
-    public List<File> getFiles() {
+    public List<FileEntity> getFiles() {
         return files;
     }
 
-    public void setFiles(List<File> files) {
+    public void setFiles(List<FileEntity> files) {
         this.files = files;
     }
 }

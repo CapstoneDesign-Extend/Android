@@ -1,7 +1,7 @@
 package com.example.schoolproject.model.retrofit;
 
 import com.example.schoolproject.model.Board;
-import com.example.schoolproject.model.File;
+import com.example.schoolproject.model.FileEntity;
 
 import java.util.List;
 
@@ -12,13 +12,12 @@ import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-import retrofit2.http.Body;
-import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 public class FileApiService {
     private static final String BASE_URL = "http://www.extends.online:5438";
@@ -41,42 +40,33 @@ public class FileApiService {
         fileApi = retrofit.create(FileApi.class);
     }
 
-    public Call<Board> uploadImageFiles(List<MultipartBody.Part> images, Long boardId){
-        return fileApi.uploadImageFiles(images, boardId);
+    public Call<List<FileEntity>> uploadFiles(List<MultipartBody.Part> files, Long boardId){
+        return fileApi.uploadFiles(files, boardId);
     }
 
-    public Call<Board> uploadAttachFile(MultipartBody.Part attachFile, Long boardId) {
-        return fileApi.uploadAttachFile(attachFile, boardId);
-    }
-    public Call<File> saveFile(File file) {
-        return fileApi.saveFile(file);
+    public Call<ResponseBody> downloadFile(Long id) {
+        return fileApi.downloadFile(id);
     }
 
-    public Call<File> getFileById(Long id) {
-        return fileApi.getFileById(id);
+    public Call<List<String>> getFileUrlsByBoardId(Long boardId) {
+        return fileApi.getFileUrlsByBoardId(boardId);
     }
 
-    public Call<Void> deleteFile(Long id) {
-        return fileApi.deleteFile(id);
-    }
+
 
     interface FileApi {
         @Multipart
-        @POST("api/files/uploadImage")
-        Call<Board> uploadImageFiles(@Part List<MultipartBody.Part> images, @Part("boardId") Long boardId);
+        @POST("/api/file/upload")
+        Call<List<FileEntity>> uploadFiles(
+                @Part List<MultipartBody.Part> files,
+                @Query("boardId") Long boardId
+        );
 
-        @Multipart
-        @POST("api/files/uploadAttach")
-        Call<Board> uploadAttachFile(@Part MultipartBody.Part attachFile, @Part("boardId") Long boardId);
+        @GET("/api/file/download/{id}")
+        Call<ResponseBody> downloadFile(@Path("id") Long id);
 
+        @GET("/api/file/urls/{boardId}")
+        Call<List<String>> getFileUrlsByBoardId(@Path("boardId") Long boardId);
 
-        @POST("/api/files")
-        Call<File> saveFile(@Body File file);
-
-        @GET("/api/files/{id}")
-        Call<File> getFileById(@Path("id") Long id);
-
-        @DELETE("/api/files/{id}")
-        Call<Void> deleteFile(@Path("id") Long id);
     }
 }

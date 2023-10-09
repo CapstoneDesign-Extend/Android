@@ -73,11 +73,11 @@ public class BoardCallback implements Callback<Board> {
     @Override
     public void onResponse(Call<Board> call, Response<Board> response) {
         if (response.isSuccessful()) {
-            Board board = response.body();
+            Board board = response.body();  // board 에는 imageURL 목록도 있음. 없다면 빈 객체가 저장됨
             String requestUrl = call.request().url().toString();  // 이 값을 구별해 적절한 로직 처리
             if (call.request().method().equals("GET")){
                 PostRecyclerViewAdapter postAdapter = (PostRecyclerViewAdapter) adapter;
-                postAdapter.setData(board);  // UPDATE Data: Post
+                postAdapter.setData(board);  // UPDATE Data: Post  -->  이때, 이미지도 함께 바인딩됨
                 PostActivity postActivity = (PostActivity) activity;
                 postActivity.setPostAuthorId(board.getMemberId());  // set postAuthorId to delete post or comments
                 postActivity.setPostTitle(board.getTitle());
@@ -91,17 +91,18 @@ public class BoardCallback implements Callback<Board> {
 
 
             }else if (call.request().method().equals("POST")){
-                if (requestUrl.contains("uploadImage")){
-                    // 이미지를 업로드할 경우 콜백 처리
-                    showShortToast(context, "이미지 업로드가 완료되었습니다.");
+                if (imageUriList.isEmpty()){
+                    // 일반 게시글 작성 시
+                    showShortToast(context, "게시글 작성이 완료되었습니다.");
                     finishActivity(activity);
                 }else{
-                    // 일반 게시글 작성 시 동작
-                    // 이미지 업로드 콜백 호출
+                    // 이미지 업로드 시
                     PostWriteActivity postWriteActivity = (PostWriteActivity) activity;
+                    postWriteActivity.setPostId(board.getId());
+                    showShortToast(context, "이미지 업로드 중입니다.");
+
                     postWriteActivity.uploadImageList(imageUriList);
 
-                    showShortToast(context, "게시글 작성이 완료되었습니다.");
                     finishActivity(activity);
                 }
 

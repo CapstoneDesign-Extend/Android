@@ -1,87 +1,40 @@
 package com.example.schoolproject.model.retrofit;
 
-import android.app.Activity;
-import android.content.Context;
-import android.net.Uri;
-import android.widget.Toast;
-import androidx.appcompat.app.AppCompatActivity;
-
-import com.example.schoolproject.model.File;
-import com.example.schoolproject.post.PostWriteActivity;
-
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class FileCallback implements Callback<File> {
-    private AppCompatActivity activity;
-    private Context context;
-
-    public FileCallback(AppCompatActivity activity, Context context) {
-        this.activity = activity;
-        this.context = context;
-    }
-
-    private static void showShortToast(Context context, String message){
-        Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
-    }
+public abstract class FileCallback<T> implements Callback<T> {
 
     @Override
-    public void onResponse(Call<File> call, Response<File> response) {
+    public void onResponse(Call<T> call, Response<T> response) {
         if (response.isSuccessful()) {
-            File file = response.body();
-            if (file == null || file.getId() == null) {
-                // 파일 업로드 실패 또는 오류 처리
-                showShortToast(context, "파일 업로드를 실패했습니다.");
-            } else {
-                // 파일 업로드 성공
-                showShortToast(context, "파일 업로드를 완료했습니다.");
-                // 서버 응답 처리
-            }
+            onSuccess(response.body());
         } else {
-            // 파일 업로드 실패
-            showShortToast(context, "서버로부터 응답을 받을 수 없습니다.");
+            onError(response.code(), response.message());
         }
     }
 
     @Override
-    public void onFailure(Call<File> call, Throwable t) {
-        // 네트워크 오류 또는 예외 처리
-        showShortToast(context, "인터넷 연결을 확인해주세요.");
+    public void onFailure(Call<T> call, Throwable t) {
+        onFailure(t);
     }
 
-    // inner Class:: Callback<ResponseBody>
+    // 성공 시 호출될 메서드
+    public abstract void onSuccess(T result);
 
-    public static class ImageCallBack implements Callback<ResponseBody> {
-        Activity activity;
-        Context context;
-        Uri imageUri;
-
-        public ImageCallBack(Activity activity, Context context, Uri imageUri) {
-            this.activity = activity;
-            this.context = context;
-            this.imageUri = imageUri;
-        }
-
-        @Override
-        public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-            if (response.isSuccessful()) {
-                // 이미지 업로드 성공
-
-                // 이미지 추가 로직 제거:: 이미지를 최종 선택한 후 일괄 업로드하는 방식으로 기능 수정
-                //((PostWriteActivity) activity).addImageToScrollView(imageUri);
-
-            } else {
-                // 이미지 업로드 실패
-                // 오류 처리
-            }
-        }
-
-        @Override
-        public void onFailure(Call<ResponseBody> call, Throwable t) {
-            // 네트워크 오류 또는 예외 처리
-        }
+    // API 응답이 성공이지만 예상된 형태가 아닌 경우 호출될 메서드
+    public void onError(int errorCode, String errorMessage) {
+        // 기본적으로 에러 메시지를 출력
+        // 필요에 따라서 확장 가능
+        System.err.println("Error Code: " + errorCode);
+        System.err.println("Error Message: " + errorMessage);
     }
 
+    // 통신 실패나, 예외 상황 등에서 호출될 메서드
+    public void onFailure(Throwable t) {
+        // 기본적으로 예외 메시지를 출력
+        // 필요에 따라서 확장 가능
+        t.printStackTrace();
+    }
 }

@@ -3,6 +3,7 @@ package com.example.schoolproject.post;
 import static android.content.ContentValues.TAG;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -33,6 +34,8 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.example.schoolproject.R;
 import com.example.schoolproject.model.Board;
 import com.example.schoolproject.model.BoardKind;
@@ -48,6 +51,7 @@ import com.gun0912.tedpermission.normal.TedPermission;
 
 import org.apache.commons.io.IOUtils;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
@@ -58,10 +62,10 @@ import java.util.List;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 
 public class PostWriteActivity extends AppCompatActivity {
+    private ArrayList imageURLs;
     private String boardKind;
     private String loginId;
     private Toolbar toolbar;
@@ -115,6 +119,13 @@ public class PostWriteActivity extends AppCompatActivity {
         if (isUpdate){
             et_post_title.setText(getIntent().getStringExtra("postTitle"));
             et_post_content.setText(getIntent().getStringExtra("postContent"));
+            imageURLs = getIntent().getStringArrayListExtra("imageURLs");
+            Log.e(TAG, "onCreate:************************************************ " + imageURLs);
+            // 기존에 저장된 이미지 url을 미리보기에 로드
+            for (Object imageUrl : imageURLs){
+                Log.e(TAG, "onClick: " + (String) imageUrl );
+                addImageToScrollViewOnEdit((String) imageUrl);
+            }
         }
 
         // setting listener
@@ -184,6 +195,7 @@ public class PostWriteActivity extends AppCompatActivity {
 
                     }else {
                         // 게시글 수정 동작
+
                         BoardApiService apiService = new BoardApiService();
                         Board board = new Board();
                         board.setTitle(et_post_title.getText().toString());
@@ -191,10 +203,9 @@ public class PostWriteActivity extends AppCompatActivity {
                         if (cb_isAnon.isChecked()) {author = "익명";}
                         else {author = loginId;}
                         board.setAuthor(author);
-                        Toast.makeText(getApplicationContext(), author, Toast.LENGTH_SHORT).show();
 
                         Call<Board> call = apiService.updateBoard(postId, board);
-                        BoardCallback callback = new BoardCallback(PostWriteActivity.this, getApplicationContext());
+                        BoardCallback callback = new BoardCallback(PostWriteActivity.this, getApplicationContext(), selectedImageUriList);
                         call.enqueue(callback);
                     }
 
@@ -274,7 +285,6 @@ public class PostWriteActivity extends AppCompatActivity {
         // 리스트에 이미지uri 추가
         selectedImageUriList.add(imageUri);
         
-        Log.e(TAG, "addImageToScrollView: URI :"+ imageUri );
         horizontalScrollView.setVisibility(View.VISIBLE);
         ImageView imageView = new ImageView(PostWriteActivity.this);
         imageView.setLayoutParams(new LinearLayout.LayoutParams(350, 350)); // or other dimensions you desire
@@ -317,6 +327,68 @@ public class PostWriteActivity extends AppCompatActivity {
                 return true; // 이벤트가 여기서 처리되었음을 나타냅니다.
             }
         });
+
+        imageWrapper.addView(imageView);
+    }
+    public void addImageToScrollViewOnEdit(String imageUrl) {  // *** 서버에서 가져온 URL을 Uri로 변환 후 리스트에 추가  ***
+
+        horizontalScrollView.setVisibility(View.VISIBLE);
+        ImageView imageView = new ImageView(PostWriteActivity.this);
+        imageView.setLayoutParams(new LinearLayout.LayoutParams(350, 350)); // or other dimensions you desire
+
+        // Glide를 사용하여 이미지 로딩
+        RequestOptions requestOptions = new RequestOptions();
+        requestOptions = requestOptions.transforms(new CenterCrop(), new RoundedCorners(32));
+
+        Glide.with(PostWriteActivity.this)
+                .load(imageUrl)
+                .apply(requestOptions)
+                .into(imageView);
+
+        imageView.setPadding(10,10,10,10); // padding if needed
+
+        // 캐시에서 URI 가져오기
+        Glide.with(PostWriteActivity.this)
+                .asFile()
+                .load(imageUrl)
+                .into(new SimpleTarget<File>() {
+                    @Override
+                    public void onResourceReady(@NonNull File resource, @Nullable Transition<? super File> transition) {
+                        Uri imageUriFromCache = Uri.fromFile(resource);
+                        imageView.setTag(imageUriFromCache);  // imageView에 태그로 URI 설정
+                        selectedImageUriList.add(imageUriFromCache);
+                    }
+                });
+
+        // ImageView에 리스너 추가
+        imageView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                // 이미지 제거 확인 대화상자 표시
+                AlertDialog dialog = new AlertDialog.Builder(PostWriteActivity.this, R.style.RoundedDialog)
+                        .setTitle("이미지 삭제")
+                        .setMessage("이 이미지를 삭제할까요?")
+                        .setPositiveButton("예", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                imageWrapper.removeView(imageView); // 이미지뷰 제거
+                                Uri cachedUri = (Uri) imageView.getTag();  //  imageView의 태그에서 URI 가져오기
+                                selectedImageUriList.remove(cachedUri);  // 이미지 URI를 리스트에서 제거
+                            }
+                        })
+                        .setNegativeButton("아니오", null)
+                        .show();
+                // 긍정적인 버튼 (예)의 텍스트 색상 변경
+                dialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.colorAccent));
+
+                // 부정적인 버튼 (아니오)의 텍스트 색상 변경
+                dialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.colorAccent));
+
+
+                return true; // 이벤트가 여기서 처리되었음을 나타냅니다.
+            }
+        });
+
 
         imageWrapper.addView(imageView);
     }
@@ -369,7 +441,7 @@ public class PostWriteActivity extends AppCompatActivity {
                 call.enqueue(new FileCallback<List<FileEntity>>() {
                     @Override
                     public void onSuccess(List<FileEntity> result) {
-                        Toast.makeText(getApplicationContext(), "이미지 업로드 성공", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "이미지 업로드가 완료되었습니다.", Toast.LENGTH_SHORT).show();
                     }
                 });
             }else {

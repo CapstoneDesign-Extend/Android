@@ -12,8 +12,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.schoolproject.R;
 import com.example.schoolproject.model.Board;
 import com.example.schoolproject.model.ui.DataPost;
@@ -32,11 +34,12 @@ public class PostPreviewRecyclerViewAdapter extends RecyclerView.Adapter<PostPre
         } else {
             dataList.clear();  // Clear exiting data before adding new data
         }
+
         for(Board b : boardList){
             DataPost p = new DataPost();
             //p.setImageResourceId();
             p.setPostId(b.getId());
-            if (!existingSamePost(p.getPostId())) {
+            if (!existingSamePost(p.getPostId())) {  // 동일한 id가 존재하지 않으면, 리스트에 추가하기
                 p.setBoardType(String.valueOf(b.getBoardKind()));
                 //p.setUserId();
                 p.setTitle(b.getTitle());
@@ -46,6 +49,7 @@ public class PostPreviewRecyclerViewAdapter extends RecyclerView.Adapter<PostPre
                 p.setTime(convertDate(b.getFinalDate(),"time"));
                 p.setHeart_count(String.valueOf(b.getLikeCnt()));
                 p.setChat_count(String.valueOf(b.getChatCnt()));
+                p.setImageURLs(b.getImageURLs());
 
                 dataList.add(p);
             }
@@ -72,9 +76,11 @@ public class PostPreviewRecyclerViewAdapter extends RecyclerView.Adapter<PostPre
     public class postPreviewHolder extends RecyclerView.ViewHolder{
         private Long postId;
         private String boardKind;
+        private ArrayList<String> imageURLs = new ArrayList<>();
         protected LinearLayout boardWrapper;
         protected LinearLayout heartWrapper;
         protected LinearLayout chatWrapper;
+        protected CardView imageWrapper;
         protected ImageView imageView;
         protected TextView tv_title;
         protected TextView tv_data;
@@ -86,6 +92,7 @@ public class PostPreviewRecyclerViewAdapter extends RecyclerView.Adapter<PostPre
         public postPreviewHolder(@NonNull View itemView) {
             super(itemView);
             this.boardWrapper = itemView.findViewById(R.id.board_notice_wrapper);
+            this.imageWrapper = itemView.findViewById(R.id.cv_board_notice_preview_wrapper);
             this.imageView = itemView.findViewById(R.id.iv_board_notice_preview);
             this.tv_title = itemView.findViewById(R.id.tv_board_notice_title);
             this.tv_data = itemView.findViewById(R.id.tv_board_notice_data);
@@ -102,6 +109,7 @@ public class PostPreviewRecyclerViewAdapter extends RecyclerView.Adapter<PostPre
                 public void onClick(View v) {
                     Intent intent = new Intent(context, PostActivity.class);
                     intent.putExtra("postId", postId);
+                    intent.putExtra("imageURLs", imageURLs);
                     //Toast.makeText(context, postId.toString(), Toast.LENGTH_SHORT).show();
 
                     intent.putExtra("boardKind", boardKind);
@@ -121,15 +129,22 @@ public class PostPreviewRecyclerViewAdapter extends RecyclerView.Adapter<PostPre
             }else {
                 chatWrapper.setVisibility(View.VISIBLE);
             }
-            // save postId+boardName and send to PostActivity in onClickListener
+            // *******************  여기서 값을 저장 후 리스너에서 인텐트로 전달  ***********************
             this.postId = data.getPostId();
             this.boardKind = String.valueOf(data.getBoardType());
+            this.imageURLs = (ArrayList<String>) data.getImageURLs();
 
-            if (data.getImageResourceId() == 0 ){
-                imageView.setVisibility(View.GONE);
+            // 이미지 url 리스트가 비어있는지 확인 후 이미지 노출 결정
+            if (data.getImageURLs() == null || data.getImageURLs().isEmpty()){
+                imageWrapper.setVisibility(View.GONE);
             }else {
-                imageView.setVisibility(View.VISIBLE);
-                imageView.setImageResource(data.getImageResourceId());
+                imageWrapper.setVisibility(View.VISIBLE);
+                String imageUrl = data.getImageURLs().get(0);
+
+                Glide.with(imageView.getContext())
+                                .load(imageUrl)
+                                .centerCrop()
+                                .into(imageView);
             }
             tv_title.setText(data.getTitle());
             tv_data.setText(data.getContent());

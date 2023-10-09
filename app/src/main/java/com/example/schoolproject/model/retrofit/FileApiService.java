@@ -12,6 +12,7 @@ import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
@@ -51,22 +52,36 @@ public class FileApiService {
     public Call<List<String>> getFileUrlsByBoardId(Long boardId) {
         return fileApi.getFileUrlsByBoardId(boardId);
     }
-
+    public Call<List<FileEntity>> updateFiles(List<MultipartBody.Part> files, Long boardId){
+        return fileApi.updateFiles(files, boardId);
+    }
+    public Call<ResponseBody> deleteFilesByBoardId(Long boardId) {
+        return fileApi.deleteFilesByBoardId(boardId);
+    }
 
 
     interface FileApi {
         @Multipart
-        @POST("/api/file/upload")
+        @POST("/api/files/upload")
         Call<List<FileEntity>> uploadFiles(
                 @Part List<MultipartBody.Part> files,
                 @Query("boardId") Long boardId
         );
 
-        @GET("/api/file/download/{id}")
+        @GET("/api/files/download/{id}")
         Call<ResponseBody> downloadFile(@Path("id") Long id);
 
-        @GET("/api/file/urls/{boardId}")
+        @GET("/api/files/urls/{boardId}")
         Call<List<String>> getFileUrlsByBoardId(@Path("boardId") Long boardId);
+        @Multipart
+        @POST("/api/files/update")
+        Call<List<FileEntity>> updateFiles(
+                @Part List<MultipartBody.Part> files,
+                @Query("boardId") Long boardId
+        );
+
+        @DELETE("/api/files/delete/byBoardId/{boardId}")
+        Call<ResponseBody> deleteFilesByBoardId(@Path("boardId") Long boardId);
 
     }
 }

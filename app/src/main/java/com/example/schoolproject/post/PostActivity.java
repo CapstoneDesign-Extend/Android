@@ -48,6 +48,7 @@ import retrofit2.Call;
 
 public class PostActivity extends AppCompatActivity {
     private boolean isCallbackCompleted = false;  // callback 상태 변수
+    private ArrayList<String> imageURLs;
     private Long postId;
     private Long postAuthorId = Long.valueOf(-1);  // callback 클래스 호출시 저장됨(기본값: -1)
     private Long memberId;
@@ -95,6 +96,7 @@ public class PostActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
         SharedPreferences sPref = getSharedPreferences("loginPrefs", MODE_PRIVATE);
         // 필요한 값 가져오기
+        imageURLs = getIntent().getStringArrayListExtra("imageURLs");
         postId = getIntent().getLongExtra("postId",-1);
         memberId = sPref.getLong("id", -1);
         loginId = sPref.getString("loginId", null);
@@ -209,6 +211,7 @@ public class PostActivity extends AppCompatActivity {
                 intent.putExtra("isUpdate", true);
                 intent.putExtra("postTitle", postTitle);
                 intent.putExtra("postContent", postContent);
+                intent.putExtra("imageURLs", imageURLs);
                 startActivity(intent);
                 return true;
             case R.id.item_delete:  // 게시글 삭제

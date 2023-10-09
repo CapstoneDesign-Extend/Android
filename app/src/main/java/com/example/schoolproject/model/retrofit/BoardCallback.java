@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.schoolproject.model.Board;
 import com.example.schoolproject.model.BoardKind;
 import com.example.schoolproject.model.Comment;
+import com.example.schoolproject.model.FileEntity;
 import com.example.schoolproject.model.ui.DataHomeBoard;
 import com.example.schoolproject.nav.home.HomeRecyclerViewAdapter;
 import com.example.schoolproject.nav.shop.ShopRecyclerViewAdapter;
@@ -21,6 +22,7 @@ import com.example.schoolproject.post.PostWriteActivity;
 import java.util.ArrayList;
 import java.util.List;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -108,8 +110,32 @@ public class BoardCallback implements Callback<Board> {
 
 
             } else if (call.request().method().equals("PUT")){
-                showShortToast(context, "게시글 수정이 완료되었습니다.");
-                finishActivity(activity);
+                FileApiService fileApiService = new FileApiService();
+
+                // 일단 서버의 이미지를 모두 삭제하는 호출 실행 (업데이트 시에도 삭제후 업로드 하기 때문)
+                Call<ResponseBody> deleteCall = fileApiService.deleteFilesByBoardId(board.getId());
+                deleteCall.enqueue(new FileCallback<ResponseBody>() {
+                    @Override
+                    public void onSuccess(ResponseBody result) {
+                        // 이미지 삭제 완료
+                        if (!imageUriList.isEmpty()){
+                            // 이미지 업로드
+                            PostWriteActivity postWriteActivity = (PostWriteActivity) activity;
+                            postWriteActivity.setPostId(board.getId());
+                            showShortToast(context, "이미지 업로드 중입니다.");
+
+                            postWriteActivity.uploadImageList(imageUriList);
+
+                            finishActivity(activity);
+                        } else {
+                            showShortToast(context, "게시글 수정이 완료되었습니다.");
+                            finishActivity(activity);
+                        }
+                    }
+                });
+
+
+
             } // delete 는 리턴이 Void 이기 때문에, 별도의 클래스로 작성함
 
         } else {

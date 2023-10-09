@@ -2,6 +2,8 @@ package com.example.schoolproject.model.ui;
 
 import com.example.schoolproject.model.BoardKind;
 
+import java.util.List;
+
 public class DataPost {
     private int imageResourceId;
     private Long postId;
@@ -14,6 +16,8 @@ public class DataPost {
     private String time;
     private String heart_count;
     private String chat_count;
+    private List<String> imageURLs;
+
 
 
     public DataPost(){
@@ -49,6 +53,14 @@ public class DataPost {
         this.time = time;
         this.heart_count = heart_count;
         this.chat_count = chat_count;
+    }
+
+    public List<String> getImageURLs() {
+        return imageURLs;
+    }
+
+    public void setImageURLs(List<String> imageURLs) {
+        this.imageURLs = imageURLs;
     }
 
     public int getImageResourceId() {

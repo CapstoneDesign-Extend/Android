@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/board_notice_wrapper"
     android:orientation="horizontal"
     android:layout_width="match_parent"
@@ -92,11 +93,19 @@
 
         </LinearLayout>
     </LinearLayout>
-    <ImageView
-        android:id="@+id/iv_board_notice_preview"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:layout_marginLeft="10dp"
-        android:src="@drawable/img_board_sample" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cv_board_notice_preview_wrapper"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="10dp">
+        <ImageView
+            android:id="@+id/iv_board_notice_preview"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:src="@drawable/img_board_sample" />
+    </androidx.cardview.widget.CardView>
+
+
 
 </LinearLayout>

@@ -190,7 +190,7 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
 
                 List<String> urls = new ArrayList<>();
                 for (String url : data.getImageURLs()){
-                    urls.add("http://www.extends.online:5438"+url);
+                    urls.add(url);
                 }
 //              http://www.extends.online:5438
 //              urls.add("http://www.extends.online:5438/api/file/download/8");
@@ -198,8 +198,6 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
 
 
                 ImageSliderAdapter imageAdapter = new ImageSliderAdapter(context, urls);
-
-
                 binding.postImageViewpager.setAdapter(imageAdapter);
                 // CircleIndicator 연결
                 binding.postImageIndicator.setViewPager(binding.postImageViewpager);

@@ -7,4 +7,6 @@ import java.util.ArrayList;
 
 public interface ScheduleCallback {
     void onScheduleAdded(ArrayList<Schedule> schedules);
+    void onScheduleEdited(int idx, ArrayList<Schedule> schedules);
+    void onScheduleDeleted(int idx);
 }

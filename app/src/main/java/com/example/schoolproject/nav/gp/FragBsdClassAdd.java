@@ -1,39 +1,31 @@
 package com.example.schoolproject.nav.gp;
 
-import static android.content.ContentValues.TAG;
-
-import android.app.Dialog;
-import android.app.TimePickerDialog;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.AdapterView;
-import android.widget.TimePicker;
+import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatDelegate;
-import androidx.fragment.app.DialogFragment;
 
 import com.example.schoolproject.R;
 import com.example.schoolproject.databinding.FragBsdClassAddBinding;
+import com.example.schoolproject.timetableview.ConvertFormat;
 import com.github.tlaabs.timetableview.Schedule;
 import com.github.tlaabs.timetableview.Time;
-import com.google.android.material.bottomsheet.BottomSheetBehavior;
-import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 
-public class FragBottomSheetDialog extends BottomSheetDialogFragment {
+public class FragBsdClassAdd extends BottomSheetDialogFragment {
+    private boolean isEdit = false;
+    private int idx;
+    private ArrayList<Schedule> schedules;
     private ScheduleCallback callback;
     private Time startTime, endTime;  // 시간표에서 사용하는 Time 클래스
     private int day;  // 월, 화, 수, 목, 금 = 0, 1, 2, 3, 4
@@ -45,6 +37,34 @@ public class FragBottomSheetDialog extends BottomSheetDialogFragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = FragBsdClassAddBinding.inflate(inflater, container, false);
+        Bundle args = getArguments();
+        if (args != null){
+            isEdit = args.getBoolean("isEdit");  // 저장 버튼 리스너에서 사용
+            idx = args.getInt("idx");
+            schedules = (ArrayList<Schedule>) args.getSerializable("schedules");
+
+            binding.etClassName.setText(schedules.get(0).getClassTitle());
+            binding.etProfessorName.setText(schedules.get(0).getProfessorName());
+            binding.spinnerDay.setSelection(schedules.get(0).getDay());
+
+            startTime = schedules.get(0).getStartTime();
+            endTime = schedules.get(0).getEndTime();
+
+            binding.etStartTime.setText(ConvertFormat.convertTime(startTime));
+            binding.etEndTime.setText(ConvertFormat.convertTime(endTime));
+
+            binding.etClassroom.setText(schedules.get(0).getClassPlace());
+
+            // 스타일 및 플래그 지정
+            binding.etStartTime.setTextColor(getResources().getColor(R.color.black));
+            binding.etEndTime.setTextColor(getResources().getColor(R.color.black));
+            startTimeIsNULL = false;
+            endTimeIsNULL = false;
+
+
+            binding.btnSave.setText("저장");
+
+        }
 
         // *****************   수업시간 설정   *****************
         binding.etStartTime.setOnClickListener(new View.OnClickListener() {
@@ -54,8 +74,9 @@ public class FragBottomSheetDialog extends BottomSheetDialogFragment {
                     @Override
                     public void onPositiveClick(int h, int m) {
                         //Log.d(TAG, "onPositiveClick: "+ h + "시" + m + "분");
-                        String timeString = String.format(Locale.getDefault(), "%02d:%02d", h, m);
-                        binding.etStartTime.setText(timeString);
+                        Time time = new Time(h, m);
+
+                        binding.etStartTime.setText(ConvertFormat.convertTime(time));
                         binding.etStartTime.setTextColor(getResources().getColor(R.color.black));
                         startTime = new Time(h, m);
                         startTimeIsNULL = false;
@@ -159,7 +180,11 @@ public class FragBottomSheetDialog extends BottomSheetDialogFragment {
                     scheduleList.add(schedule);
 
                     if (callback != null){
-                        callback.onScheduleAdded(scheduleList);  // 어댑터의 콜백 호출 (거기 저장로직이 있음)
+                        if (isEdit){
+                            callback.onScheduleEdited(idx, scheduleList);
+                        } else {
+                            callback.onScheduleAdded(scheduleList);  // 어댑터의 콜백 호출 (거기에 저장로직이 있음)
+                        }
                     }
 
                     // 모든 작업이 끝나면 bottomSheetDialogFragment 닫기

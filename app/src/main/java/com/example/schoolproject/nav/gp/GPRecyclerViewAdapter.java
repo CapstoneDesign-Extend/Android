@@ -4,31 +4,23 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.room.Room;
 
 import com.example.schoolproject.R;
 import com.example.schoolproject.databinding.ItemGpBinding;
-import com.example.schoolproject.databinding.ItemTableBinding;
 import com.example.schoolproject.databinding.ItemTlaabsTableBinding;
 import com.example.schoolproject.model.ui.DataGP;
-import com.example.schoolproject.model.ui.DataHomeBoard;
-import com.example.schoolproject.model.ui.DataHomeDynamicMorning;
 import com.example.schoolproject.model.ui.DataTimeTable;
-import com.example.schoolproject.nav.home.HomeRecyclerViewAdapter;
-import com.example.schoolproject.room.AppDatabase;
-import com.example.schoolproject.room.entity.TimetableEntity;
 import com.example.schoolproject.timetableview.TimetableView;
 import com.github.tlaabs.timetableview.Schedule;
 
@@ -55,7 +47,7 @@ public class GPRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         return -1;
     }
     // ============================================= 뷰홀더 클래스 START =======================================================
-    // 학점입력 뷰홀더
+    // ********    학점입력 뷰홀더 클래스     *********
     public class GPViewHolder extends RecyclerView.ViewHolder{
         private final ItemGpBinding binding;
 
@@ -122,7 +114,15 @@ public class GPRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             binding.timetable.setOnStickerSelectEventListener(new TimetableView.OnStickerSelectedListener() {
                 @Override
                 public void OnStickerSelected(int idx, ArrayList<Schedule> schedules) {
-                    Toast.makeText(context, idx+"클릭되었습니다.", Toast.LENGTH_SHORT).show();
+
+                    // 강의를 조회하는 대화상자(BSD프래그먼트) 호출
+                    FragBsdClassInfo bottomSheet = new FragBsdClassInfo();
+                    bottomSheet.setCallback(TimetableViewHolder.this);
+                    Bundle args = new Bundle();
+                    args.putInt("idx", idx);
+                    args.putSerializable("schedules", schedules);
+                    bottomSheet.setArguments(args);
+                    bottomSheet.show(((FragmentActivity) context).getSupportFragmentManager(), bottomSheet.getTag());
                 }
             });
 
@@ -130,8 +130,8 @@ public class GPRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             binding.btnEditTable.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    // 강의를 추가하는 대화상자(프래그먼트) 호출
-                    FragBottomSheetDialog bottomSheet = new FragBottomSheetDialog();
+                    // 강의를 추가하는 대화상자(BSD프래그먼트) 호출
+                    FragBsdClassAdd bottomSheet = new FragBsdClassAdd();
                     bottomSheet.setCallback(TimetableViewHolder.this);
                     bottomSheet.show(((FragmentActivity) context).getSupportFragmentManager(), bottomSheet.getTag());
                 }
@@ -153,12 +153,7 @@ public class GPRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             binding.timetable.add(schedules);
             String json = binding.timetable.createSaveData();
 
-            // SharedPrefs 사용
-            SharedPreferences sPrefs = context.getSharedPreferences("timetable_prefs", Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = sPrefs.edit();
-            editor.putString("json", json);
-            editor.apply();
-
+            saveTimetable(json);
 
             // ==========================    로컬 DB 로직 시작  =============================
 //            // 데이터베이스 초기화
@@ -187,6 +182,24 @@ public class GPRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 //            }).start();
             // ==========================    로컬 DB 로직 끝  =============================
         }
+        @Override
+        public void onScheduleEdited(int idx, ArrayList<Schedule> schedules) {
+            binding.timetable.edit(idx, schedules);
+            saveTimetable(binding.timetable.createSaveData());
+        }
+        @Override
+        public void onScheduleDeleted(int idx) {
+            binding.timetable.remove(idx);
+            saveTimetable(binding.timetable.createSaveData());
+        }
+        private void saveTimetable(String json){
+            // SharedPrefs 사용
+            SharedPreferences sPrefs = context.getSharedPreferences("timetable_prefs", Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sPrefs.edit();
+            editor.putString("json", json);
+            editor.apply();
+        }
+
     }
 
     // ============================================= 뷰홀더 클래스 END =======================================================

@@ -6,12 +6,12 @@
     android:padding="16dp">
 
     <TextView
-
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@color/colorAccent"
+        android:textColor="@color/black"
         android:textStyle="bold"
-        android:textSize="27dp"
+        android:textSize="23dp"
         android:paddingVertical="5dp"
         android:text="수업 추가"/>
     <!-- 첫번째 행: 수업명, 교수명 -->
@@ -125,7 +125,7 @@
             android:paddingHorizontal="25dp"
             android:background="@drawable/shape_round_border_accent"
             android:layout_marginBottom="15dp"
-            android:text="저장"/>
+            android:text="수업 추가"/>
     </LinearLayout>
 
 </LinearLayout>

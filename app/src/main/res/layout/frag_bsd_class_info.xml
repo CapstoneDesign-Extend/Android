@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+<!--    강의정보 표시 부분-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="27dp"
+        android:paddingVertical="15dp"
+        android:orientation="vertical">
+<!--        강의명-->
+        <TextView
+            android:id="@+id/tv_class_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            android:text="스프링프레임워크활용"/>
+<!--        교수명-->
+        <TextView
+            android:id="@+id/tv_professor_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:textSize="17dp"
+            android:text="최석원"/>
+<!--        강의시간-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tv_day"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="5dp"
+                android:text="수"
+                android:textColor="@color/colorGray"
+                android:textSize="15dp" />
+
+            <TextView
+                android:id="@+id/tv_start_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorGray"
+                android:textSize="15dp"
+                android:text="14:00"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="~"
+                android:textColor="@color/colorGray"
+                android:textSize="15dp" />
+
+            <TextView
+                android:id="@+id/tv_end_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorGray"
+                android:textSize="15dp"
+                android:text="17:00"/>
+
+        </LinearLayout>
+<!--        강의실-->
+        <TextView
+            android:id="@+id/tv_classroom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="배312"
+            android:textColor="@color/colorGray"
+            android:textSize="15dp" />
+    </LinearLayout>
+
+<!--    시간표 메뉴-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="70dp"
+        android:orientation="vertical">
+<!--        수업정보 수정-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingVertical="13dp"
+            android:paddingHorizontal="25dp">
+            <ImageView
+                android:layout_gravity="center_vertical"
+                android:paddingHorizontal="2dp"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                app:tint="@color/black"
+                android:src="@drawable/icon_edit"/>
+            <TextView
+                android:id="@+id/tv_edit_class"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="11dp"
+                android:text="수정"
+                android:textColor="@color/black"
+                android:textSize="18dp" />
+        </LinearLayout>
+
+<!--            수업 삭제-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingVertical="13dp"
+            android:paddingHorizontal="25dp">
+            <ImageView
+                android:layout_gravity="center_vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:tint="@color/black"
+                android:src="@drawable/icon_delete"/>
+            <TextView
+                android:id="@+id/tv_delete_class"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="11dp"
+                android:textColor="@color/black"
+                android:textSize="18dp"
+                android:text="삭제"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+
+
+
+
+</LinearLayout>

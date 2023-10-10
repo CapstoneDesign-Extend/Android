@@ -28,7 +28,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.schoolproject.databinding.ActivityCameraBinding;
+import com.example.schoolproject.model.Access;
 import com.example.schoolproject.model.Member;
+import com.example.schoolproject.model.retrofit.MemberApiService;
+import com.example.schoolproject.model.retrofit.MemberCallback;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.gson.Gson;
 import com.google.mlkit.vision.common.InputImage;
@@ -42,6 +45,10 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class CameraActivity extends AppCompatActivity {
     ActivityCameraBinding binding;
@@ -74,7 +81,40 @@ public class CameraActivity extends AppCompatActivity {
                     && binding.tvCameraName.getText().toString().equals(member.getName())
                     && binding.tvCameraSid.getText().toString().equals(String.valueOf(member.getStudentId()))
             ){
+                // member에 학과정보 추가 및 권한 부여
+                member.setDepartment(binding.tvCameraDepartment.getText().toString());
+                member.setAccess(Access.STUDENT);
 
+
+
+                MemberApiService apiService = new MemberApiService();
+                Call<Member> call = apiService.updateMember(member.getId(), member);
+                call.enqueue(new Callback<Member>() {
+                    @Override
+                    public void onResponse(Call<Member> call, Response<Member> response) {
+                        if (response.isSuccessful()){
+                            Toast.makeText(getApplicationContext(), "학생증 인증이 완료되었습니다.", Toast.LENGTH_SHORT).show();
+                            // 앱 내부에도 변경사항 저장
+                            SharedPreferences.Editor editor = sPrefs.edit();
+                            editor.putString("memberJson", gson.toJson(member));
+                            editor.putBoolean("isCertified", true);
+                            editor.apply();
+                            finish();
+                        } else {
+                            Toast.makeText(getApplicationContext(), "서버로부터 응답을 받을 수 없습니다.", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<Member> call, Throwable t) {
+                        Toast.makeText(getApplicationContext(), "인터넷 연결을 확인해주세요.", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+            } else {
+                // 회원정보와 학생증 정보가 다를 때 처리
+                Toast.makeText(getApplicationContext(), "회원정보와 학생증 정보가 일치하지 않습니다.", Toast.LENGTH_SHORT).show();
+                finish();
             }
         });
 

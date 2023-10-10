@@ -1,6 +1,8 @@
 package com.example.schoolproject.nav.board;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -10,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import com.example.schoolproject.model.Board;
 import com.example.schoolproject.model.BoardKind;
@@ -33,6 +36,8 @@ public class FragBoardQnA extends Fragment {
     private RecyclerView.LayoutManager layoutManager;
     private RecyclerView.Adapter adapter;
     private FloatingActionButton fab;
+    private SharedPreferences sPrefs;
+    private Long curUserId;
 
     public static FragBoardQnA newInstance(){
         FragBoardQnA fragBoardQnA = new FragBoardQnA();
@@ -42,15 +47,30 @@ public class FragBoardQnA extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        sPrefs = getActivity().getSharedPreferences("loginPrefs", Context.MODE_PRIVATE);
+        curUserId = sPrefs.getLong("id", -1);
         // get updated board
-        BoardApiService apiService = new BoardApiService();
-        Call<List<Board>> call = apiService.getBoardsByBoardKind(BoardKind.QNA);
-        call.enqueue(new BoardCallback.BoardListCallBack(getActivity().getApplicationContext(), adapter));
+        boolean isCertified = sPrefs.getBoolean("isCertified", false);
+        if (!isCertified){
+            // 학생증 인증하지 않으면 에러 표시
+            LinearLayout linearLayout = view.findViewById(R.id.warning_qna);
+            linearLayout.setVisibility(View.VISIBLE);
+            FloatingActionButton fab = view.findViewById(R.id.fab_write);
+            fab.setVisibility(View.GONE);
+        } else {
+            // get updated board
+            BoardApiService apiService = new BoardApiService();
+            Call<List<Board>> call = apiService.getBoardsByBoardKindMember(BoardKind.QNA, curUserId);
+            call.enqueue(new BoardCallback.BoardListCallBack(getActivity().getApplicationContext(), adapter));
+        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        // 현재 접속자 ID 가져오기
+        sPrefs = getActivity().getSharedPreferences("loginPrefs", Context.MODE_PRIVATE);
+        curUserId = sPrefs.getLong("id", -1);
         view = inflater.inflate(R.layout.frag_board_qna, container, false);
         // connecting resources
         fab = view.findViewById(R.id.fab_write);
@@ -63,10 +83,11 @@ public class FragBoardQnA extends Fragment {
         adapter = new PostPreviewRecyclerViewAdapter(getContext(), dataFragBoardQNAs);
         recyclerView.setAdapter(adapter);
 
+
         // get posts matching boardKind
-        BoardApiService apiService = new BoardApiService();
-        Call<List<Board>> call = apiService.getBoardsByBoardKind(BoardKind.QNA);
-        call.enqueue(new BoardCallback.BoardListCallBack(getActivity().getApplicationContext(), adapter));
+//        BoardApiService apiService = new BoardApiService();
+//        Call<List<Board>> call = apiService.getBoardsByBoardKindMember(BoardKind.QNA, curUserId);
+//        call.enqueue(new BoardCallback.BoardListCallBack(getActivity().getApplicationContext(), adapter));
         // setting listeners
         fab.setOnClickListener(new View.OnClickListener() {
             @Override

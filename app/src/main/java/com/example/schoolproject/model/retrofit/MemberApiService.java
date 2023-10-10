@@ -13,6 +13,7 @@ import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Path;
 
 public class MemberApiService{
@@ -60,7 +61,9 @@ public class MemberApiService{
     public Call<Member> createMember(Member member){
         return memberApi.createMember(member);
     }
-
+    public Call<Member> updateMember(@Path("id") Long id, @Body Member updatedMember) {
+        return memberApi.updateMember(id, updatedMember);
+    }
     public Call<Void> deleteMember(long id){
         return memberApi.deleteMemberById(id);
     }
@@ -90,6 +93,9 @@ public class MemberApiService{
         // 회원을 생성하는 API 엔드포인트
         @POST("/api/members")
         Call<Member> createMember(@Body Member member);
+
+        @PUT("/api/members/{id}")
+        Call<Member> updateMember(@Path("id") Long id, @Body Member updatedMember);
 
         // 특정 ID의 회원 정보를 삭제하는 API 엔드포인트
         @DELETE("/api/members/{id}")

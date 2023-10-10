@@ -55,8 +55,12 @@ public class BoardApiService {
     }
 
     public Call<Board> getBoardById(Long id) { return boardApi.getBoardById(id); }
+
     public Call<List<Board>> getBoardsByBoardKind(BoardKind boardKind){
         return boardApi.getBoardsByBoardKind(boardKind);
+    }
+    public Call<List<Board>> getBoardsByBoardKindMember(BoardKind boardKind, Long memberId){
+        return boardApi.getBoardsByBoardKindMember(boardKind, memberId);
     }
     public Single<List<Board>> getBoardsByBoardKindAmountRx(BoardKind boardKind, int amount){
         return boardApi.getBoardsByBoardKindAmountRx(boardKind, amount);
@@ -90,6 +94,8 @@ public class BoardApiService {
         Call<Board> getBoardById(@Path("id") Long id);  // 특정 id의 게시글 가져오기
         @GET("/api/boards/search/byBoardKind")  // 게시판 종류에 해당하는 게시글 가져오기
         Call<List<Board>> getBoardsByBoardKind(@Query("boardKind") BoardKind boardKind);
+        @GET("/api/boards/search/byBoardKindMember")  // 게시판 종류에 해당하는 게시글 가져오기
+        Call<List<Board>> getBoardsByBoardKindMember(@Query("boardKind") BoardKind boardKind, @Query("memberId") Long memberId);
         @GET("/api/boards/search/byBoardKindAmount")  // 게시판 종류에 해당하는 게시글을 필요한 만큼만 가져오기
         Single<List<Board>> getBoardsByBoardKindAmountRx(@Query("boardKind") BoardKind boardKind, @Query("amount") int amount);
         @GET("/api/boards/search/byTitle")  // 제목만 검색

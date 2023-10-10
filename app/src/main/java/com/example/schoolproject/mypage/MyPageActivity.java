@@ -30,6 +30,23 @@ import java.util.List;
 public class MyPageActivity extends AppCompatActivity {
     private ActivityMyPageBinding binding;
     private SharedPreferences sPrefs;
+    private Member member;
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //   ******* 초기화 동작 정의  ************
+        // 사용자 id, 이름, 학번, 학교 가져오기
+        Gson gson = new Gson();
+        sPrefs = getSharedPreferences("loginPrefs", Context.MODE_PRIVATE);
+        String memberJson = sPrefs.getString("memberJson", null);
+        member = gson.fromJson(memberJson, Member.class);
+        // VIEW에 MEMBER 정보 표시
+        binding.mypageUserId.setText(member.getLoginId());
+        binding.mypageUserName.setText(member.getName());
+        binding.mypageUserSid.setText(String.valueOf(member.getStudentId()));
+        binding.mypageSchoolName.setText(member.getSchoolName());
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,23 +62,19 @@ public class MyPageActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        //   ******* 초기화 동작 정의  ************
-        // 사용자 id, 이름, 학번, 학교 가져오기
-        Gson gson = new Gson();
-        sPrefs = getSharedPreferences("loginPrefs", Context.MODE_PRIVATE);
-        String memberJson = sPrefs.getString("memberJson", null);
-        Member member = gson.fromJson(memberJson, Member.class);
-        // VIEW에 MEMBER 정보 표시
-        binding.mypageUserId.setText(member.getLoginId());
-        binding.mypageUserName.setText(member.getName());
-        binding.mypageUserSid.setText(String.valueOf(member.getStudentId()));
-        binding.mypageSchoolName.setText(member.getSchoolName());
+
 
 
         // =======================  학생 인증 동작  ===========================
         binding.tvMypageAuthSchool.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                if (member.getDepartment() != null && !member.getDepartment().isEmpty()){
+                    Toast.makeText(getApplicationContext(), "이미 학생증 인증을 완료했습니다.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 PermissionListener permissionlistener = new PermissionListener() {
                     @Override
                     public void onPermissionGranted() {

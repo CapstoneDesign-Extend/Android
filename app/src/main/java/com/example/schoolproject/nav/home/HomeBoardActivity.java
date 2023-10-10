@@ -21,11 +21,8 @@ import com.example.schoolproject.model.retrofit.BoardCallback;
 import com.example.schoolproject.post.PostWriteActivity;
 import com.example.schoolproject.search.SearchActivity;
 import com.example.schoolproject.post.PostPreviewRecyclerViewAdapter;
-import com.example.schoolproject.test.DataBaseHelper;
-import com.example.schoolproject.model.ui.DataPost;
 import com.example.schoolproject.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,14 +37,18 @@ public class HomeBoardActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
     private FloatingActionButton fab;
+    private SharedPreferences sPrefs;
+    private Long curUserId;
 
 
     @Override
     protected void onResume() {
         super.onResume();
+        sPrefs = getSharedPreferences("loginPrefs", MODE_PRIVATE);
+        curUserId = sPrefs.getLong("id", -1);
         // Load data and set adapter
         BoardApiService apiService = new BoardApiService();
-        Call<List<Board>> call = apiService.getBoardsByBoardKind(BoardKindUtils.getBoardKindByKorean(receivedBoardName));
+        Call<List<Board>> call = apiService.getBoardsByBoardKindMember(BoardKindUtils.getBoardKindByKorean(receivedBoardName), curUserId);
         call.enqueue(new BoardCallback.BoardListCallBack(getApplicationContext(), adapter));
     }
 

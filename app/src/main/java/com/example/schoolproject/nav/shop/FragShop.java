@@ -1,6 +1,8 @@
 package com.example.schoolproject.nav.shop;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -19,7 +21,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.schoolproject.model.Board;
 import com.example.schoolproject.model.BoardKind;
-import com.example.schoolproject.model.BoardKindUtils;
 import com.example.schoolproject.model.retrofit.BoardApiService;
 import com.example.schoolproject.model.retrofit.BoardCallback;
 import com.example.schoolproject.post.PostWriteActivity;
@@ -28,8 +29,6 @@ import com.example.schoolproject.notification.NotificationActivity;
 import com.example.schoolproject.search.SearchActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
-import com.leinardi.android.speeddial.SpeedDialActionItem;
-import com.leinardi.android.speeddial.SpeedDialView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,13 +42,17 @@ public class FragShop extends Fragment {
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
     private RecyclerView.Adapter adapter;
+    private SharedPreferences sPrefs;
+    private Long curUserId;
 
     @Override
     public void onResume() {
         super.onResume();
+        sPrefs = getActivity().getSharedPreferences("loginPrefs", Context.MODE_PRIVATE);
+        curUserId = sPrefs.getLong("id", -1);
         // Load Data
         BoardApiService apiService = new BoardApiService();
-        Call<List<Board>> call = apiService.getBoardsByBoardKind(BoardKind.MARKET);
+        Call<List<Board>> call = apiService.getBoardsByBoardKindMember(BoardKind.MARKET, curUserId);
         call.enqueue(new BoardCallback.BoardListCallBack(getContext(), adapter));
     }
 

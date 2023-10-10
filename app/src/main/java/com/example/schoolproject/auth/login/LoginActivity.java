@@ -120,6 +120,11 @@ public class LoginActivity extends AppCompatActivity {
                                     editor.putLong("id", member.getId());
                                     editor.putString("loginId", id);
                                     editor.putBoolean("isLoggedIn", true);
+                                    if (member.getDepartment() != null && !member.getDepartment().isEmpty()){
+                                        editor.putBoolean("isCertified", true);
+                                    }else{
+                                        editor.putBoolean("isCertified", false);
+                                    }
                                     editor.apply();
 
                                     // move to MainActivity

@@ -3,7 +3,9 @@ package com.example.schoolproject.mypage;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.room.RoomSQLiteQuery;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -13,17 +15,29 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.schoolproject.CameraActivity;
 import com.example.schoolproject.R;
 import com.example.schoolproject.auth.login.LoginActivity;
+import com.example.schoolproject.databinding.ActivityMyPageBinding;
+import com.example.schoolproject.model.Member;
 import com.example.schoolproject.test.TestRetrofit;
+import com.google.gson.Gson;
+import com.gun0912.tedpermission.PermissionListener;
+import com.gun0912.tedpermission.normal.TedPermission;
+
+import java.util.List;
 
 public class MyPageActivity extends AppCompatActivity {
-    private TextView tv_logout;
+    private ActivityMyPageBinding binding;
+    private SharedPreferences sPrefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_my_page);
+
+        // 바인딩 초기화
+        binding = ActivityMyPageBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
         // setting Toolbar
         Toolbar toolbar = findViewById(R.id.toolbar_myPage);
@@ -31,9 +45,50 @@ public class MyPageActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        //   ******* 초기화 동작 정의  ************
+        // 사용자 id, 이름, 학번, 학교 가져오기
+        Gson gson = new Gson();
+        sPrefs = getSharedPreferences("loginPrefs", Context.MODE_PRIVATE);
+        String memberJson = sPrefs.getString("memberJson", null);
+        Member member = gson.fromJson(memberJson, Member.class);
+        // VIEW에 MEMBER 정보 표시
+        binding.mypageUserId.setText(member.getLoginId());
+        binding.mypageUserName.setText(member.getName());
+        binding.mypageUserSid.setText(String.valueOf(member.getStudentId()));
+        binding.mypageSchoolName.setText(member.getSchoolName());
 
-        tv_logout = findViewById(R.id.tv_logout);
-        tv_logout.setOnClickListener(new View.OnClickListener() {
+
+        // =======================  학생 인증 동작  ===========================
+        binding.tvMypageAuthSchool.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PermissionListener permissionlistener = new PermissionListener() {
+                    @Override
+                    public void onPermissionGranted() {
+                        // 카메라 액티비티 호출
+                        Intent intent = new Intent(MyPageActivity.this, CameraActivity.class);
+                        startActivity(intent);
+                    }
+
+                    @Override
+                    public void onPermissionDenied(List<String> deniedPermissions) {
+                        Toast.makeText(getApplicationContext(), "카메라 권한이 거부되었습니다.\n" + deniedPermissions.toString(), Toast.LENGTH_SHORT).show();
+                    }
+                };
+
+                TedPermission.create()
+                        .setPermissionListener(permissionlistener)
+                        .setDeniedMessage("카메라를 사용하기 위해 권한이 필요합니다.\n\n[설정] > [권한] 에서 권한을 허용해주세요.")
+                        .setPermissions(Manifest.permission.CAMERA)
+                        .check();
+
+
+            }
+        });
+
+        // =======================  로그아웃 동작  ===========================
+
+        binding.tvLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // init SharedPreferences

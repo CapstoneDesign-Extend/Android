@@ -20,7 +20,7 @@ public class Member implements Parcelable {
     private String schoolName;
 
     @SerializedName("access")
-    private String access;
+    private Access access;
 
     @SerializedName("loginId")
     private String loginId;
@@ -31,8 +31,19 @@ public class Member implements Parcelable {
     @SerializedName("email")
     private String email;
 
+    @SerializedName("department")
+    private String department;
+
     // 생성자, Getter 및 Setter
 
+
+    public String getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(String department) {
+        this.department = department;
+    }
 
     public Long getId() {
         return id;
@@ -66,11 +77,11 @@ public class Member implements Parcelable {
         this.schoolName = schoolName;
     }
 
-    public String getAccess() {
+    public Access getAccess() {
         return access;
     }
 
-    public void setAccess(String access) {
+    public void setAccess(Access access) {
         this.access = access;
     }
 
@@ -104,7 +115,7 @@ public class Member implements Parcelable {
         studentId = in.readInt();
         name = in.readString();
         schoolName = in.readString();
-        access = in.readString();
+        access = Access.valueOf(in.readString());
         loginId = in.readString();
         password = in.readString();
         email = in.readString();
@@ -134,7 +145,7 @@ public class Member implements Parcelable {
         dest.writeInt(studentId);
         dest.writeString(name);
         dest.writeString(schoolName);
-        dest.writeString(access);
+        dest.writeString(String.valueOf(access));
         dest.writeString(loginId);
         dest.writeString(password);
         dest.writeString(email);

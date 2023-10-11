@@ -118,6 +118,7 @@ public class LoginActivity extends AppCompatActivity {
                                     String memberJson = gson.toJson(member);
                                     editor.putString("memberJson", memberJson);
                                     editor.putLong("id", member.getId());
+                                    editor.putString("pw", member.getPassword());
                                     editor.putString("loginId", id);
                                     editor.putBoolean("isLoggedIn", true);
                                     if (member.getDepartment() != null && !member.getDepartment().isEmpty()){

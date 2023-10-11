@@ -184,6 +184,7 @@
                     android:textStyle="bold" />
 
                 <TextView
+                    android:visibility="gone"
                     android:id="@+id/tv_mypage_edit_nickname"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -192,15 +193,7 @@
                     android:text="닉네임 변경"
                     android:textColor="@color/black"
                     android:textSize="17dp" />
-                <TextView
-                    android:id="@+id/tv_mypage_edit_profile"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginVertical="5dp"
-                    android:paddingVertical="5dp"
-                    android:text="프로필 이미지 변경"
-                    android:textColor="@color/black"
-                    android:textSize="17dp" />
+
                 <TextView
                     android:id="@+id/tv_mypage_history_block"
                     android:layout_width="match_parent"
@@ -222,6 +215,7 @@
 
             </LinearLayout>
             <LinearLayout
+                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginVertical="10dp"
@@ -283,6 +277,7 @@
                     android:textStyle="bold" />
 
                 <TextView
+                    android:visibility="gone"
                     android:id="@+id/tv_mypage_contact_us"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -292,6 +287,7 @@
                     android:textColor="@color/black"
                     android:textSize="17dp" />
                 <TextView
+                    android:visibility="gone"
                     android:id="@+id/tv_mypage_announcement"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -332,7 +328,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginVertical="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="40dp"
                 android:background="@drawable/shape_round_border"
                 android:orientation="vertical"
                 android:paddingHorizontal="18dp"

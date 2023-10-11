@@ -20,6 +20,7 @@ import com.example.schoolproject.R;
 import com.example.schoolproject.auth.login.LoginActivity;
 import com.example.schoolproject.databinding.ActivityMyPageBinding;
 import com.example.schoolproject.model.Member;
+import com.example.schoolproject.mypage.activity.EditPasswordActivity;
 import com.example.schoolproject.test.TestRetrofit;
 import com.google.gson.Gson;
 import com.gun0912.tedpermission.PermissionListener;
@@ -120,6 +121,14 @@ public class MyPageActivity extends AppCompatActivity {
             }
         });
 
+        // =======================  비밀번호 변경 동작  ===========================
+        binding.tvMypageEditPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MyPageActivity.this, EditPasswordActivity.class);
+                startActivity(intent);
+            }
+        });
 
     }
 

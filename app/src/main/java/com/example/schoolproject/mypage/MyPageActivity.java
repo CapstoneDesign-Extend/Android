@@ -20,7 +20,12 @@ import com.example.schoolproject.R;
 import com.example.schoolproject.auth.login.LoginActivity;
 import com.example.schoolproject.databinding.ActivityMyPageBinding;
 import com.example.schoolproject.model.Member;
+import com.example.schoolproject.mypage.activity.BlockedHistoryActivity;
 import com.example.schoolproject.mypage.activity.EditPasswordActivity;
+import com.example.schoolproject.mypage.activity.RulesActivity;
+import com.example.schoolproject.mypage.activity.TermsPersonalActivity;
+import com.example.schoolproject.mypage.activity.TermsServiceActivity;
+import com.example.schoolproject.mypage.activity.TermsYouthActivity;
 import com.example.schoolproject.test.TestRetrofit;
 import com.google.gson.Gson;
 import com.gun0912.tedpermission.PermissionListener;
@@ -129,8 +134,56 @@ public class MyPageActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        // =======================  이용 제한 내역 열기  ===========================
+        binding.tvMypageHistoryBlock.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MyPageActivity.this, BlockedHistoryActivity.class);
+                startActivity(intent);
+            }
+        });
+        // =======================  커뮤니티 이용규칙 열기  ===========================
+        binding.tvMypageRules.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MyPageActivity.this, RulesActivity.class);
+                startActivity(intent);
+            }
+        });
+        // =======================  서비스 이용약관 열기  ===========================
+        binding.tvMypageTerms.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MyPageActivity.this, TermsServiceActivity.class);
+                startActivity(intent);
+            }
+        });
+        // =======================  개인정보 처리방침 열기  ===========================
+        binding.tvMypagePolicyPrivacy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MyPageActivity.this, TermsPersonalActivity.class);
+                startActivity(intent);
+            }
+        });
+        // =======================  청소년 보호정책 열기  ===========================
+        binding.tvMypagePolicyYouth.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MyPageActivity.this, TermsYouthActivity.class);
+                startActivity(intent);
+            }
+        });
+        // =======================  회원 탈퇴  ===========================
+        binding.tvMypageWithdraw.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
 
     }
+
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {

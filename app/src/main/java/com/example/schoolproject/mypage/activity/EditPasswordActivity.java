@@ -110,6 +110,13 @@ public class EditPasswordActivity extends AppCompatActivity {
 
             }
         });
+        // ==============  닫기 버튼 동작
+        binding.ivClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
 
         binding.btnSignUp2.setOnClickListener(new View.OnClickListener() {

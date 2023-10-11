@@ -1,12 +1,14 @@
 package com.example.schoolproject.mypage;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.room.RoomSQLiteQuery;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -20,6 +22,7 @@ import com.example.schoolproject.R;
 import com.example.schoolproject.auth.login.LoginActivity;
 import com.example.schoolproject.databinding.ActivityMyPageBinding;
 import com.example.schoolproject.model.Member;
+import com.example.schoolproject.model.retrofit.MemberApiService;
 import com.example.schoolproject.mypage.activity.BlockedHistoryActivity;
 import com.example.schoolproject.mypage.activity.EditPasswordActivity;
 import com.example.schoolproject.mypage.activity.RulesActivity;
@@ -32,6 +35,10 @@ import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.normal.TedPermission;
 
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MyPageActivity extends AppCompatActivity {
     private ActivityMyPageBinding binding;
@@ -178,7 +185,52 @@ public class MyPageActivity extends AppCompatActivity {
         binding.tvMypageWithdraw.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                AlertDialog dialog = new AlertDialog.Builder(MyPageActivity.this, R.style.RoundedDialog)
+                        .setTitle("회원 탈퇴")
+                        .setMessage("회원 탈퇴하시겠습니까?")
+                        .setPositiveButton("예", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                MemberApiService apiService = new MemberApiService();
+                                Call<Void> call = apiService.deleteMember(sPrefs.getLong("id", -1 ));
+                                call.enqueue(new Callback<Void>() {
+                                    @Override
+                                    public void onResponse(Call<Void> call, Response<Void> response) {
+                                        if (response.isSuccessful()){
+                                            Toast.makeText(getApplicationContext(), "회원 탈퇴가 완료되었습니다.", Toast.LENGTH_SHORT).show();
 
+                                            // 로그아웃 동작
+                                            // init SharedPreferences
+                                            SharedPreferences sharedPrefs = getSharedPreferences("loginPrefs", Context.MODE_PRIVATE);
+                                            SharedPreferences.Editor editor = sharedPrefs.edit();
+                                            // set loginState false
+                                            editor.putBoolean("isLoggedIn", false);
+                                            editor.apply();
+
+                                            Intent intent = new Intent(MyPageActivity.this, LoginActivity.class);
+                                            // start new task with LoginActivity
+                                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                            startActivity(intent);
+                                            finish();
+
+                                        } else {
+                                            Toast.makeText(getApplicationContext(), "서버로부터 응답을 받을 수 없습니댜.", Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                    @Override
+                                    public void onFailure(Call<Void> call, Throwable t) {
+                                        Toast.makeText(getApplicationContext(), "인터넷 연결을 확인하세요", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                            }
+                        })
+                        .setNegativeButton("아니오", null)
+                        .show();
+                // 긍정적인 버튼 (예)의 텍스트 색상 변경
+                dialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.colorAccent));
+
+                // 부정적인 버튼 (아니오)의 텍스트 색상 변경
+                dialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.colorAccent));
             }
         });
 
